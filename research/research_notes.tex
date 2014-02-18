@@ -1,0 +1,75 @@
+ \documentclass[12pt]{article}
+\usepackage{amssymb}
+\usepackage[margin=.8in]{geometry}
+\usepackage{amsmath,graphicx}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{amsmath}
+\usepackage{tabularx}
+\usepackage{framed}
+\usepackage{tabu}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage[stable]{footmisc}
+\usepackage{titlesec}
+\usepackage{setspace}
+\newcommand{\bt}[1]{\textbf{#1}}
+\newcommand{\bi}[0]{  \begin{itemize}}
+\newcommand{\ei}[0]{  \end{itemize}}
+\newcommand{\q}[0]{\item} 
+\titleformat*{\section}{\bfseries}
+\titleformat*{\subsection}{\bfseries}
+\titleformat*{\subsubsection}{\footnotesize\bfseries}
+
+  \begin{document}
+  \title{Research Notes}
+  \author{Monath, Shultze, Zaporojets}
+\maketitle  
+
+\begin{framed}
+\emph{Please be sure to provide links to the sources you take notes from either in the form of a link to the webpage or as a Bibtex citation}
+\end{framed}
+
+\begin{framed}
+\centering
+\bt{Possible Future Points of Research/Papers to Read:}
+\begin{itemize}
+\item \href{http://arxiv.org/pdf/1310.1285v2.pdf}{\emph{Semantic Measures for the Comparison of Units of Language, Concepts or Instances from Text and Knowledge Representation Analysis} by Harispe, Ranwez, Janaqi, Montmain}
+\item \href{http://www-nlp.stanford.edu/IR-book/}{\emph{Introduction to Information Retrieval} by Christopher Manning}
+\end{itemize}
+\end{framed}
+
+\clearpage
+
+\section{\href{http://en.wikipedia.org/wiki/Semantic\_similarity}{Semantic Similarity}} 
+\bi
+\q \bt{Semantic measures:} mathematical tools used to estimate the strength of the semantic relationship between units of language, concepts or instances, through a numerical description obtained according to the comparison of information formally or implicitly supporting their meaning or describing their nature
+\q \bt{Semantic similarity}: measures the likeness of terms, words, documents (or any objects which can be characterized through semantics). The likeness of compared objects is based on their meaning or semantic content, as opposed to similarity which can be estimated regarding their syntactical representation (e.g. their string format).
+\q An \href{http://en.wikipedia.org/wiki/Ontology\_(computer\_science)}{\bt{ontology}} formally represents knowledge as a set of concepts within a domain, using a shared vocabulary to denote the types, properties and interrelationships of those concepts
+\q  \bt{Semantic similarity} can be estimated for instance by defining a topological similarity, by using \bt{ontologies} to define a distance between terms/concepts
+	\bi
+	\q A naive metric for the comparison of concepts ordered in a partially ordered set and represented as nodes of a directed acyclic graph (e.g., a taxonomy), would be the minimal distance in terms of edges composing the shortest-path linking the two concept nodes. Based on text analyses, semantic relatedness/distance between units of language (e.g., words, sentences) can also be estimated using statistical means such as a vector space model to correlate words and textual contexts from a suitable text corpus (co-occurrence).
+	\ei
+\q Note the difference between semantic \emph{similarity} and semantic \emph{antonymy} (how \emph{unrelated} things are) and semantic \bt{meronymy}
+	\bi
+	\q A \bt{meronym} denotes a constituent part of, or a member of something. For example, ``finger'' is a meronym of ``hand'' because a finger is part of a hand. Similarly, ``wheels'' is a meronym of ``automobile''.
+	\ei 
+\ei
+\subsection{Measures}
+\bi
+\q Two main approaches to measuring the similarity of ontological concepts: \bt{edge-based} and \bt{node-based}
+	\bi
+	\q Edge-based: which use the edges and their types as the data source
+	\q Node-based: in which the main data sources are the nodes and their properties.
+	\ei
+\q Other measures calculate the similarity between \emph{ontological instances}:
+	\bi
+	\q Pairwise: measure functional similarity between two instances by combining the semantic similarities of the concepts they represent
+	\q Groupwise: calculate the similarity directly not combining the semantic similarities of the concepts they represent
+	\ei
+\q There are also a number of statical similarity approaches such as: Latent semantic analysis, Pointwise mutual information, etc. (see \href{http://en.wikipedia.org/wiki/Semantic\_similarity}{article} for more information)
+\ei
+  
+  \end{document}
