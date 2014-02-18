@@ -1,3 +1,4 @@
 NLPProject
 ==========
-This is our README File
+
+Please add research notes!
