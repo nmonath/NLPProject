@@ -1,4 +1,4 @@
- \documentclass[12pt]{article}
+\documentclass[12pt]{article}
 \usepackage{amssymb}
 \usepackage[margin=.8in]{geometry}
 \usepackage{amsmath,graphicx}
@@ -15,17 +15,16 @@
 \usepackage[stable]{footmisc}
 \usepackage{titlesec}
 \usepackage{setspace}
+
+% COMMANDS I DEFINED
 \newcommand{\bt}[1]{\textbf{#1}}
 \newcommand{\bi}[0]{  \begin{itemize}}
 \newcommand{\ei}[0]{  \end{itemize}}
 \newcommand{\q}[0]{\item} 
-\titleformat*{\section}{\bfseries}
-\titleformat*{\subsection}{\bfseries}
-\titleformat*{\subsubsection}{\footnotesize\bfseries}
 
-  \begin{document}
-  \title{Research Notes}
-  \author{Nicholas Monath, Niklas Shulze, Klim Zaporojets}
+\begin{document}
+\title{Research Notes}
+\author{Nicholas Monath, Niklas Shulze, Klim Zaporojets}
 \maketitle  
 
 \begin{framed}
@@ -72,6 +71,12 @@ An experimental, application-oriented evaluation of ?ve measures} by Budanitsky 
 	\q Groupwise: calculate the similarity directly not combining the semantic similarities of the concepts they represent
 	\ei
 \q There are also a number of statical similarity approaches such as: Latent semantic analysis, Pointwise mutual information, etc. (see \href{http://en.wikipedia.org/wiki/Semantic\_similarity}{article} for more information)
+\ei
+
+\section{Information Retrieval by Christopher Manning}
+\bi
+\q \bt{Information retrieval} (IR) is finding material (usually documents) of an unstructured nature (usually text) that satisfies an information need from within large collections (usually stored on computers).
+\q \bt{Unstructured data}: refers to data which does not have clear, semantically overt, easy-for-a-computer structure\footnote{Note how most text we would want to search is \emph{semistructured}, that is it has tags such as a title or headings etc}
 \ei
   
   \end{document}
