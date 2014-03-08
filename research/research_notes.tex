@@ -144,5 +144,28 @@ document clustering} (Between 2009 and 2010) by Alexandre Passos and others} \M 
 \q \bt{Information retrieval} (IR) is finding material (usually documents) of an unstructured nature (usually text) that satisfies an information need from within large collections (usually stored on computers).
 \q \bt{Unstructured data}: refers to data which does not have clear, semantically overt, easy-for-a-computer structure\footnote{Note how most text we would want to search is \emph{semistructured}, that is it has tags such as a title or headings etc}
 \ei
-  
+ 
+ \section{Semantic distance in WordNet: An experimental, application-oriented evaluation of five measures}
+ \bi
+ \q Compares five measures of \bt{semantic distance}. Note the subtle differences between \bt{semantic distance}, \bt{semantic relatedness}, and \bt{semantic similarity}
+ \bi
+ 	\q {\bt Semantically similar} lexical items are connected by a `virtue of their likeness' (bank \& trust \& company)
+  	\q \bt{Semantic relatedness}is more general. Lexical items that are semantically similar are also semantically related, but items connected by a relationship like meronymy (car \& wheel) or antonymy (theist \& agnostic) or a functional relation are also considered related (paper \& pencil).
+	\q \bt{Semantic distance} is the inverse of relatedness 
+ \ei
+ \q Five measures of similarity:
+ \bi
+ 	\q \bt{Hirst-St-Onge}: Two lexicalized concepts are semantically close if their WordNet synsets are connected by a path that is not too long and that ``does not change direction too often''. Given by: \[ rel_{HS}(c_1,c_2) = C -\text{path length} - k \times d \]
+	\q[] where $d$ is the number of changes of direction in the path and $C$ and $k$ are constants. 
+	\q \bt{Leacock-Chodorow}: Given two lexical entries $c_1$, $c_2$, the function $len(c_1, c_2)$ is the shortest path between the synsets of $c_1$ and $c_2$ using only IS-A (hyponymity). The semantic similarity is given by: \[ sim_{LC} = -\log{\frac{len(c_1,c_2)}{2D}} \] 
+	\q[] where $D$ is the overall depth of taxonomy. 
+	\q \bt{Resnik}: The function $lso(c_1,c_2)$ defines the lowest super-ordinate (most ommon specific subsumed) of the two lexical entries (basically their common ancestor that is deepest in the tree). The semantic similarity is given by: \[ sim_R(c_1,c_2)=-\log{p(lso(c_1,c_2))} \] 
+	\q[] where $p(c)$ is the probability of encountering an instance of a sunset $c$ in some specific corpus
+	\q \bt{Jiang-Conrath}: Defines semantic \emph{distance} as: \[ dist_{JC}(c_1,c_2) = 2log(p(lso(c_1,c_2))) - ( log(p(c_1)) + log(p(c_2))) \]
+	\q \bt{Lin}'s approach is \[ \frac{2log(p(lso(c_1,c_2)))}{ log(p(c_1)) + log(p(c_2))} \]
+ \ei
+ \q Compares these methods by doing a `malapropism detection experiment'. Meaning can the methods be used to detect when random words have been altered in a document. Jiang Conrath's method did the best. The Lin and Resnik methods had good recall and so were good at giving possible malapropisms but had worse precision. Leacock-Chodorow had better precision than those too but worse than Jiang Conrath.
+ \q \emph{In summary, this paper discusses several techniques that use WordNet to provide measures of semantic similarity of lexical items. The Jiang-Conrath measure was the most effective measure in the authors experiments}. 
+ \ei
+ 
   \end{document}
