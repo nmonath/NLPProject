@@ -45,30 +45,22 @@
 \item \href{http://arxiv.org/pdf/1310.1285v2.pdf}{\emph{Semantic Measures for the Comparison of Units of Language, Concepts or Instances from Text and Knowledge Representation Analysis} by Harispe, Ranwez, Janaqi, Montmain}
 \item \href{http://www-nlp.stanford.edu/IR-book/}{\emph{Introduction to Information Retrieval} by Christopher Manning}
 
-\item \href{ftp://learning.cs.utoronto.ca/pub/gh/Budanitsky+Hirst-2001.pdf}{\emph{Semantic distance in WordNet:
-An experimental, application-oriented evaluation of ve measures} by Budanitsky and Hirst} \M \S
+\item \href{ftp://learning.cs.utoronto.ca/pub/gh/Budanitsky+Hirst-2001.pdf}{\emph{Semantic distance in WordNet: An experimental, application-oriented evaluation of ve measures} by Budanitsky and Hirst} \M \S
 
-\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/1303.4087.pdf}{\emph{An improved semantic similarity measure for
-document clustering based on topic maps} (2013) by Muhammad Rafi, Mohammad Shahid Shaikh}\S \Z
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/1303.4087.pdf}{\emph{An improved semantic similarity measure for document clustering based on topic maps} (2013) by Muhammad Rafi, Mohammad Shahid Shaikh}\S \Z
 
-\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/6_taxonomy_comparation.pdf}{\emph{Comparing taxonomies for organising collections of
-documents} (2012) by Samuel Fernando, Mark Hall, Eneko Agirre, Aitor Soroa, Paul Clough, Mark Stevenson} \Z \M
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/6_taxonomy_comparation.pdf}{\emph{Comparing taxonomies for organising collections of documents} (2012) by Samuel Fernando, Mark Hall, Eneko Agirre, Aitor Soroa, Paul Clough, Mark Stevenson} \Z \M
 
 \item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/7-entity_desambiguation_freebase.pdf}{\emph{Entity Disambiguation with Freebase} (2012) by Zhicheng Zheng, Xiance Si, Fangtao Li, Edward Y. Chang, and Xiaoyan Zhu} \M \S
 
 
-\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/8_OM-et\%20al-focusedtaxonomies.pdf}{\emph{Constructing a Focused Taxonomy from a
-Document Collection} (2013) by Olena Medelyan, Steve Manion, Jeen Broekstra, Anna Divoli,
-Anna-Lan Huang, Ian H. Witten} \M \S
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/8_OM-et\%20al-focusedtaxonomies.pdf}{\emph{Constructing a Focused Taxonomy from aDocument Collection} (2013) by Olena Medelyan, Steve Manion, Jeen Broekstra, Anna Divoli, Anna-Lan Huang, Ian H. Witten} \M \S
 
-\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/A\%20Taxonomy\%20based\%20Semantic\%20Similarity.pdf}{\emph{A Taxonomy based Semantic Similarity of
-Documents using the Cosine Measure} (2009) by Ainura Madylova} \S \Z
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/A\%20Taxonomy\%20based\%20Semantic\%20Similarity.pdf}{\emph{A Taxonomy based Semantic Similarity of Documents using the Cosine Measure} (2009) by Ainura Madylova} \S \Z
 
 \item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/AA22.pdf}{\emph{Learning Semantic Similarity} (2002) by Jaz Kandola and others} \Z \M
 
-\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/Hofmann-NIPS99.pdf}{\emph{Learning the Similarity of Documents:
-An Information-Geometric Approach to
-Document Retrieval and Categorization} (2000) by Thomas Joffman} \M \S
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/Hofmann-NIPS99.pdf}{\emph{Learning the Similarity of Documents: An Information-Geometric Approach to Document Retrieval and Categorization} (2000) by Thomas Joffman} \M \S
 
 \item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/IJCSI-8-5-3-1-8.pdf}{\emph{Document Representation and Clustering with WordNet Based Similarity Rough Set Model} (2011) by Nguyen Chi Thanh and Koichi Yamada} \S \Z
 
@@ -167,5 +159,20 @@ document clustering} (Between 2009 and 2010) by Alexandre Passos and others} \M 
  \q Compares these methods by doing a `malapropism detection experiment'. Meaning can the methods be used to detect when random words have been altered in a document. Jiang Conrath's method did the best. The Lin and Resnik methods had good recall and so were good at giving possible malapropisms but had worse precision. Leacock-Chodorow had better precision than those too but worse than Jiang Conrath.
  \q \emph{In summary, this paper discusses several techniques that use WordNet to provide measures of semantic similarity of lexical items. The Jiang-Conrath measure was the most effective measure in the authors experiments}. 
  \ei
+ 
+ \section{\href{https://github.com/nmonath/NLPProject/blob/master/research/papers/6_taxonomy_comparation.pdf}{Comparing Taxonomies for Organizing Collections of Documents}
+\bi
+\q \bt{Taxonomy} is the practice and science of classification. Many taxonomies have a hierarchical structure, but this is not a requirement. Taxonomy uses taxonomic units, known as taxa (singular taxon).
+\q Discusses both manually and automatically created taxonomies. 
+\q Manual taxonomies include: Library of Congress Subject Headings (LCSH), WordNet domains, Wikipedia Taxonomy, DBpedia ontology
+\q  Automatically created taxonomies include: \href{http://en.wikipedia.org/wiki/Latent_Dirichlet_allocation}{\bt{Latent Dirichlet Allocation}}, \emph{which we will want to study more in detail}, and a model built on \bt{Wikipedia Link Frequencies}
+\q Compared the taxonomies expressive power with experiments measuring the \emph{cohesion} and \emph{relatedness}. 
+\bi
+\q A cohesive cluster is defined as one in which the items are similar while at the same time clearly distinguishable from items in other clusters. This is evaluated by presenting a human subject a cluster with one element that does not belong. We see how often the subject can determine which element does not belong. 
+\q Relatedness is defined by two questions: Are the two concepts A and B related? f Yes, then how would you best define the relationship? Is A more specific than B, less specific than B, neither, or don?t know? 
+\ei
+\q The Wikipedia Link Frequency taxonomy performed very well in the experiments, especially in terms of cohesion. 
+\ei
+
  
   \end{document}
