@@ -236,12 +236,32 @@ document clustering} (Between 2009 and 2010) by Alexandre Passos and others} \M 
 \q On that note, I think we need to make a decision if we are doing document similarity or if we are doing a recommendation system. They definitely overlap, but I think we should focus on document similarity.
 \ei
 
-\section{Latent Dirichlet Allocation}
+\section{Latent Dirichlet Allocation (from Wikipedia)}
  \bi
  \q Latent Dirichlet Allocation (LDA) is a generative model that allows sets of observations to be explained by unobserved groups that explain why some parts of the data are similar. For example, if observations are words collected into documents, it posits that each document is a mixture of a small number of topics and that each word's creation is attributable to one of the document's topics. 
  \q For example, an LDA model might have topics that can be classified as \emph{CAT\_related} and \emph{DOG\_related}. A topic has probabilities of generating various words, such as milk, meow, and kitten, which can be classified and interpreted by the viewer as \emph{"CAT\_related"}. Naturally, the word cat itself will have high probability given this topic. The \emph{DOG\_related} topic likewise has probabilities of generating each word: puppy, bark, and bone might have high probability. Words without special relevance, such as the (see function word), will have roughly even probability between classes (or can be placed into a separate category). A topic is not strongly defined, neither semantically nor epistemologically. It is identified on the basis of supervised labeling and (manual) pruning on the basis of their likelihood of co-occurrence. A lexical word may occur in several topics with a different probability, however, with a different typical set of neighboring words in each topic.
 \q Each document is assumed to be characterized by a particular set of topics. This is akin to the standard bag of words model assumption, and makes the individual words exchangeable.
 \q {\tt [TO BE CONTINUED]}. See \href{http://en.wikipedia.org/wiki/Latent_Dirichlet_allocation}{http://en.wikipedia.org/wiki/Latent\_Dirichlet\_allocation}
+ \ei
+ 
+ \section{{\tt tf-idf} from Wikipedia}
+ \bi
+ \q {\tt tf-idf}, term frequency-inverse document frequency, is a numerical statistic that is intended to reflect how important a word is to a document in a collection or corpus.
+ \q The tf-idf value increases proportionally to the number of times a word appears in the document, but is offset by the frequency of the word in the corpus, which helps to control for the fact that some words are generally more common than others.
+ \q Term frequency, {\tt tf} is defined as:
+ \bi
+ 	\q $tf(t,d) = 1$ iff $t$ occurs in $d$
+	\q Logarithmic or augmented alternatives also exist
+ \ei
+ \q Inverse document frequency, {\tt idf}, is a measure of whether the term is common or rare across all documents. It is obtained by dividing the total number of documents by the number of documents containing the term, and then taking the logarithm of that quotient.
+ \bi
+ 	\q $idf(t, \mathbf{D}) =\log \frac{|\mathbf{D}|}{\sum_{d \in \mathbf{D}} tf(t, d)}$
+ \ei
+ \q Therefore, {\tt tf-idf} is defined:
+ \bi
+ 	\q $tfidf(t,d, \mathbf{D}) = tf(t,d) \times idf(t, \mathbf{D})$
+ \ei
+ \q A high weight in {\tt tf-idf} is reached by a high term frequency (in the given document) and a low document frequency of the term in the whole collection of documents; the weights hence tend to filter out common terms. Since the ratio inside the {\tt idf}'s log function is always greater than or equal to 1, the value of  {\tt idf} (and {\tt tf-idf}) is greater than or equal to 0. As a term appears in more documents, the ratio inside the logarithm approaches 1, bringing the {\tt idf} and {\tt tf-idf} closer to 0.
  \ei
  
   \end{document}
