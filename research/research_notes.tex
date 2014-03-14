@@ -222,5 +222,26 @@ document clustering} (Between 2009 and 2010) by Alexandre Passos and others} \M 
 	\q[] with $Prec(i)$ the precision at cut off $i$ in the ranking (i.e. the the percentage of the $i$ first ranked items that are relevant) and $rel(i)=1$ if the item at rank $i$ is a relevant document ($rel(i)=0$ otherwise). 
 \ei 
 \ei
+
+\section{General Notes \& Observations} 
+\bi
+\q Most of the approaches I have read for content based document similarity require essentially two definitions: a mathematical representation of the documents and a measure over those representations. 
+\q The two most common representations for documents are a \emph{vector space model} in which a feature vector is used to represent the document and a probabilistic or \emph{language model} in which a probability distribution over the terms in the documents is used as the representation. 
+\q A number of measures can be used to determine the distance between two documents in these models. For the \emph{vector space model} it seems that the \emph{cosine} distance is often used. For the \emph{language model} the probability distributions are usually compared using KL divergence.
+\q One problem, which is often encountered in information extraction, is the difficulty of two different terms having the same meaning. The most common way to handle this problem is the use of topic clustering by Latent Dirichilet Allocation.
+\q We could incorporate predicate argument structure in a couple unique ways. For one, we could include it in the language model of  {\it Finding Similar Research Papers Using Language Models \& Using Semi-Structured Data for Assessing Research Paper Similarity}.
+\q We could also include techniques in entity disambiguation instead of or in addition to LDA. 
+\q Also, it doesn't seem like people are really making use of the fact that Wikipedia provides us with a pretty strong taxonomy of scientific topics. This would make an excellent starting point for doing entity disambiguation or LDA. 
+\q I'm sure people have done this, but I haven't found it done yet. We could use the references section of the papers and apply an algorithm like PageRank to do the recommendations/similarity.
+\q On that note, I think we need to make a decision if we are doing document similarity or if we are doing a recommendation system. They definitely overlap, but I think we should focus on document similarity.
+\ei
+
+\section{Latent Dirichlet Allocation}
+ \bi
+ \q Latent Dirichlet Allocation (LDA) is a generative model that allows sets of observations to be explained by unobserved groups that explain why some parts of the data are similar. For example, if observations are words collected into documents, it posits that each document is a mixture of a small number of topics and that each word's creation is attributable to one of the document's topics. 
+ \q For example, an LDA model might have topics that can be classified as \emph{CAT\_related} and \emph{DOG\_related}. A topic has probabilities of generating various words, such as milk, meow, and kitten, which can be classified and interpreted by the viewer as \emph{"CAT\_related"}. Naturally, the word cat itself will have high probability given this topic. The \emph{DOG\_related} topic likewise has probabilities of generating each word: puppy, bark, and bone might have high probability. Words without special relevance, such as the (see function word), will have roughly even probability between classes (or can be placed into a separate category). A topic is not strongly defined, neither semantically nor epistemologically. It is identified on the basis of supervised labeling and (manual) pruning on the basis of their likelihood of co-occurrence. A lexical word may occur in several topics with a different probability, however, with a different typical set of neighboring words in each topic.
+\q Each document is assumed to be characterized by a particular set of topics. This is akin to the standard bag of words model assumption, and makes the individual words exchangeable.
+\q {\tt [TO BE CONTINUED]}. See \href{http://en.wikipedia.org/wiki/Latent_Dirichlet_allocation}{http://en.wikipedia.org/wiki/Latent\_Dirichlet\_allocation}
+ \ei
  
   \end{document}
