@@ -24,9 +24,10 @@
 \newcommand{\q}[0]{\item} 
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
             \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
-   \newcommand{\M}{\circled{M}}
-   \renewcommand{\S}{\circled{S}}
-   \newcommand{\Z}{\circled{Z}}
+\newcommand{\M}{\circled{M}}
+ \renewcommand{\S}{\circled{S}}
+ \newcommand{\Z}{\circled{Z}}
+ \newcommand{\sr}[1]{\mathcal{#1}}
 
 \begin{document}
 \title{Research Notes}
@@ -45,30 +46,22 @@
 \item \href{http://arxiv.org/pdf/1310.1285v2.pdf}{\emph{Semantic Measures for the Comparison of Units of Language, Concepts or Instances from Text and Knowledge Representation Analysis} by Harispe, Ranwez, Janaqi, Montmain}
 \item \href{http://www-nlp.stanford.edu/IR-book/}{\emph{Introduction to Information Retrieval} by Christopher Manning}
 
-\item \href{ftp://learning.cs.utoronto.ca/pub/gh/Budanitsky+Hirst-2001.pdf}{\emph{Semantic distance in WordNet:
-An experimental, application-oriented evaluation of ve measures} by Budanitsky and Hirst} \M \S
+\item \href{ftp://learning.cs.utoronto.ca/pub/gh/Budanitsky+Hirst-2001.pdf}{\emph{Semantic distance in WordNet: An experimental, application-oriented evaluation of ve measures} by Budanitsky and Hirst} \M \S
 
-\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/1303.4087.pdf}{\emph{An improved semantic similarity measure for
-document clustering based on topic maps} (2013) by Muhammad Rafi, Mohammad Shahid Shaikh}\S \Z
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/1303.4087.pdf}{\emph{An improved semantic similarity measure for document clustering based on topic maps} (2013) by Muhammad Rafi, Mohammad Shahid Shaikh}\S \Z
 
-\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/6_taxonomy_comparation.pdf}{\emph{Comparing taxonomies for organising collections of
-documents} (2012) by Samuel Fernando, Mark Hall, Eneko Agirre, Aitor Soroa, Paul Clough, Mark Stevenson} \Z \M
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/6_taxonomy_comparation.pdf}{\emph{Comparing taxonomies for organising collections of documents} (2012) by Samuel Fernando, Mark Hall, Eneko Agirre, Aitor Soroa, Paul Clough, Mark Stevenson} \Z \M
 
 \item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/7-entity_desambiguation_freebase.pdf}{\emph{Entity Disambiguation with Freebase} (2012) by Zhicheng Zheng, Xiance Si, Fangtao Li, Edward Y. Chang, and Xiaoyan Zhu} \M \S
 
 
-\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/8_OM-et\%20al-focusedtaxonomies.pdf}{\emph{Constructing a Focused Taxonomy from a
-Document Collection} (2013) by Olena Medelyan, Steve Manion, Jeen Broekstra, Anna Divoli,
-Anna-Lan Huang, Ian H. Witten} \M \S
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/8_OM-et\%20al-focusedtaxonomies.pdf}{\emph{Constructing a Focused Taxonomy from aDocument Collection} (2013) by Olena Medelyan, Steve Manion, Jeen Broekstra, Anna Divoli, Anna-Lan Huang, Ian H. Witten} \M \S
 
-\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/A\%20Taxonomy\%20based\%20Semantic\%20Similarity.pdf}{\emph{A Taxonomy based Semantic Similarity of
-Documents using the Cosine Measure} (2009) by Ainura Madylova} \S \Z
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/A\%20Taxonomy\%20based\%20Semantic\%20Similarity.pdf}{\emph{A Taxonomy based Semantic Similarity of Documents using the Cosine Measure} (2009) by Ainura Madylova} \S \Z
 
 \item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/AA22.pdf}{\emph{Learning Semantic Similarity} (2002) by Jaz Kandola and others} \Z \M
 
-\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/Hofmann-NIPS99.pdf}{\emph{Learning the Similarity of Documents:
-An Information-Geometric Approach to
-Document Retrieval and Categorization} (2000) by Thomas Joffman} \M \S
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/Hofmann-NIPS99.pdf}{\emph{Learning the Similarity of Documents: An Information-Geometric Approach to Document Retrieval and Categorization} (2000) by Thomas Joffman} \M \S
 
 \item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/IJCSI-8-5-3-1-8.pdf}{\emph{Document Representation and Clustering with WordNet Based Similarity Rough Set Model} (2011) by Nguyen Chi Thanh and Koichi Yamada} \S \Z
 
@@ -99,10 +92,18 @@ Clustering} (2007) by Hung Chim and others} \Z \M
 \item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/wncluster.pdf}{\emph{Wordnet-based metrics do not seem to help
 document clustering} (Between 2009 and 2010) by Alexandre Passos and others} \M \Z
 
+\item \href{http://www.hindawi.com/journals/tswj/2014/741608/}{\emph{Link-Based Similarity Measures Using Reachability Vectors} by Seok-Ho Yoon, Ji-Soo Kim, Jiwoon Ha, Sang-Wook Kim, Minsoo Ryu, and Ho-Jin Choi}
 
+\item \href{http://machinelearning.wustl.edu/mlpapers/paper_files/BleiNJ03.pdf}{\emph{Latent Dirichlet Allocation} by David M. Blei, Andrew Ng, Michael Jordan}
 
+\item \href{http://ac.els-cdn.com/S1532046406000645/1-s2.0-S1532046406000645-main.pdf?_tid=2b338e48-a734-11e3-8959-00000aab0f27&acdnat=1394333005_db809de3215f4beccaf023aa2833d750}{\emph{Measures of semantic similarity and relatedness in the biomedical domain} by Ted Pedersen, Serguei V.S. Pakhomov Siddharth Patwardhan Christopher G. Chute}
 
+\item \href{http://sci2s.ugr.es/publications/ficheros/HurtadoINS.pdf}{\it Using semi-structured data for assessing research paper similarity} by Germán Hurtado Martína, Steven Schockaert, Chris Cornelis, Helga Naessens 
 
+\item \href{http://www.cwi.ugent.be/Chris/article_iswc_spim2011.pdf}{\it Finding similar research papers using language models} by Germán Hurtado Martína, Steven Schockaert, Chris Cornelis, Helga Naessens 
+\item \href{http://www.comp.rgu.ac.uk/staff/ds/papers/KAIS-expert-finding.pdf}{\it Integrating Multiple Document Features in Language Models for Expert Finding} by Jianhan Zhu1 Xiangji Huang Dawei Song Stefan Ruger
+
+\item \href{http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.95.7226&rep=rep1&type=pdf}{\it A Language Modeling Approach to Information Retrieval } by Jay M. Ponte and W. Bruce Croft 
 
 
 \end{enumerate}
@@ -144,5 +145,124 @@ document clustering} (Between 2009 and 2010) by Alexandre Passos and others} \M 
 \q \bt{Information retrieval} (IR) is finding material (usually documents) of an unstructured nature (usually text) that satisfies an information need from within large collections (usually stored on computers).
 \q \bt{Unstructured data}: refers to data which does not have clear, semantically overt, easy-for-a-computer structure\footnote{Note how most text we would want to search is \emph{semistructured}, that is it has tags such as a title or headings etc}
 \ei
-  
+ 
+ \section{Semantic distance in WordNet: An experimental, application-oriented evaluation of five measures}
+ \bi
+ \q Compares five measures of \bt{semantic distance}. Note the subtle differences between \bt{semantic distance}, \bt{semantic relatedness}, and \bt{semantic similarity}
+ \bi
+ 	\q {\bt Semantically similar} lexical items are connected by a `virtue of their likeness' (bank \& trust \& company)
+  	\q \bt{Semantic relatedness}is more general. Lexical items that are semantically similar are also semantically related, but items connected by a relationship like meronymy (car \& wheel) or antonymy (theist \& agnostic) or a functional relation are also considered related (paper \& pencil).
+	\q \bt{Semantic distance} is the inverse of relatedness 
+ \ei
+ \q Five measures of similarity:
+ \bi
+ 	\q \bt{Hirst-St-Onge}: Two lexicalized concepts are semantically close if their WordNet synsets are connected by a path that is not too long and that ``does not change direction too often''. Given by: \[ rel_{HS}(c_1,c_2) = C -\text{path length} - k \times d \]
+	\q[] where $d$ is the number of changes of direction in the path and $C$ and $k$ are constants. 
+	\q \bt{Leacock-Chodorow}: Given two lexical entries $c_1$, $c_2$, the function $len(c_1, c_2)$ is the shortest path between the synsets of $c_1$ and $c_2$ using only IS-A (hyponymity). The semantic similarity is given by: \[ sim_{LC} = -\log{\frac{len(c_1,c_2)}{2D}} \] 
+	\q[] where $D$ is the overall depth of taxonomy. 
+	\q \bt{Resnik}: The function $lso(c_1,c_2)$ defines the lowest super-ordinate (most ommon specific subsumed) of the two lexical entries (basically their common ancestor that is deepest in the tree). The semantic similarity is given by: \[ sim_R(c_1,c_2)=-\log{p(lso(c_1,c_2))} \] 
+	\q[] where $p(c)$ is the probability of encountering an instance of a sunset $c$ in some specific corpus
+	\q \bt{Jiang-Conrath}: Defines semantic \emph{distance} as: \[ dist_{JC}(c_1,c_2) = 2log(p(lso(c_1,c_2))) - ( log(p(c_1)) + log(p(c_2))) \]
+	\q \bt{Lin}'s approach is \[ \frac{2log(p(lso(c_1,c_2)))}{ log(p(c_1)) + log(p(c_2))} \]
+ \ei
+ \q Compares these methods by doing a `malapropism detection experiment'. Meaning can the methods be used to detect when random words have been altered in a document. Jiang Conrath's method did the best. The Lin and Resnik methods had good recall and so were good at giving possible malapropisms but had worse precision. Leacock-Chodorow had better precision than those too but worse than Jiang Conrath.
+ \q \emph{In summary, this paper discusses several techniques that use WordNet to provide measures of semantic similarity of lexical items. The Jiang-Conrath measure was the most effective measure in the authors experiments}. 
+ \ei
+ 
+ \section{\href{https://github.com/nmonath/NLPProject/blob/master/research/papers/6_taxonomy_comparation.pdf}{Comparing Taxonomies for Organizing Collections of Documents}}
+\bi
+\q \bt{Taxonomy} is the practice and science of classification. Many taxonomies have a hierarchical structure, but this is not a requirement. Taxonomy uses taxonomic units, known as taxa (singular taxon).
+\q Discusses both manually and automatically created taxonomies. 
+\q Manual taxonomies include: Library of Congress Subject Headings (LCSH), WordNet domains, Wikipedia Taxonomy, DBpedia ontology
+\q  Automatically created taxonomies include: \href{http://en.wikipedia.org/wiki/Latent_Dirichlet_allocation}{\bt{Latent Dirichlet Allocation}}, \emph{which we will want to study more in detail}, and a model built on \bt{Wikipedia Link Frequencies}
+\q Compared the taxonomies expressive power with experiments measuring the \emph{cohesion} and \emph{relatedness}. 
+\bi
+\q A cohesive cluster is defined as one in which the items are similar while at the same time clearly distinguishable from items in other clusters. This is evaluated by presenting a human subject a cluster with one element that does not belong. We see how often the subject can determine which element does not belong. 
+\q Relatedness is defined by two questions: Are the two concepts A and B related? f Yes, then how would you best define the relationship? Is A more specific than B, less specific than B, neither, or don?t know? 
+\ei
+\q The Wikipedia Link Frequency taxonomy performed very well in the experiments, especially in terms of cohesion. 
+\ei
+
+\section{\href{https://github.com/nmonath/NLPProject/blob/master/research/papers/7-entity_desambiguation_freebase.pdf}{Entity Disambiguation with Freebase}}
+\bi
+\q \bt{Entity disambiguation} is the determination of the $sense$ of a word or phrase. E.g. determining if `The pitcher fell over' refers to a baseball player or a jug of water.
+\q Introduces Freebase as a tool for disambiguation. It is much bigger than Wikipedia and enjoys a better type taxonomy and more complex schemas. The well structured database is not only convenient for a human to browse, but also very suitable for the machine to use.
+\q Uses an iterative semi-supervised frame- work to perform entity disambiguation with Freebase.  
+\q Use both generative and discriminative models in our framwork, and find that the discriminative model outper- forms the generative one constantly.
+\ei
+
+\section{A Paper Recommender for Scientific Literatures Based on Semantic Concept Similarity by Ming Zhang, Weichun Wang, and Xiaoming Li}
+\bi
+\q The paper recommender systems are emerging with the explosive growth of the WWW. McNee et al. mapped the Web of citations between papers into the user-item rating matrix where the paper ``votes'' for the citations it references. 
+\q Defines a concept graph system which measures both similar clicks AND semantic similarity. But they do not discuss the measure of semantic similarity used. 
+\q They do give a definition of concept similarity (see paper) but it is defined in terms of tags and so perhaps not useful to us.
+\ei
+
+\section{Finding Similar Research Papers Using Language Models \& Using Semi-Structured Data for Assessing Research Paper Similarity}
+\bi
+\q The authors represent a document with a \emph{language model}, a probability distribution over the words in the document. Note how this contrasts with the Vector Space model used in the paper: \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/pg049_Similarity_Measures_for_Text_Document_Clustering.pdf}{\it Similarity Measures for Text Document Clustering}
+\q \bt{Language Model}:
+\bi
+\q A document $d$ is then assumed to be generated by a given model $D$. We want to define the probability that model $D$ generates term $w$: $\sr{D}(w) = P(w|D)$. 
+\q To compare the model $\sr{D}_1$ of document $d_1$ and $\sr{D}_2$ of document $d_2$ to see how similar the two documents are, we use KL-Divergence:
+\bi
+	\q $KLD(\sr{D}_1 || \sr{D}_2) = \sum_w \sr{D}_1(w) \log{\frac{\sr{D}_1(w)}{\sr{D}_2(w)}}$
+\ei
+\q We define the the language model as:
+\bi
+	\q $\sr{D}(w) = P(w|D) = \lambda_1 P(w|d) + \lambda_2 P(w|k) + \lambda_3 P(w|a) + \lambda_4 P(w|j) + \lambda_5 P(w|\sr{C})$
+	\q[] where $k$ is a keyword, $a$ is the author, $j$ is the journal, $\sr{C}$ is whole collection of abstracts.
+\ei
+\q Latent Dirichlet Allocation is used to determine a set of topics discussed in the collection of papers. We add an additional term to the above equation: $\lambda_6 P(w|t)$, where $t$ is a topic. 
+\ei
+\q Claims to have a publicly available dataset with manually tagged papers, but it is no where to be found. 
+\q The evaluation is done with two measures: \emph{Mean Average Precision} and \emph{Mean Reciprocal Rank}. $MAP$ takes into account the position of every hit within the ranking and is defined by: 
+\bi
+	\q $MAP=\frac{\sum_{r=1}^{|R|} AvPrec(r)}{|R|}$
+	\q $AvPrec(r) = \frac{\sum_{i=1}^n Prec(i) \times rel(i)}{\text{number of relavent documents}}$ 
+	\q[] with $Prec(i)$ the precision at cut off $i$ in the ranking (i.e. the the percentage of the $i$ first ranked items that are relevant) and $rel(i)=1$ if the item at rank $i$ is a relevant document ($rel(i)=0$ otherwise). 
+\ei 
+\ei
+
+\section{General Notes \& Observations} 
+\bi
+\q Most of the approaches I have read for content based document similarity require essentially two definitions: a mathematical representation of the documents and a measure over those representations. 
+\q The two most common representations for documents are a \emph{vector space model} in which a feature vector is used to represent the document and a probabilistic or \emph{language model} in which a probability distribution over the terms in the documents is used as the representation. 
+\q A number of measures can be used to determine the distance between two documents in these models. For the \emph{vector space model} it seems that the \emph{cosine} distance is often used. For the \emph{language model} the probability distributions are usually compared using KL divergence.
+\q One problem, which is often encountered in information extraction, is the difficulty of two different terms having the same meaning. The most common way to handle this problem is the use of topic clustering by Latent Dirichilet Allocation.
+\q We could incorporate predicate argument structure in a couple unique ways. For one, we could include it in the language model of  {\it Finding Similar Research Papers Using Language Models \& Using Semi-Structured Data for Assessing Research Paper Similarity}.
+\q We could also include techniques in entity disambiguation instead of or in addition to LDA. 
+\q Also, it doesn't seem like people are really making use of the fact that Wikipedia provides us with a pretty strong taxonomy of scientific topics. This would make an excellent starting point for doing entity disambiguation or LDA. 
+\q I'm sure people have done this, but I haven't found it done yet. We could use the references section of the papers and apply an algorithm like PageRank to do the recommendations/similarity.
+\q On that note, I think we need to make a decision if we are doing document similarity or if we are doing a recommendation system. They definitely overlap, but I think we should focus on document similarity.
+\ei
+
+\section{Latent Dirichlet Allocation (from Wikipedia)}
+ \bi
+ \q Latent Dirichlet Allocation (LDA) is a generative model that allows sets of observations to be explained by unobserved groups that explain why some parts of the data are similar. For example, if observations are words collected into documents, it posits that each document is a mixture of a small number of topics and that each word's creation is attributable to one of the document's topics. 
+ \q For example, an LDA model might have topics that can be classified as \emph{CAT\_related} and \emph{DOG\_related}. A topic has probabilities of generating various words, such as milk, meow, and kitten, which can be classified and interpreted by the viewer as \emph{"CAT\_related"}. Naturally, the word cat itself will have high probability given this topic. The \emph{DOG\_related} topic likewise has probabilities of generating each word: puppy, bark, and bone might have high probability. Words without special relevance, such as the (see function word), will have roughly even probability between classes (or can be placed into a separate category). A topic is not strongly defined, neither semantically nor epistemologically. It is identified on the basis of supervised labeling and (manual) pruning on the basis of their likelihood of co-occurrence. A lexical word may occur in several topics with a different probability, however, with a different typical set of neighboring words in each topic.
+\q Each document is assumed to be characterized by a particular set of topics. This is akin to the standard bag of words model assumption, and makes the individual words exchangeable.
+\q {\tt [TO BE CONTINUED]}. See \href{http://en.wikipedia.org/wiki/Latent_Dirichlet_allocation}{http://en.wikipedia.org/wiki/Latent\_Dirichlet\_allocation}
+ \ei
+ 
+ \section{{\tt tf-idf} from Wikipedia}
+ \bi
+ \q {\tt tf-idf}, term frequency-inverse document frequency, is a numerical statistic that is intended to reflect how important a word is to a document in a collection or corpus.
+ \q The tf-idf value increases proportionally to the number of times a word appears in the document, but is offset by the frequency of the word in the corpus, which helps to control for the fact that some words are generally more common than others.
+ \q Term frequency, {\tt tf} is defined as:
+ \bi
+ 	\q $tf(t,d) = 1$ iff $t$ occurs in $d$
+	\q Logarithmic or augmented alternatives also exist
+ \ei
+ \q Inverse document frequency, {\tt idf}, is a measure of whether the term is common or rare across all documents. It is obtained by dividing the total number of documents by the number of documents containing the term, and then taking the logarithm of that quotient.
+ \bi
+ 	\q $idf(t, \mathbf{D}) =\log \frac{|\mathbf{D}|}{\sum_{d \in \mathbf{D}} tf(t, d)}$
+ \ei
+ \q Therefore, {\tt tf-idf} is defined:
+ \bi
+ 	\q $tfidf(t,d, \mathbf{D}) = tf(t,d) \times idf(t, \mathbf{D})$
+ \ei
+ \q A high weight in {\tt tf-idf} is reached by a high term frequency (in the given document) and a low document frequency of the term in the whole collection of documents; the weights hence tend to filter out common terms. Since the ratio inside the {\tt idf}'s log function is always greater than or equal to 1, the value of  {\tt idf} (and {\tt tf-idf}) is greater than or equal to 0. As a term appears in more documents, the ratio inside the logarithm approaches 1, bringing the {\tt idf} and {\tt tf-idf} closer to 0.
+ \ei
+ 
   \end{document}
