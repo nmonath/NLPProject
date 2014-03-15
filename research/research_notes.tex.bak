@@ -1,0 +1,148 @@
+\documentclass[12pt]{article}
+\usepackage{amssymb}
+\usepackage[margin=.8in]{geometry}
+\usepackage{amsmath,graphicx}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{amsmath}
+\usepackage{tabularx}
+\usepackage{framed}
+\usepackage{tikz}
+\usepackage{tabu}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage[stable]{footmisc}
+\usepackage{titlesec}
+\usepackage{setspace}
+
+% COMMANDS I DEFINED
+\newcommand{\bt}[1]{\textbf{#1}}
+\newcommand{\bi}[0]{  \begin{itemize}}
+\newcommand{\ei}[0]{  \end{itemize}}
+\newcommand{\q}[0]{\item} 
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+   \newcommand{\M}{\circled{M}}
+   \renewcommand{\S}{\circled{S}}
+   \newcommand{\Z}{\circled{Z}}
+
+\begin{document}
+\title{Research Notes}
+\author{Nicholas Monath, Niklas Shulze, Klim Zaporojets}
+\maketitle  
+
+\begin{framed}
+\emph{Please be sure to provide links to the sources you take notes from either in the form of a link to the webpage or as a Bibtex citation}
+\end{framed}
+
+\begin{framed}
+\centering
+\bt{Possible Future Points of Research/Papers to Read:}
+\begin{enumerate}
+
+\item \href{http://arxiv.org/pdf/1310.1285v2.pdf}{\emph{Semantic Measures for the Comparison of Units of Language, Concepts or Instances from Text and Knowledge Representation Analysis} by Harispe, Ranwez, Janaqi, Montmain}
+\item \href{http://www-nlp.stanford.edu/IR-book/}{\emph{Introduction to Information Retrieval} by Christopher Manning}
+
+\item \href{ftp://learning.cs.utoronto.ca/pub/gh/Budanitsky+Hirst-2001.pdf}{\emph{Semantic distance in WordNet:
+An experimental, application-oriented evaluation of ve measures} by Budanitsky and Hirst} \M \S
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/1303.4087.pdf}{\emph{An improved semantic similarity measure for
+document clustering based on topic maps} (2013) by Muhammad Rafi, Mohammad Shahid Shaikh}\S \Z
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/6_taxonomy_comparation.pdf}{\emph{Comparing taxonomies for organising collections of
+documents} (2012) by Samuel Fernando, Mark Hall, Eneko Agirre, Aitor Soroa, Paul Clough, Mark Stevenson} \Z \M
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/7-entity_desambiguation_freebase.pdf}{\emph{Entity Disambiguation with Freebase} (2012) by Zhicheng Zheng, Xiance Si, Fangtao Li, Edward Y. Chang, and Xiaoyan Zhu} \M \S
+
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/8_OM-et\%20al-focusedtaxonomies.pdf}{\emph{Constructing a Focused Taxonomy from a
+Document Collection} (2013) by Olena Medelyan, Steve Manion, Jeen Broekstra, Anna Divoli,
+Anna-Lan Huang, Ian H. Witten} \M \S
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/A\%20Taxonomy\%20based\%20Semantic\%20Similarity.pdf}{\emph{A Taxonomy based Semantic Similarity of
+Documents using the Cosine Measure} (2009) by Ainura Madylova} \S \Z
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/AA22.pdf}{\emph{Learning Semantic Similarity} (2002) by Jaz Kandola and others} \Z \M
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/Hofmann-NIPS99.pdf}{\emph{Learning the Similarity of Documents:
+An Information-Geometric Approach to
+Document Retrieval and Categorization} (2000) by Thomas Joffman} \M \S
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/IJCSI-8-5-3-1-8.pdf}{\emph{Document Representation and Clustering with WordNet Based Similarity Rough Set Model} (2011) by Nguyen Chi Thanh and Koichi Yamada} \S \Z
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/Paper\%2014-Measuring\%20Semantic\%20Similarity\%20Between\%20Words\%20Using\%20Web\%20Documents.pdf}{\emph{Measuring Semantic Similarity between Words Using Web Documents} (2010) by Sheetal A. Takale and other} \Z \M
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/RankingofWebDocuments.pdf}{\emph{Ranking of Web Documents using Semantic Similarity} (2013) by Poonam Chahal, Manjeet Singh, Suresh Kumar} \M \S
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/Unsupervised\%20Semantic\%20Similarity.pdf}{\emph{Unsupervised Semantic Similarity Computation Between Terms Using Web Documents} (2010) by Elias Iosif} \S \Z
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/Varelas-widm05.pdf}{\emph{Semantic Similarity Methods in WordNet and their
+Application to Information Retrieval on the Web} (2005) by Giannis Varelas and others} \Z \M
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/docsim.pdf}{\emph{Pairwise Document Similarity in Large Collections with MapReduce} (2008) by T Elsayed and others} \M \S 
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/p1361-whissell.pdf}{\emph{Effective Measures for Inter-Document Similarity} (2013) by John S. Whissell, Charles L.A. Clarke} \S \Z
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/paper091.pdf}{\emph{A New Sufix Tree Similarity Measure for Document
+Clustering} (2007) by Hung Chim and others} \Z \M
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/paper8.pdf}{\emph{Exploring the Similarity between Social Knowledge Sources and Twitter for Cross-domain Topic Classification} (2012) by Andrea Varga and others} \M \S
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/pg049_Similarity_Measures_for_Text_Document_Clustering.pdf}{\emph{Similarity Measures for Text Document Clustering} (2008) by Anna Huang} \S \Z
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/semsim.pdf}{\emph{Algorithmic Detection of Semantic Similarity} (2005) by Ana G. Maguitman and others} \Z \M
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/textgraph.pdf}{\emph{Using aWikipedia-based Semantic Relatedness Measure for Document Clustering} (2011) by M Yazdani and others} \S \Z
+
+\item \href{https://github.com/nmonath/NLPProject/blob/master/research/papers/wncluster.pdf}{\emph{Wordnet-based metrics do not seem to help
+document clustering} (Between 2009 and 2010) by Alexandre Passos and others} \M \Z
+
+
+
+
+
+
+
+\end{enumerate}
+\end{framed}
+
+\clearpage
+
+\section{\href{http://en.wikipedia.org/wiki/Semantic\_similarity}{Semantic Similarity}} 
+\bi
+\q \bt{Semantic measures:} mathematical tools used to estimate the strength of the semantic relationship between units of language, concepts or instances, through a numerical description obtained according to the comparison of information formally or implicitly supporting their meaning or describing their nature
+\q \bt{Semantic similarity}: measures the likeness of terms, words, documents (or any objects which can be characterized through semantics). The likeness of compared objects is based on their meaning or semantic content, as opposed to similarity which can be estimated regarding their syntactical representation (e.g. their string format).
+\q An \href{http://en.wikipedia.org/wiki/Ontology\_(computer\_science)}{\bt{ontology}} formally represents knowledge as a set of concepts within a domain, using a shared vocabulary to denote the types, properties and interrelationships of those concepts
+\q  \bt{Semantic similarity} can be estimated for instance by defining a topological similarity, by using \bt{ontologies} to define a distance between terms/concepts
+	\bi
+	\q A naive metric for the comparison of concepts ordered in a partially ordered set and represented as nodes of a directed acyclic graph (e.g., a taxonomy), would be the minimal distance in terms of edges composing the shortest-path linking the two concept nodes. Based on text analyses, semantic relatedness/distance between units of language (e.g., words, sentences) can also be estimated using statistical means such as a vector space model to correlate words and textual contexts from a suitable text corpus (co-occurrence).
+	\ei
+\q Note the difference between semantic \emph{similarity} and semantic \emph{antonymy} (how \emph{unrelated} things are) and semantic \bt{meronymy}
+	\bi
+	\q A \bt{meronym} denotes a constituent part of, or a member of something. For example, ``finger'' is a meronym of ``hand'' because a finger is part of a hand. Similarly, ``wheels'' is a meronym of ``automobile''.
+	\ei 
+\ei
+\subsection{Measures}
+\bi
+\q Two main approaches to measuring the similarity of ontological concepts: \bt{edge-based} and \bt{node-based}
+	\bi
+	\q Edge-based: which use the edges and their types as the data source
+	\q Node-based: in which the main data sources are the nodes and their properties.
+	\ei
+\q Other measures calculate the similarity between \emph{ontological instances}:
+	\bi
+	\q Pairwise: measure functional similarity between two instances by combining the semantic similarities of the concepts they represent
+	\q Groupwise: calculate the similarity directly not combining the semantic similarities of the concepts they represent
+	\ei
+\q There are also a number of statical similarity approaches such as: Latent semantic analysis, Pointwise mutual information, etc. (see \href{http://en.wikipedia.org/wiki/Semantic\_similarity}{article} for more information)
+\ei
+
+\section{Information Retrieval by Christopher Manning}
+\bi
+\q \bt{Information retrieval} (IR) is finding material (usually documents) of an unstructured nature (usually text) that satisfies an information need from within large collections (usually stored on computers).
+\q \bt{Unstructured data}: refers to data which does not have clear, semantically overt, easy-for-a-computer structure\footnote{Note how most text we would want to search is \emph{semistructured}, that is it has tags such as a title or headings etc}
+\ei
+  
+  \end{document}
