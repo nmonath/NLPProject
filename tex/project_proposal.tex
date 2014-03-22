@@ -140,6 +140,9 @@ The groups of terms making up the relations and arguments are used in place of t
 
 Our implementation will be complemented by using the word2vec utility in order to get the first k senses of a particular word and use them in unigram bag of words models. We are planning to train word2vec on the whole document content, whereas the bug of words calculation will be only performed on abstract of each paper. 
 
+\subsubsection{Text Processing Tools}
+
+Many of the current papers (cite) convert words to their lemmatized form that is removing inflections so that each word is in its base form. This helps to reduce the feature space and make the feature vectors (or probability distributions) more descriptive. This process will take place after the dependency parsing and semantic role labeling. We can experiment with whether or not it will be used in the Word2Vec model. 
 
 \subsection{Experiments}
 
@@ -161,9 +164,16 @@ The problem of \textbf{document classification} is formally defined just like th
 
 The authors of \cite{Nastase2007} present results from a document classification experiment on the Reuters-21578 dataset using a vector space model which makes use of dependency parsing. We will repeat their experiment to see how our model performs in comparison to theirs. The classification experiment is done using the 10 most frequent classes in the Reuters-21578 document collection with the ModApte split designating the specific documents for training and testing. The precision and recall scores are used to judge the performance of a document similarity measure. 
 
+\subsubsection{Clustering and Classification Methods}
+
+We will use a standard set of machine learning tools to implement the clustering and classification procedures. For clustering, we will perform experiments using \emph{k-means}, \emph{DBScan}, and the \emph{EM Algorithm}. For classification, we will perform experiments using \emph{Support Vector Machines}, \emph{Naive Bayes}, and \emph{k-Nearest Neighbor} approaches. We will be programming most of our project in {\tt Python} and will be using the machine learning tools available in {\tt NumPy} and {\tt SciPy}.
+
 \begin{framed}
-\emph{Still need to give clustering and classification algorithms. Need to make emphasis more on scientific papers. Word2Vec.}
+\emph{Need to make emphasis more on scientific papers. Word2Vec.}
 \end{framed}
+
+
+
 
 \section{Schedule}
 
