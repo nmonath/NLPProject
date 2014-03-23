@@ -135,10 +135,15 @@ Relation \#3: & sleep.01 & sleeper [A0] & sleeper [R-A0] & temporal [AM-TMP] \\
 The groups of terms making up the relations and arguments are used in place of the $n$-grams in the \emph{document representations} of the three document similarity measures described in Section \ref{sec:TraditionalApproaches}. We will experiment with including the role labels along with each group of terms. Also, we will try using unigrams in addition to these groups of terms in the three approaches. 
 
 
-\subsubsection{Making use of Word2Vec for Semantic Information} \label{sec:Word2Vec}
+\subsubsection{Making use of Word2Vec} \label{sec:Word2Vec}
 
+Vector space word models are useful in determining the syntactic and semantic relatedness between words. In these models, each word in a corpus assigned a position in a high-dimensional space $\mathbb{R}^N$ through a training process. The hope is that words that are related to one another are placed at a near by place in $\mathbb{R}^N$. The relatedness (or rather \emph{difference}) between two words is typically measured by the cosine distance between their two vectors. Word2Vec is a state of the art vector space word model and training process  \cite{Mikolov2013efficient}. We propose two modifications to the previously described models that make use of a vector space word model. 
 
-Our implementation will be complemented by using the word2vec utility in order to get the first k senses of a particular word and use them in unigram bag of words models. We are planning to train word2vec on the whole document content, whereas the bug of words calculation will be only performed on abstract of each paper. 
+The first method is to perform clustering of the words and to use the centroid of each cluster in place of $n$-grams in the previously described approaches. Specifically, we let $\mathbf{W}$ be the set of words that appear in one or more of the collection of documents $d_1, d_2, \dots, d_n$ and we let $\mathbf{V}$ be the set of vectors corresponding to the entries in $\mathbf{W}$. We cluster $\mathbf{V}$ using an algorithm such as $k$-means or DBscan and so each entry in $\mathbf{V}$ is associated with a specific cluster. We then calculate the center point or centroid of that cluster. Then each word in the corpus is replaced with the centroid of its associated cluster and the three approaches described in Section \ref{sec:TraditionalApproaches} are used. 
+
+A second method, but related method, is a less strong form of clustering. Clustering is done in just two passes through the documents. For each word, we find the closest $k$ words in the vector space defined by Word2Vec. If the word is not already associated with a cluster and if any of these $k$ words appear in the collection of documents, a cluster is defined for the related words. If any of the $k$ words appear in other clusters, the clusters are merged together. We then calculate the center point or centroid of that cluster. Then each word in the corpus is replaced with the centroid of its associated cluster and the three approaches described in Section \ref{sec:TraditionalApproaches} are used. 
+
+According to \cite{Mikolov2013efficient}, we can define multiple word phrases in vector space as the sum of the vectors of the individual words. In so doing we can apply these two methods to the multi-word phrases extracted from the dependency parsing and semantic role labeling. 
 
 \subsubsection{Text Processing Tools}
 
