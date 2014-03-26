@@ -48,7 +48,7 @@ The most common approach to unstructured text document similarity is a vector sp
 
 In these traditional approaches, the syntactic and semantic relationships of words and phrases in the text are ignored. The models are based on statistical information on the frequency of the occurrence of word sequences or $n$-grams. Often unigrams (i.e. $n=1$) are used and so the measure is the frequency of the occurrence of single words. Bigrams (two-word sequences) and trigrams (three-word sequences) are also commonly used. Intuitively, the substitution of \emph{n-grams} with syntactically related groups of words is a logically sound choice. Often, \emph{n-grams} are disparate sequences of terms, while syntactically related groups of words can provide a more robust feature that preserves the semantic meaning of phrases. Initial work was done on this in the late 1990s, such as \cite{Furnkranz1998}, \cite{Dumais1998}, \cite{Shapire1999}. The recent works of \cite{Nastase2007} and \cite{Koster2009}, show the method can have significant benefits over the traditional \emph{n-gram} approach. Nastase et al in \cite{Nastase2007} use syntactically related pairs of words obtained using a dependency parser as the base elements in a vector-based bag-of-words approach to perform the task of supervised text classification on the Reuters-21578 dataset. They also experiment with a combination of using the syntactically related pairs and unigrams both with and without syntactic labels. Koster et al in \cite{Koster2009} use a similar method of combining syntactically related triples obtained with a dependency parser with unigrams in a vector based model to perform the task of patent document classification.
 
-The most recent work in the document similarity of scientific research papers is in \cite{Hurtado2011} and \cite{Hurtado2013}, which uses a unigram based language model to represent the documents. The model treats the text as \emph{semi-structured}, taking advantage of the additional features of the keywords of the paper, authors' names, and the name of the journal in which the paper appears.
+The most recent work related to document similarity of scientific papers can be found in \cite{Hurtado2011} and \cite{Hurtado2013}, it uses a unigram based language model to represent the documents. The model treats the text as \emph{semi-structured}, taking advantage of the additional features of the keywords of the paper, authors' names, and the name of the journal in which the paper appears.
 
 Our work separates itself from these previous studies in that we propose to use syntactically and semantically related sequences of words extracted from the text, using not only dependency parsing, but also automatic predicate argument structure detection, both in a language model and a vector based representation of documents. In creating a language model, we hope to provide a more robust representation of documents using LDA and other techniques. We will also apply the approach to unsupervised document clustering and pairwise document similarity for applications such as recommender systems. 
 
@@ -172,17 +172,6 @@ The authors of \cite{Nastase2007} present results from a document classification
 \subsubsection{Clustering and Classification Methods}
 
 We will use a standard set of machine learning tools to implement the clustering and classification procedures. For clustering, we will perform experiments using \emph{k-means}, \emph{DBScan}, and the \emph{EM Algorithm}. For classification, we will perform experiments using \emph{Support Vector Machines}, \emph{Naive Bayes}, and \emph{k-Nearest Neighbor} approaches. We will be programming most of our project in {\tt Python} and will be using the machine learning tools available in {\tt NumPy} and {\tt SciPy}.
-
-\begin{framed}
-\emph{Need to make emphasis more on scientific papers. Word2Vec.}
-\end{framed}
-
-
-
-
-\section{Schedule}
-
-TODO
 
 
 \nocite{*}
