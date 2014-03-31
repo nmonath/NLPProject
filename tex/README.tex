@@ -1,0 +1,164 @@
+ \documentclass[12pt]{article}
+\usepackage{amssymb}
+\usepackage[margin=.75in]{geometry}
+\usepackage{amsmath,graphicx}
+\usepackage[usenames,dvipsnames]{color}
+\usepackage{listings}
+\usepackage{float}
+\usepackage{soul}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{tabularx}
+\usepackage{framed}
+\usepackage{color}
+\usepackage{tabu}
+\usepackage{booktabs}
+\usepackage{fancyheadings}
+\usepackage[stable]{footmisc}
+\usepackage{titlesec}
+\usepackage{setspace}
+\pagestyle{fancy}
+\newcommand{\bt}[1]{\textbf{#1}}
+\newcommand{\bi}[0]{  \begin{itemize}}
+\newcommand{\ei}[0]{  \end{itemize}}
+\newcommand{\q}[0]{\item} 
+
+  \begin{document}
+\lstdefinestyle{custompython}{
+  belowcaptionskip=1\baselineskip,
+  breaklines=true,
+  frame=L,
+  xleftmargin=\parindent,
+  language=Python,
+  showstringspaces=false,
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\bfseries\color{ForestGreen},
+  commentstyle=\color{black},
+  identifierstyle=\color{black},
+  stringstyle=\color{OrangeRed},
+   morekeywords={String}
+}
+
+\lstset{escapechar=@,style=custompython}
+\author{Monath, Schulze, Zaporojets}
+  \title{CS691CL: Final Project \\  {\tt README}}
+  \maketitle
+  \newcommand{\lst}[1]{\begin{lstlisting} #1 \end{lstlisting}} 
+  
+  \clearpage
+  
+  \section{Preliminaries}
+  \begin{itemize}
+  \item Download \& Install the Anaconda Distribution of Python from here: 
+  \begin{itemize}
+  \item \href{https://store.continuum.io/cshop/anaconda/}{https://store.continuum.io/cshop/anaconda/}
+  \end{itemize}
+  \item Set Anaconda to be your default version of Python
+  \end{itemize}
+  
+  \section{Data Format Specifications}
+  
+  Following the format specified in the \href{http://scikit-learn.org/stable/datasets/}{\tt Scikit-Learn Dataset}, we can use the following data structure format for our data sets:
+  
+  \begin{itemize} 
+  \item Suppose we define the following function for loading the data from files on disk to the data structure {\tt dataset} in memory.
+  
+  \begin{lstlisting}
+  dataset = load_data("DirectoryName")
+  \end{lstlisting}
+  \item {\tt dataset} will be a \href{https://pypi.python.org/pypi/bunch/1.0.1}{\bt{bunch}} datatype, which is a \href{http://docs.python.org/2/library/stdtypes.html#dict}{\bt{dictionary}} that supports dot (.) style field/attribute access.
+  \item {\tt dataset} has four fields:
+  \begin{itemize}
+  	\item {\tt data} - A \href{http://docs.python.org/2/library/stdtypes.html#typesseq}{\bt{list}} such that each element is the contents of one of the text files in the data set. Let $N$ be the length of the list. 
+	\item {\tt filenames} - A $N$-by-1 \href{http://docs.scipy.org/doc/numpy/reference/arrays.ndarray.html}{\bt{ndarray}} such that each entry of {\tt filenames} is the filename of the corresponding text entry in {\tt data}
+	\item {\tt target} - A $N$-by-1 \href{http://docs.scipy.org/doc/numpy/reference/arrays.ndarray.html}{\bt{ndarray}} of integers such that each entry of {\tt target} is the class label (an integer) of the corresponding text entry in {\tt data}. Let there be $C$ distinct class labels.
+	\item {\tt target\_names} - A $C$-element \href{http://docs.python.org/2/library/stdtypes.html#typesseq}{\bt{list}} such that the integer class label {\tt i} has the name {\tt target\_names[i]}
+  \end{itemize}
+  \end{itemize}
+  
+  
+\section{Feature Format Specifications}
+
+By \emph{feature} or \emph{feature vector}, I mean the \emph{document representation}, e.g. unigram bag-of-words or bag of dependency pairs, etc. This section defines the format in which we will store these representations in {\tt Python}.
+
+\begin{itemize}
+\item Following the format of the bag-of-words feature extractor provided by {\tt Scikit-Learn}, we can define a method which extracts the features out of all the documents in a {\tt dataset}. 
+\begin{lstlisting}
+dataset = load_data("DirectoryName")
+features = extract_features(dataset, "feature type")
+\end{lstlisting}
+\item {\tt features} will be a $N$-by-$M$ matrix, with $N$ as the number of documents in the dataset and $M$ is the length of the feature vectors (e.g. the number of words or dependency pairs in all documents). {\tt features} will be a sparse matrix in the format \href{http://docs.scipy.org/doc/scipy/reference/sparse.html}{\bt{csr\_matrix}}
+\end{itemize}
+  
+\section{Reuters-21578}
+
+\begin{itemize}
+\item Which documents are in the training set and which are in the testing set is defined by the ModApte split.  See Appendix \hyperref[sec:ModApteQuote]{\ref{sec:ModApteQuote}} for a full explanation of this division.
+\item The ten most frequent classes, defined by Natase et al are: \emph{acq, corn, crude, earn, grain, interest, money-fx, ship, trade, wheat}. \bt{The category \emph{money-fx} seems to be the combination of two categories in the dataset. We will have to be careful. It's unclear if it means the union or intersection of the two}
+\item Filter out documents that contain no text 
+\item Filter out documents that do not belong to one of the 10 most frequent classes
+\item Filter out features that do not appear in at least 2 documents
+\item Filter out documents that have an all 0 representation vector. (How could you have this? A document of entirely stop words?)
+\item Important note: Documents can have more than 1 class label!!!!
+\end{itemize}  
+
+\newpage
+\appendix
+\section{ModApte Split - from Reuters-21578 ReadMe} \label{sec:ModApteQuote}
+\footnotesize
+\begin{verbatim}
+VIII.B. The Modified Apte ("ModApte") Split :
+
+ Training Set (9,603 docs): LEWISSPLIT="TRAIN";  TOPICS="YES"
+ Test Set (3,299 docs): LEWISSPLIT="TEST"; TOPICS="YES"
+ Unused (8,676 docs):   LEWISSPLIT="NOT-USED"; TOPICS="YES"
+                     or TOPICS="NO" 
+                     or TOPICS="BYPASS"
+
+This replaces the 10645/3672 split (7,856 not used) of the
+Reuters-22173 collection.  These are our best approximation to the
+training and test splits used in APTE94 and APTE94b. Note the
+following:
+
+      1. As with the ModLewis, those documents removed in forming
+Reuters-21578 are not present, and BYPASS documents are not used.  
+      2. The intent in APTE94 and APTE94b was to use the Lewis split,
+but restrict it to documents with at least one TOPICS categories.
+However, but it was not clear exactly what Apte, et al meant by having
+at least one TOPICS category (e.g. how was "bypass" treated, whether
+this was before or after any fixing of typographical errors, etc.). We
+have encoded our interpretation in the TOPICS attribute.  ***Note
+that, as discussed above, some TOPICS="YES" stories have no TOPICS
+categories, and a few TOPICS="NO" stories have TOPICS
+categories. These facts are irrelevant to the definition of the
+split.*** If you are using a learning algorithm that requires each
+training document to have at least TOPICS category, you can screen out
+the training documents with no TOPICS categories. Please do NOT screen
+out any of the 3,299 documents - that will make your results
+incomparable with other studies.
+
+      3. As with ModLewis, it may be desirable to use the 8,676 Unused
+documents for gathering statistical information about feature
+distribution.
+
+As with ModLewis, this split assigns documents from April 7, 1987 and
+before to the training set, and documents from April 8, 1987 and after
+to the test set.  The difference is that only documents with at least
+one TOPICS category are used.  The rationale for this restriction is
+that while some documents lack TOPICS categories because no TOPICS
+apply (i.e. the document is a true negative example for all TOPICS
+categories), it appears that others simply were never assigned TOPICS
+categories by the indexers. (Unfortunately, the amount of time that
+has passed since the collection was created has made it difficult to
+establish exactly what went on during the indexing.)
+
+WARNING: Given the many changes in going from Reuters-22173 to
+Reuters-21578, including correction of many typographical errors in
+category labels, results on the ModApte split cannot be compared
+with any published results on the Reuters-22173 collection!
+
+\end{verbatim}
+  
+  
+  \end{document}
+  
