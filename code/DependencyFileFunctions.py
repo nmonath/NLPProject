@@ -1,4 +1,15 @@
 class Word:
+	"""
+		A Word object consists of the following fields:
+			form - the way the word appears in the document
+			lemma - the lemmatized form of the word
+			posTag - the part of speech tag for the word
+			feats - the features specified in the dep file, _ == no features
+			depRel - the dependency label of the word
+
+		Two words are considered equal if the lemmatized forms are equal
+	"""
+
 	def __init__(self, form, lemma, posTag, feats, depRel):
 		self.form = form
 		self.lemma = lemma
@@ -17,6 +28,13 @@ class Word:
 
 
 class Dependency:
+	"""
+		A Dependency object consists of a list of words 
+		and the sentence that the dependency appears in
+		the sentence numbers start at 0.
+
+		Two dependencies are equal if their word sets are equal
+	"""
 	def __init__(self, words, sentenceNo):
 		self.words = words
 		self.sentenceNo = sentenceNo
@@ -36,6 +54,10 @@ class Dependency:
 
 
 def ReadDependencyParseFile(filename):
+	""" 
+		This function reads a dep format file into a list of Dependency objects.
+	"""
+
 	f = open(filename, 'r')
 	tmp = dict()
 	sentenceNo = 0
@@ -55,5 +77,8 @@ def ReadDependencyParseFile(filename):
 
 	
 def DisplayDependencies(dep):
+	"""
+		Prints each dependency out on a seperate line
+	"""
 	for d in dep:
 		print str(d)
