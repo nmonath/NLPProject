@@ -35,8 +35,9 @@ class Dependency:
 
 		Two dependencies are equal if their word sets are equal
 	"""
-	def __init__(self, words, sentenceNo):
-		self.words = words
+	def __init__(self, head, complement, sentenceNo):
+		self.head = head
+		self.complement = complement
 		self.sentenceNo = sentenceNo
 
 	def __eq__(self, other):
@@ -45,10 +46,7 @@ class Dependency:
 		return not self.eq(other)
 
 	def __str__(self):
-		s = "{" + str(self.words[0]) 
-		for i in range(1, len(self.words)):
-			s = s + ", " + str(self.words[i])
-		s = s + "} -- Sentence #" + str(self.sentenceNo) 
+		s = "{" + str(self.head)+ ", " + str(self.complement) +  "} -- Sentence #" + str(self.sentenceNo) 
 		return s
 		
 
@@ -59,26 +57,45 @@ def ReadDependencyParseFile(filename):
 	"""
 
 	f = open(filename, 'r')
-	tmp = dict()
+	ComplementsOfHeadInSentence = dict()
+	WordsInSentence = dict()
+	WordsInSentence[0] = []
 	sentenceNo = 0
 	for line in f:
 		spl = line.split()
 		if len(spl) == 7:
-			if (sentenceNo, spl[5]) in tmp:
-				tmp[(sentenceNo, spl[5])].append(Word(spl[1], spl[2], spl[3], spl[4], spl[6]))
-			else:
-				tmp[(sentenceNo, spl[5])] = [(Word(spl[1], spl[2], spl[3], spl[4], spl[6]))]
+			wordno = int(spl[0])-1
+			wordform = spl[1]
+			lemma = spl[2]
+			posTag = spl[3]
+			feat = spl[4]
+			head = int(spl[5])-1
+			depRel = spl[6]
+			WordsInSentence[sentenceNo].append(Word(wordform, lemma, posTag, feat, depRel))
+			# 
+			if not head == -1:
+				if (sentenceNo, head) in ComplementsOfHeadInSentence:
+					ComplementsOfHeadInSentence[(sentenceNo, head)].append(wordno)
+				else:
+					ComplementsOfHeadInSentence[(sentenceNo, head)] = [wordno]
 		else:
 			sentenceNo = sentenceNo + 1
+			WordsInSentence[sentenceNo] = []
 	Dependencies = []
-	for d in tmp:
-		Dependencies.append(Dependency(tmp[d], d[0]))
+	for (sentno, headno) in ComplementsOfHeadInSentence:
+		for compno in ComplementsOfHeadInSentence[(sentno, headno)]:
+			#print str(sentno) + " " + str(headno) + " " + str(compno)
+			#Display(WordsInSentence[sentno])
+			Dependencies.append(Dependency(WordsInSentence[sentno][headno], WordsInSentence[sentno][compno], sentno))
 	return Dependencies
 
 	
-def DisplayDependencies(dep):
+def Display(dep):
 	"""
 		Prints each dependency out on a seperate line
 	"""
+	dep = sorted(dep, key=lambda w:w.sentenceNo)
 	for d in dep:
 		print str(d)
+
+
