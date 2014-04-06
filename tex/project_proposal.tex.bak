@@ -173,17 +173,6 @@ The authors of \cite{Nastase2007} present results from a document classification
 
 We will use a standard set of machine learning tools to implement the clustering and classification procedures. For clustering, we will perform experiments using \emph{k-means}, \emph{DBScan}, and the \emph{EM Algorithm}. For classification, we will perform experiments using \emph{Support Vector Machines}, \emph{Naive Bayes}, and \emph{k-Nearest Neighbor} approaches. We will be programming most of our project in {\tt Python} and will be using the machine learning tools available in {\tt NumPy} and {\tt SciPy}.
 
-\begin{framed}
-\emph{Need to make emphasis more on scientific papers. Word2Vec.}
-\end{framed}
-
-
-
-
-\section{Schedule}
-
-TODO
-
 
 \nocite{*}
 
