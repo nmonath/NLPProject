@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class Word:
 	"""
 		A Word object consists of the following fields:
@@ -41,13 +44,16 @@ class Dependency:
 		self.sentenceNo = sentenceNo
 
 	def __eq__(self, other):
-		return self.words == other.words
+		return self.head == other.head and self.complement == other.complement
 	def __ne__(self, other):
 		return not self.eq(other)
 
 	def __str__(self):
 		s = "{" + str(self.head)+ ", " + str(self.complement) +  "} -- Sentence #" + str(self.sentenceNo) 
 		return s
+
+	def __hash__(self):
+		return (hash(self.head.lemma + self.complement.lemma))
 		
 
 
@@ -88,6 +94,31 @@ def ReadDependencyParseFile(filename):
 			#Display(WordsInSentence[sentno])
 			Dependencies.append(Dependency(WordsInSentence[sentno][headno], WordsInSentence[sentno][compno], sentno))
 	return Dependencies
+
+
+def ExtractFeature(feature, dep_document):
+	feat = np.zeros_like(feature)
+	for dep in dep_document:
+		try: 
+			feat[feature.index(dep)] = feat[feature.index(dep)] + 1
+		except:
+			None
+	return feat
+		 
+
+def DefineFeature(list_of_all_deps_in_all_files):
+	feature = []
+	keepers = KeeperPOS()
+	for dep in list_of_all_deps_in_all_files:
+		if dep.head.posTag in keepers and dep.complement.posTag in keepers:
+			feature.append(dep)
+	return list(set(feature))
+
+
+
+def KeeperPOS():
+	return ["JJ", "JJR", "JJS", "NN", "NNS", "NNP", "NNPS", "RR", "RBR", "RBS", "VB", "VBD", "VBG", "VBN", "VBP", "VBZ"]
+
 
 	
 def Display(dep):
