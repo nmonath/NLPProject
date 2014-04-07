@@ -7,3 +7,7 @@ echo "classpath has been set"
 echo "testing clearnlp"
 java com.clearnlp.run.Version
 echo "end of testing"
+
+echo "testing our code"
+python TestCode.py
+echo "end testing our code"

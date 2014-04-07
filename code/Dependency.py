@@ -127,6 +127,6 @@ def Display(dep):
 	"""
 	dep = sorted(dep, key=lambda w:w.sentenceNo)
 	for d in dep:
-		print str(d)
+		print(str(d))
 
 
