@@ -19,5 +19,12 @@ def Word2VecGetVector(modelPath, word):
 		This function uses Word2Vec to get a vector for a particular word in a particular model . 
 	"""
 	my_model = word2vec.Word2Vec.load_word2vec_format(modelPath, binary=True)
+ 	# I think you can just do my_model[word]
  	return my_model.syn0[my_model.vocab[word].index]
 
+def Word2VecGetModel(modelPath):
+	"""
+		This function returns the model stored in the c-format at the given modelPath
+		Just a Wrapper Function
+	"""
+		return word2vec.Word2Vec.load_word2vec_format(modelPath, binary=True)
