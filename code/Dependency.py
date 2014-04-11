@@ -1,4 +1,13 @@
 import numpy as np
+import os
+
+
+def DepParse(filename):
+	"""
+		Call's CLEARNLP parser. Returns the dependencies as a list of Dependecy objects as defined below
+	"""
+	os.system("java -XX:+UseConcMarkSweepGC -Xmx3g com.clearnlp.nlp.engine.NLPDecode -z dep -c config_en_dep.xml -i "  + filename + " -oe dep")
+	return ReadDependencyParseFile(filename + '.dep')
 
 
 class Word:
@@ -118,7 +127,6 @@ def DefineFeature(list_of_all_deps_in_all_files):
 
 def KeeperPOS():
 	return ["JJ", "JJR", "JJS", "NN", "NNS", "NNP", "NNPS", "RR", "RBR", "RBS", "VB", "VBD", "VBG", "VBN", "VBP", "VBZ"]
-
 
 	
 def Display(dep):
