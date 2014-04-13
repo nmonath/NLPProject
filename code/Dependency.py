@@ -182,7 +182,7 @@ def FastFeaturesHash(deps):
 	count = 0;
 	for d in deps:
 		# Note the use of the lemmatized version instead of the word fomr
-		FF[count] = (d.head.lemma + " " + d.complement.lemma).hash()
+		FF[count] = hash(d.head.lemma + " " + d.complement.lemma)
 		count = count +1
 	return FF
 
