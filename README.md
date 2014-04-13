@@ -5,11 +5,17 @@ Example Usage of Dependency.py
 
 cd NLPProject/Code
 import Dependency as DP
-# Load the dependencies from the first training file
+
+Load the dependencies from the first training file
+
 dep_from_file = DP.ReadDependencyParseFile('../data_sets/reuters_21578/train/train_00001.srl')
-# Display the dependencies so you can see that it worked properly
+
+Display the dependencies so you can see that it worked properly
+
 DP.Display(dep_from_file)
-# This shows something like:
+
+This shows something like:
+
 {published, to} -- Sentence #19
 {published, be} -- Sentence #19
 {published, by} -- Sentence #19
@@ -18,23 +24,27 @@ DP.Display(dep_from_file)
 {figures, for} -- Sentence #19
 {ends, which} -- Sentence #19
 
-# Load another file's dependencies
+Load another file's dependencies
+
 dep_from_file2 = DP.ReadDependencyParseFile('../data_sets/reuters_21578/train/train_14091.srl')
 
-# Merge the dependencies
+Merge the dependencies
+
 from copy import copy
 all_dep = copy(dep_from_file)
 all_dep = all_dep + dep_from_file2
 
-# Define a feature
+Define a feature
+
 feature = DP.DefineFeature(all_dep)
 DP.Display(feature)
 
-# Extract Feature Vectors
+Extract Feature Vectors
+
 feature_doc_1 = DP.ExtractFeature(feature, dep_from_file)
 feature_doc_2 = DP.ExtractFeature(feature, dep_from_file)
 
-# If you look at what the features looks like
+If you look at what the features looks like
 feature_doc_1
 
 array([1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1,
