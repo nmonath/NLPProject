@@ -124,7 +124,7 @@ def ExtractFeature(feature, dependencies_from_document):
 		The value of v[i] is a count of the number of types (hi+1_f, ci+1_f) appears in dependencies_from_document
 	"""
 	feat = np.zeros_like(feature)
-	for dep in dep_document:
+	for dep in dependencies_from_document:
 		try: 
 			feat[feature.index(dep)] = feat[feature.index(dep)] + 1
 		except:
