@@ -116,6 +116,7 @@ def Features(dirname):
 
 	# Convert the list of Dependency objects to an numpy array of strings
 	fast_feature_def = FastFeatures(feature_def)
+	fast_feature_def = fast_feature_def.reshape([fast_feature_def.shape[0], 1])
 
 	# Init the features matrix, uint16 to save space. We should maybe use a sparse matrix
 	features = np.zeros((num_samples, len(feature_def)), dtype=np.uint16)
@@ -147,6 +148,7 @@ def FeaturesHash(dirname):
 	(all_deps, num_samples) = LoadAllDepFromFiles(dirname)
 	feature_def = DefineFeature(all_deps)
 	fast_feature_def = FastFeaturesHash(feature_def)
+	fast_feature_def = fast_feature_def.reshape([fast_feature_def.shape[0], 1])
 	features = np.zeros((num_samples, len(feature_def)), dtype=np.uint16)
 	count = 0;
 	all_deps = 0;
@@ -196,10 +198,9 @@ def ExtractFF(ffv, allff):
 					is number of times the i^th element of ffv appeared in allff
 	"""
 
-	# Create an M by N matrix where each row is ffv
-	ffvs = np.tile(ffv, [allff.shape[0],1])
+	
 	# Transpose so dimensions match up and then sum, gives the count of how many times each element of ffv appears
-	return np.sum(np.transpose(ffvs) == allff, axis=1, dtype=np.uint16)
+	return np.sum(ffv == allff, axis=1, dtype=np.uint16)
 	
 
 
