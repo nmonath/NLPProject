@@ -27,4 +27,4 @@ def Word2VecGetModel(modelPath):
 		This function returns the model stored in the c-format at the given modelPath
 		Just a Wrapper Function
 	"""
-		return word2vec.Word2Vec.load_word2vec_format(modelPath, binary=True)
+	return word2vec.Word2Vec.load_word2vec_format(modelPath, binary=True)

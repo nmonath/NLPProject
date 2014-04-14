@@ -1,3 +1,10 @@
 text8
 vectors.bin
 *DS_Store
+*.pyc
+*.log
+*.aux
+GoogleNews-vectors-negative300.bin
+*.synctex.gz
+*reuters_21578/*
+*reuters*
