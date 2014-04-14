@@ -1,6 +1,7 @@
 #working on it 
 import subprocess
 from gensim.models import word2vec
+import numpy as np
 
 #check if use list, or one file, for now only using one file as in demo 
 def Word2VecTrain(filenameOrig, modelDest):
@@ -27,4 +28,16 @@ def Word2VecGetModel(modelPath):
 		This function returns the model stored in the c-format at the given modelPath
 		Just a Wrapper Function
 	"""
-		return word2vec.Word2Vec.load_word2vec_format(modelPath, binary=True)
+	return word2vec.Word2Vec.load_word2vec_format(modelPath, binary=True)
+
+def GetVectorsForWords(model, list_of_words):
+	result = np.zeros([len(list_of_words), model.layer1_size])
+	count = 0;
+	for w in list_of_words:
+		try:
+			result[count, :] = model[w.lemma]
+		except:
+			None
+		count = count + 1
+	return result
+

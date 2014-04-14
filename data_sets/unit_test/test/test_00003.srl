@@ -1,0 +1,11 @@
+1	In	in	IN	_	8	prep	8:AM-LOC
+2	a	a	DT	_	4	det	_
+3	distance	distance	NN	_	4	nn	_
+4	galaxy	galaxy	NN	p2=NNP	1	pobj	_
+5	,	,	,	_	8	punct	_
+6	the	the	DT	_	7	det	_
+7	stars	star	NNS	_	8	nsubj	8:A1=PPT
+8	are	be	VBP	pb=be.01	0	root	_
+9	ours	ours	PRP$	p2=PRP	8	attr	8:A2=PRD
+10	.	.	.	_	8	punct	_
+

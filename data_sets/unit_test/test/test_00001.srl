@@ -1,0 +1,9 @@
+1	I	I	PRP	_	2	nsubj	2:A0=PAG
+2	play	play	VBP	pb=play.01	0	root	_
+3	shooting	shoot	VBG	_	4	nn	_
+4	guard	guard	NN	_	2	dobj	2:A1=PPT
+5	in	in	IN	_	2	prep	2:AM-LOC
+6	pickup	pickup	NN	p2=JJ	7	nn	_
+7	games	game	NNS	_	5	pobj	_
+8	.	.	.	_	2	punct	_
+

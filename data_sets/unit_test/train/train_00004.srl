@@ -1,0 +1,9 @@
+1	Sean	sean	NNP	_	2	nn	_
+2	Elliott	elliott	NNP	_	3	nsubj	3:A1=PPT
+3	is	be	VBZ	pb=be.01	0	root	_
+4	my	my	PRP$	_	7	poss	_
+5	favorite	favorite	JJ	_	7	amod	_
+6	basketball	basketball	NN	_	7	nn	_
+7	player	player	NN	_	3	attr	3:A2=PRD
+8	.	.	.	_	3	punct	_
+

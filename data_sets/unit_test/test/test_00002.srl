@@ -1,0 +1,10 @@
+1	He	he	PRP	_	2	nsubj	2:A1=PPT
+2	was	be	VBD	pb=be.01	0	root	_
+3	the	the	DT	_	4	det	_
+4	center	center	NN	_	2	attr	2:A2=PRD
+5	of	of	IN	_	4	prep	_
+6	the	the	DT	_	8	det	_
+7	basketball	basketball	NN	_	8	nn	_
+8	team	team	NN	_	5	pobj	_
+9	.	.	.	_	2	punct	_
+
