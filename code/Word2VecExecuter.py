@@ -39,5 +39,7 @@ def GetVectorsForWords(model, list_of_words):
 		except:
 			None
 		count = count + 1
+		sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5))
+		
 	return result
 
