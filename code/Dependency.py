@@ -33,6 +33,8 @@ class Word:
 	def __str__(self):
 		return self.form
 
+	def __hash__(self):
+		return hash(self.lemma)
 
 class Dependency:
 	"""
@@ -59,8 +61,28 @@ class Dependency:
 
 	def __hash__(self):
 		return (hash(self.head.lemma + self.complement.lemma))
-		
 
+def ReadWordsFromDependencyParseFile(filename):
+	""" 
+		This function reads a dep format file into a list of Dependency objects.
+	"""
+
+	f = open(filename, 'r')
+	# Mapping from (sentence number, head id number) to a list of the complements of the head id number
+	Words = list()
+	sentenceNo = 0
+	for line in f:
+		spl = line.split()
+		if len(spl) == 7 or len(spl) == 8:
+			wordno = int(spl[0])-1
+			wordform = spl[1]
+			lemma = spl[2]
+			posTag = spl[3]
+			feat = spl[4]
+			head = int(spl[5])-1
+			depRel = spl[6]
+			Words.append(Word(wordform, lemma, posTag, feat, depRel))
+	return Words
 
 def ReadDependencyParseFile(filename):
 	""" 
@@ -101,25 +123,35 @@ def ReadDependencyParseFile(filename):
 			Dependencies.append(Dependency(WordsInSentence[sentno][headno], WordsInSentence[sentno][compno], sentno))
 	return Dependencies
 
-
-def Features(dirname):
+def Features(dirname, method=('Dep', 'Hash'), feature=None):
 	"""
 		Creates an M-by-N matrix where N is the length of the feature vector and M is number of documents
 		The documents used are all the .srl files stored in the directory dirname
-	"""
+	"""		
 
-	# Loads all the dependencies from all the documents
-	(all_deps, num_samples) = LoadAllDepFromFiles(dirname)
+	num_samples = num_samples(dirname)
 
-	# Defines a feature vector based on the dependencies
-	feature_def = DefineFeature(all_deps)
+	if feature == None:
 
-	# Convert the list of Dependency objects to an numpy array of strings
-	fast_feature_def = FastFeatures(feature_def)
-	fast_feature_def = fast_feature_def.reshape([fast_feature_def.shape[0], 1])
+		# Loads all the dependencies from all the documents
+		if method[0] == 'Dep':
+			all_deps = LoadAllDepFromFiles(dirname)
+		else:
+			all_deps = LoadAllWordsFromFiles(dirname)
+
+
+
+		# Defines a feature vector based on the dependencies
+		feature_def = DefineFeature(all_deps, method=method[0])
+
+		# Convert the list of Dependency objects to an numpy array of strings
+
+		fast_feature_def = FastFeatures(feature_def, method=method[1])
+		fast_feature_def = fast_feature_def.reshape([fast_feature_def.shape[0], 1])
+		feature = fast_feature_def
 
 	# Init the features matrix, uint16 to save space. We should maybe use a sparse matrix
-	features = np.zeros((num_samples, len(feature_def)), dtype=np.uint16)
+	features = np.zeros((num_samples, len(feature)), dtype=np.uint16)
 
 	# Counter
 	count = 0;
@@ -135,59 +167,56 @@ def Features(dirname):
 	for filename in os.listdir(dirname):
 		if '.srl' in filename:
 			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5)) # print just to see code is progressing
-
 			# Extract the feature vector using the fast mechanism
-			features[count, :] = ExtractFF(fast_feature_def, FastFeatures(ReadDependencyParseFile(os.path.join(dirname, filename))))
+			if method[0] == 'Dep':
+				features[count, :] = ExtractFF(feature, FastFeatures(ReadDependencyParseFile(os.path.join(dirname, filename)), method=method[1]))
+			else:
+				features[count, :] = ExtractFF(feature, FastFeatures(ReadWordsFromDependencyParseFile(os.path.join(dirname, filename)), method=method[1]))
 			count = count + 1
-	return features 
+	return (feature, features) 
 
-def FeaturesHash(dirname):
-	"""
-		same as Features(dirname), but uses FastFeaturesHash instead of FastFeatures
-	"""
-	(all_deps, num_samples) = LoadAllDepFromFiles(dirname)
-	feature_def = DefineFeature(all_deps)
-	fast_feature_def = FastFeaturesHash(feature_def)
-	fast_feature_def = fast_feature_def.reshape([fast_feature_def.shape[0], 1])
-	features = np.zeros((num_samples, len(feature_def)), dtype=np.uint16)
-	count = 0;
-	all_deps = 0;
-	feature_def = 0;
-	sys.stdout.write("\nDocuments Processed: 00000")
+def num_samples(dirname):
+	count = 0
 	for filename in os.listdir(dirname):
 		if '.srl' in filename:
-			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5))
-			features[count, :] = ExtractFF(fast_feature_def, FastFeaturesHash(ReadDependencyParseFile(os.path.join(dirname, filename))))
 			count = count + 1
-	return features 
 
-
-def FastFeatures(deps):
+def FastFeatures(deps, method='Hash'):
 	"""
 		Convert a list of Dependency objects into an numpy array of strings
 	"""
-
-	FF = np.empty((len(deps), ), dtype=np.object)
-	count = 0;
-	for d in deps:
-		# Note the use of lemmatized version instead of the word form
-		FF[count] = (d.head.lemma + " " + d.complement.lemma)
-		count = count +1
-	return FF
-
-def FastFeaturesHash(deps):
-	"""
-		Convert a list of Dependency objects into an numpy array of integers (32/64 based on system)
-		Integers are hashed value of string = head + complement
-	"""
-	FF = np.empty((len(deps), ), dtype=np.dtype(int))
-	count = 0;
-	for d in deps:
-		# Note the use of the lemmatized version instead of the word fomr
-		FF[count] = hash(d.head.lemma + " " + d.complement.lemma)
-		count = count +1
-	return FF
-
+	if method == 'NoHash':
+		FF = np.empty((len(deps), ), dtype=np.object)
+		count = 0;
+		for d in deps:
+			# Note the use of lemmatized version instead of the word form
+			FF[count] = (d.head.lemma + " " + d.complement.lemma)
+			count = count +1
+		return FF
+	elif method == 'Hash':
+		FF = np.empty((len(deps), ), dtype=np.dtype(int))
+		count = 0;
+		for d in deps:
+			# Note the use of the lemmatized version instead of the word fomr
+			FF[count] = hash(d.head.lemma + " " + d.complement.lemma)
+			count = count +1
+		return FF
+	elif method == 'WordNoHash':
+		FF = np.empty((len(deps), ), dtype=np.object)
+		count = 0;
+		for f in deps:
+			# Note the use of the lemmatized version instead of the word fomr
+			FF[count] = (f.lemma)
+			count = count +1
+		return FF
+	elif method == 'WordHash':
+		FF = np.empty((len(deps), ), dtype=np.dtype(int))
+		count = 0;
+		for f in deps:
+			# Note the use of the lemmatized version instead of the word fomr
+			FF[count] = hash(f.lemma)
+			count = count +1
+		return FF
 
 def ExtractFF(ffv, allff):
 	"""
@@ -202,24 +231,27 @@ def ExtractFF(ffv, allff):
 	# Transpose so dimensions match up and then sum, gives the count of how many times each element of ffv appears
 	return np.sum(ffv == allff, axis=1, dtype=np.uint16)
 	
-
-
-
-def DefineFeature(list_of_all_deps_in_all_files):
+def DefineFeature(list_of_all_deps_in_all_files, method='Dep'):
 	"""
 		Given all the Dependencies that appear in inputted list
 		return a list containing only those Dependencies in which
 		both the head and the complement have a POS tag in the KeeperPOS()
 		list. 
 	"""
-
-	feature = []
-	keepers = KeeperPOS()
-	for dep in list_of_all_deps_in_all_files:
-		if dep.head.posTag in keepers and dep.complement.posTag in keepers:
-			feature.append(dep)
-	return list(set(feature))
-
+	if method == 'Dep':
+		feature = []
+		keepers = KeeperPOS()
+		for dep in list_of_all_deps_in_all_files:
+			if dep.head.posTag in keepers and dep.complement.posTag in keepers:
+				feature.append(dep)
+		return list(set(feature))
+	elif method == 'BOW':
+		feature = []
+		keepers = KeeperPOS()
+		for w in list_of_all_deps_in_all_files:
+			if w.posTag in keepers:
+				feature.append(w)
+		return list(set(feature))
 
 def ExtractFeature(feature, dependencies_from_document):
 	"""
@@ -237,10 +269,20 @@ def ExtractFeature(feature, dependencies_from_document):
 			None
 	return feat
 		 
-
-
 def KeeperPOS():
 	return ["JJ", "JJR", "JJS", "NN", "NNS", "NNP", "NNPS", "RR", "RBR", "RBS", "VB", "VBD", "VBG", "VBN", "VBP", "VBZ"]
+
+def LoadAllWordsFromFiles(dirname):
+	deps = []
+	count = 0
+	sys.stdout.write("\nDocuments Processed: 00000")
+	for filename in os.listdir(dirname):
+		if '.srl' in filename:
+			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5))
+			count = count + 1
+			deps = deps + ReadWordsFromDependencyParseFile(os.path.join(dirname, filename))
+	sys.stdout.write('\n')
+	return deps
 
 
 def LoadAllDepFromFiles(dirname):
@@ -253,8 +295,7 @@ def LoadAllDepFromFiles(dirname):
 			count = count + 1
 			deps = deps + ReadDependencyParseFile(os.path.join(dirname, filename))
 	sys.stdout.write('\n')
-	return (deps, count)
-
+	return deps
 	
 def Display(dep):
 	"""
@@ -264,4 +305,11 @@ def Display(dep):
 	for d in dep:
 		print(str(d))
 
+def LoadClassFile(filename):
+	Y = list()
+	f = open(filename, 'r')
+	for line in f:
+		spl = line.split(' ')
+		Y.append(int(spl[0]))
+	return np.array(Y, dtype=np.dtype(int))
 

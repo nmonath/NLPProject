@@ -1,0 +1,10 @@
+1	Do	do	VBP	_	3	aux	_
+2	you	you	PRP	_	3	nsubj	3:A0=PAG
+3	remember	remember	VB	pb=remember.01	0	root	_
+4	the	the	DT	_	5	det	_
+5	book	book	NN	_	3	dobj	3:A1=PPT;6:A1=PPT
+6	called	call	VBN	p2=VBD|pb=call.01	5	partmod	_
+7	Number	number	NNP	p2=NN	6	oprd	6:A2=PRD
+8	the	the	DT	_	9	det	_
+9	Stars	star	NNPS	p2=NNP	5	appos	_
+
