@@ -14,8 +14,16 @@ def toc():
 
 
 
-
-
+def SVMLightWrite(targets, features, filename):
+	[N,D]=features.shape;
+	fid=file(filename,'w');
+	for n in xrange(0, N):
+		fid.write(str(targets[n]));
+		for d in xrange(0,D):
+			if (abs(features[n,d])>1e-3):
+				fid.write(' ' + str(d+1) + ':' + str(features[n,d])) 
+	fid.write('\n');
+	fid.close()
 
 
 
