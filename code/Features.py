@@ -199,6 +199,7 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5)) # print just to see code is progressing
 			features[count, :] = ExtractFeature(feature, DefineFeature(ReadDependencyParseFile(os.path.join(dirname, filename), funit=funit), frep=frep) ,ftype=ftype)
 			count = count + 1
+	features = csr_matrix(features, dtype=DataType(ftype))
 	return (feature, features) 
 
 def get_num_samples(dirname):
