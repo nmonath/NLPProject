@@ -9,7 +9,7 @@ from enum import Enum
 def DataType(argin):
 		if argin == FeatureType.BINARY:
 			return np.bool
-		elif argin == FeatureType.TDIDF:
+		elif argin == FeatureType.TFIDF:
 			return np.float16
 		elif argin == FeatureType.COUNT:
 			return np.uint32
@@ -31,7 +31,7 @@ class FeatureUnits(Enum):
 
 class FeatureType(Enum):
 	BINARY = 'BINARY'
-	TDIDF = 'td-idf'
+	TFIDF = 'tf-idf'
 	COUNT = 'COUNT'
 
 class FeatureRepresentation(Enum):
