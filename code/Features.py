@@ -100,7 +100,7 @@ class Dependency:
 
 def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH):
 	""" 
-		This function reads a dep format file into a list of Dependency objects.
+		This function reads a dep format file into a (python) list of Word and or Dependency objects.
 	"""
 	Words = list()
 	Dependencies = list()
