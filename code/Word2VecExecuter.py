@@ -2,6 +2,7 @@
 import subprocess
 from gensim.models import word2vec
 import numpy as np
+import sys
 
 #check if use list, or one file, for now only using one file as in demo 
 def Word2VecTrain(filenameOrig, modelDest):
@@ -33,6 +34,7 @@ def Word2VecGetModel(modelPath):
 def GetVectorsForWords(model, list_of_words):
 	result = np.zeros([len(list_of_words), model.layer1_size])
 	count = 0;
+	sys.stdout.write("words processed: " + str(0).zfill(5))
 	for w in list_of_words:
 		try:
 			result[count, :] = model[w.lemma]
@@ -40,6 +42,6 @@ def GetVectorsForWords(model, list_of_words):
 			None
 		count = count + 1
 		sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5))
-		
+
 	return result
 

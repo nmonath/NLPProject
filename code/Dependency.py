@@ -230,7 +230,7 @@ def ExtractFF(ffv, allff):
 	
 	# Transpose so dimensions match up and then sum, gives the count of how many times each element of ffv appears
 	return np.sum(ffv == allff, axis=1, dtype=np.uint16)
-	
+#use this one with bow	
 def DefineFeature(list_of_all_deps_in_all_files, method='Dep'):
 	"""
 		Given all the Dependencies that appear in inputted list
