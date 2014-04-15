@@ -179,8 +179,7 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 
 		# Rearrange the feature so that it can be used for broadcasting
 		feature = feature.reshape([feature.shape[0], 1])
-	print(num_samples)
-	print(feature.shape)
+
 	# Init the features matrix, uint16 to save space.
 	features = np.zeros((num_samples, feature.shape[0]), dtype=DataType(ftype))
 
