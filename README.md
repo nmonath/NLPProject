@@ -7,11 +7,11 @@ Numpy and Scipy are required for using our code. We recommend downloading this d
 
 You will also need to install the Enum package for Python, which can be done with the command:
 ```
-$easy_install enum
+$ easy_install enum
 ```
 As well as the Genism package, which can be done with the command:
 ```
-$easy_install -U gensim
+$ easy_install -U gensim
 ```
 
 
