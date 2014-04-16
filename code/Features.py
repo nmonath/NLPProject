@@ -6,6 +6,8 @@ from scipy.sparse import csr_matrix
 from Util import *
 from enum import Enum
 
+global USE_LEMMA = True
+
 def DataType(argin):
 		if argin == FeatureType.BINARY:
 			return np.bool
@@ -64,10 +66,10 @@ class Word:
 		return not self.eq(other)
 
 	def __str__(self):
-		return self.lemma
+		return self.lemma if USE_LEMMA else self.form
 
 	def __hash__(self):
-		return hash(self.lemma)
+		return hash(self.lemma) if USE_LEMMA else hash(self.form)
 
 class Dependency:
 	"""
@@ -93,10 +95,10 @@ class Dependency:
 		return s
 
 	def __str__(self):
-		return self.head.lemma + " " + self.complement.lemma
+		return self.head.lemma + " " + self.complement.lemma if USE_LEMMA else self.head.form + " " + self.complement.form
 
 	def __hash__(self):
-		return (hash(self.head.lemma + " " + self.complement.lemma))
+		return (hash(self.head.lemma + " " + self.complement.lemma)) if USE_LEMMA else (hash(self.head.form + " " + self.complement.form)) 
 
 def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH):
 	""" 
@@ -160,12 +162,14 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH):
 		elif funit == FeatureUnits.BOTH:
 			return Dependencies + Words
 
-def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=FeatureRepresentation.HASH, feature=None, K=0.5):
+def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=FeatureRepresentation.HASH, feature=None, K=0.5, UseLemma=True):
 	"""
 		Creates an M-by-N matrix where N is the length of the feature vector and M is number of documents
 		The documents used are all the .srl files stored in the directory dirname
 	"""		
 
+	USE_LEMMA = UseLemma
+	
 	f_data_type = DataType(ftype);
 
 	num_samples = get_num_samples(dirname)
@@ -205,7 +209,7 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 		# TF = K * binaryTF + (1-K) * count/(maxcount)
 		# IDF = log (NumDocuments / Number of Documents which the term appears in)
 		TF = (K * (features > 0)) + ((1-K) *  features) / (DataType(FeatureType.TFIDF)(np.max(features, axis=1))).reshape([features.shape[0], 1])
-		IDF = np.log(num_samples / (DataType(FeatureType.TFIDF)(np.sum(features > 0, axis = 0))))
+		IDF = np.log(num_samples / (1 + DataType(FeatureType.TFIDF)(np.sum(features > 0, axis = 0))))
 		features = TF * IDF
 		TF = 0
 		IDF = 0
@@ -285,11 +289,4 @@ def Display(dep):
 		elif d.__class__ == Dependency:
 			print(d.fancy_string())
 
-def LoadClassFile(filename):
-	Y = list()
-	f = open(filename, 'r')
-	for line in f:
-		spl = line.split(' ')
-		Y.append(int(spl[0]))
-	return np.array(Y, dtype=np.dtype(int))
 
