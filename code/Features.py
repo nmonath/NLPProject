@@ -160,7 +160,7 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH):
 		elif funit == FeatureUnits.BOTH:
 			return Dependencies + Words
 
-def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=FeatureRepresentation.HASH, feature=None):
+def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=FeatureRepresentation.HASH, feature=None, K=0.5):
 	"""
 		Creates an M-by-N matrix where N is the length of the feature vector and M is number of documents
 		The documents used are all the .srl files stored in the directory dirname
@@ -198,7 +198,19 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5)) # print just to see code is progressing
 			features[count, :] = ExtractFeature(feature, DefineFeature(ReadDependencyParseFile(os.path.join(dirname, filename), funit=funit), frep=frep) ,ftype=ftype)
 			count = count + 1
-	features = csr_matrix(features, dtype=DataType(ftype))
+	
+
+	if ftype == FeatureType.TFIDF:
+		# Augmented Term Frequency
+		# TF = K * binaryTF + (1-K) * count/(maxcount)
+		# IDF = log (NumDocuments / Number of Documents which the term appears in)
+		TF = (K * (features > 0)) + ((1-K) *  features) / (DataType(FeatureType.TFIDF)(np.max(features, axis=1))).reshape([features.shape[0], 1])
+		IDF = np.log(num_samples / (DataType(FeatureType.TFIDF)(np.sum(features > 0, axis = 0))))
+		features = TF * IDF
+		TF = 0
+		IDF = 0
+
+	#features = csr_matrix(features, dtype=DataType(ftype))
 	return (feature, features) 
 
 def get_num_samples(dirname):
@@ -246,7 +258,7 @@ def ExtractFeature(ffv, allff, ftype=FeatureType.BINARY):
 	if ftype == FeatureType.BINARY:
 		return np.any(ffv == allff, axis=1)
 	else:
-		return np.sum(ffv == allff, axis=1, dtype=DataType(ftype)) # Make sure this is ok interms of MAXing out values
+		return np.sum(ffv == allff, axis=1, dtype=DataType(FeatureType.COUNT)) # Make sure this is ok interms of MAXing out values
 			 
 def KeeperPOS():
 	return ["JJ", "JJR", "JJS", "NN", "NNS", "NNP", "NNPS", "RR", "RBR", "RBS", "VB", "VBD", "VBG", "VBN", "VBP", "VBZ"]
