@@ -14,76 +14,35 @@ As well as the Genism package, which can be done with the command:
 $ easy_install -U gensim
 ```
 
+# Using Features.py
 
+Import the Features module by
 
+```
+import Features
+```
 
+The _data\_set_ folders are of the following format:
 
+```
+data_set
+       <data_set_name>
+              train_classes.txt
+              test_classes.txt
+              class_label_index.txt
+              train/
+                     train_00001
+                     train_00001.srl
+              test/
+                     test_00001
+                     test_00001.srl
+```
 
-# Other Notes
+Each file train/test\_XXXXX is a raw text file containing a training or testing document, train/test\_XXXX.srl, is the dependency parsed and semantic role labeled version of document.  _train\_classes.txt_ and _test\_classes.txt_ store the class labels of the training and testing documents. They are organized such that the class label of the ith file (determined by number after train/test in filename) in the train/test folders is on the ith line of the file. 
 
+To determine the defintion of a feature vector for a set of documents, and to extract feature vectors from all documents, use the following command.
 
-
-Example Usage of Dependency.py
-
-cd NLPProject/Code
-import Dependency as DP
-
-Load the dependencies from the first training file
-
-dep_from_file = DP.ReadDependencyParseFile('../data_sets/reuters_21578/train/train_00001.srl')
-
-Display the dependencies so you can see that it worked properly
-
-DP.Display(dep_from_file)
-
-This shows something like:
-
-{published, to} -- Sentence #19
-{published, be} -- Sentence #19
-{published, by} -- Sentence #19
-{published, after} -- Sentence #19
-{figures, Final} -- Sentence #19
-{figures, for} -- Sentence #19
-{ends, which} -- Sentence #19
-
-Load another file's dependencies
-
-dep_from_file2 = DP.ReadDependencyParseFile('../data_sets/reuters_21578/train/train_14091.srl')
-
-Merge the dependencies
-
-from copy import copy
-all_dep = copy(dep_from_file)
-all_dep = all_dep + dep_from_file2
-
-Define a feature
-
-feature = DP.DefineFeature(all_dep)
-DP.Display(feature)
-
-Extract Feature Vectors
-
-feature_doc_1 = DP.ExtractFeature(feature, dep_from_file)
-feature_doc_2 = DP.ExtractFeature(feature, dep_from_file)
-
-If you look at what the features looks like
-feature_doc_1
-
-array([1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 2, 1, 1,
-       1, 5, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1,
-       1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-       1, 3, 3, 1, 1, 1, 0, 3, 1, 1, 1, 1, 1, 2, 3, 1, 1, 1, 0, 1, 1, 1, 1,
-       2, 1, 1, 1, 2, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1,
-       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 1, 0, 1, 1, 1,
-       1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1, 1, 2, 1, 1, 1, 1, 1, 0, 1,
-       1, 1, 1, 2, 2, 1, 1, 1, 1, 1, 1, 8, 3, 1, 1, 1, 1, 2, 1], dtype=object)
-feature_doc_2
-
-array([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-       0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-       0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-       0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0,
-       0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0,
-       0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0,
-       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], dtype=object)
+```
+data_set_path = '<PATH_TO>/data_set/<DATA_SET_NAME>/'
+(feature_definition, x_train) = Features.Features(data_set_path)
+```
