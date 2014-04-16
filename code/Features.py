@@ -169,7 +169,7 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 	"""		
 
 	USE_LEMMA = UseLemma
-	
+
 	f_data_type = DataType(ftype);
 
 	num_samples = get_num_samples(dirname)
@@ -243,7 +243,7 @@ def RemoveItemsWithPOSExcept(words_or_deps, keepers=None):
 				result.append(w_or_d)
 	return result
 
-def DefineFeature(words_or_deps,  frep=FeatureRepresentation.HASH):
+def DefineFeature(words_or_deps, frep=FeatureRepresentation.HASH):
 	"""
 		Convert a list of Dependency objects into an numpy array of strings
 	"""
