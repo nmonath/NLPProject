@@ -6,7 +6,8 @@ from scipy.sparse import csr_matrix
 from Util import *
 from enum import Enum
 
-global USE_LEMMA = True
+global USE_LEMMA 
+USE_LEMMA = True
 
 def DataType(argin):
 		if argin == FeatureType.BINARY:
@@ -199,9 +200,10 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 	# iterate over all the files in the directory
 	for filename in os.listdir(dirname):
 		if '.srl' in filename:
-			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5)) # print just to see code is progressing
 			features[count, :] = ExtractFeature(feature, DefineFeature(ReadDependencyParseFile(os.path.join(dirname, filename), funit=funit), frep=frep) ,ftype=ftype)
 			count = count + 1
+			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5)) # print just to see code is progressing
+
 	
 
 	if ftype == FeatureType.TFIDF:
@@ -273,8 +275,8 @@ def LoadAllUnitsFromFiles(dirname, funit=FeatureUnits.WORD):
 	sys.stdout.write("\nDocuments Processed: 00000")
 	for filename in os.listdir(dirname):
 		if '.srl' in filename:
-			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5))
 			count = count + 1
+			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5))
 			deps = deps + ReadDependencyParseFile(os.path.join(dirname, filename), funit=funit)
 	sys.stdout.write('\n')
 	return deps
