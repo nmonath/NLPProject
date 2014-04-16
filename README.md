@@ -43,6 +43,54 @@ Each file train/test\_XXXXX is a raw text file containing a training or testing 
 To determine the defintion of a feature vector for a set of documents, and to extract feature vectors from all documents, use the following command.
 
 ```
-data_set_path = '<PATH_TO>/data_set/<DATA_SET_NAME>/'
+data_set_path = '<PATH_TO>/data_set/<DATA_SET_NAME>/train'
 (feature_definition, x_train) = Features.Features(data_set_path)
 ```
+
+Several different feature types can be used. These are determined by the optional arguments passed in to the Features method. There are three sets of parameters to specify
+
+```
+funit (FeatureUnit)
+frep (FeatureRepresentation)
+ftype (FeatureType)
+```
+
+FeatureUnit determines the base elements of the vector space model. Right now there are three possible values:
+
+```
+FeatureUnit.WORD
+FeatureUnit.DEPENDENCY_PAIR
+FeatureUnit.BOTH
+```
+
+There are two options for FeatureRepresentation, which determines whether Hash values are used to reprsent the FeatureUnits or if Strings are used.
+
+```
+FeatureRepresentation.HASH
+FeatureRepresentation.STRING
+```
+
+There are three options for FeatureType, which determines the values inside of the vector space features.
+
+```
+FeatureType.BINARY
+FeatureType.TFIDF
+FeatureType.COUNT
+```
+
+If you wanted to use dependency pairs as the feature unit, hashed representations, and term frequency-inverse document frequency, we would do:
+
+
+```
+train_data_set_path = '<PATH_TO>/data_set/<DATA_SET_NAME>/train'
+(feature_definition, x_train) = Features.Features(train_data_set_path, funit=Feature.FeatureUnit.DEPENDENCY_PAIR, frep=Feature.FeatureRepresentation.HASH, ftype=Feature.FeatureType.TFIDF)
+```
+
+We can pass in a feature definition with the optional argument <feature> to extract feature vectors from the testing documents using the feature defined by the training documents. 
+
+```
+test_data_set_path = '<PATH_TO>/data_set/<DATA_SET_NAME>/test'
+x_test = Features.Features(test_data_set_path, funit=Feature.FeatureUnit.DEPENDENCY_PAIR, frep=Feature.FeatureRepresentation.HASH, ftype=Feature.FeatureType.TFIDF, feature=feature_definition)
+```
+
+
