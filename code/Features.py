@@ -250,6 +250,9 @@ def DefineFeature(words_or_deps, frep=FeatureRepresentation.HASH):
 	f = ConversionFunction(frep)
 	return np.array([f(w_or_d) for w_or_d in set(words_or_deps)], dtype=DataType(frep)) 
 
+def NumberOfHashCollisions(words_or_deps):
+	return len([hash(w_or_d) for w_or_d in set(words_or_deps)]) - len(set([hash(w_or_d) for w_or_d in set(words_or_deps)])) 
+
 def ExtractFeature(ffv, allff, ftype=FeatureType.BINARY):
 	"""
 		Inputs: ffv - the feature definition by FastFeatures or FastFeaturesHash, a 1 by N numpy array
