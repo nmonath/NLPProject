@@ -52,6 +52,22 @@ def SRL(dirname, traintest):
   	"""
   	os.system("java -XX:+UseConcMarkSweepGC -Xmx3g com.clearnlp.nlp.engine.NLPDecode -z srl -c config_en_srl.xml -i "  + os.path.join(dirname, traintest) + " -oe srl")
 
+def FeatureOccuranceReport(feature_def, x):
+	"""
+		Inputs
+			feature_def - the feature definition created using Feature.DefineFeature or the combo method features
+			x - an M by N matrix of features using the COUNT option of Features.Features()
+		Outputs
+			returns an N by 2 numpy array where the first column is the feature definition and the second is the number of occurances of the feature
+	"""
+	counts = np.sum(x, axis=0)
+	count_order = np.argsort(counts)
+	feature_def = feature_def[count_order]
+	counts = counts[count_order].reshape((count_order.shape[0], 1))
+	fd = np.hstack([feature_def, counts])
+	return fd
+
+
 def MakeSmallTest(orig_dir, new_dir,TopK=3,NumDocOfEach=np.inf):
 	if not os.path.exists(new_dir):
 		os.mkdir(new_dir)

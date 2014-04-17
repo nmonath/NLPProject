@@ -15,7 +15,7 @@ def DataType(argin):
 		elif argin == FeatureType.TFIDF:
 			return np.float16
 		elif argin == FeatureType.COUNT:
-			return np.uint32
+			return np.dtype(int)
 		elif argin == FeatureRepresentation.HASH:
 			return np.dtype(int)
 		elif argin == FeatureRepresentation.STRING:
@@ -200,7 +200,7 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 	# iterate over all the files in the directory
 	for filename in os.listdir(dirname):
 		if '.srl' in filename:
-			features[count, :] = ExtractFeature(feature, DefineFeature(ReadDependencyParseFile(os.path.join(dirname, filename), funit=funit), frep=frep) ,ftype=ftype)
+			features[count, :] = ExtractFeature(feature, Convert(RemoveItemsWithPOSExcept(ReadDependencyParseFile(os.path.join(dirname, filename))),frep=frep),ftype=ftype)
 			count = count + 1
 			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5)) # print just to see code is progressing
 
@@ -214,7 +214,7 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 		TF = 0
 		IDF = 0
 
-	features = csr_matrix(features, dtype=DataType(ftype))
+	#features = csr_matrix(features, dtype=DataType(ftype))
 	return (feature, features) 
 
 def get_num_samples(dirname):
@@ -242,6 +242,13 @@ def RemoveItemsWithPOSExcept(words_or_deps, keepers=None):
 			if w_or_d.head.posTag in keepers and w_or_d.complement.posTag in keepers:
 				result.append(w_or_d)
 	return result
+
+def Convert(words_or_deps, frep=FeatureRepresentation.HASH):
+	"""
+		Convert a list of Dependency objects into an numpy array of strings
+	"""
+	f = ConversionFunction(frep)
+	return np.array([f(w_or_d) for w_or_d in (words_or_deps)], dtype=DataType(frep)) 
 
 def DefineFeature(words_or_deps, frep=FeatureRepresentation.HASH):
 	"""
