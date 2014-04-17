@@ -204,13 +204,11 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 			count = count + 1
 			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5)) # print just to see code is progressing
 
-	
-
 	if ftype == FeatureType.TFIDF:
 		# Augmented Term Frequency
 		# TF = K * binaryTF + (1-K) * count/(maxcount)
 		# IDF = log (NumDocuments / Number of Documents which the term appears in)
-		TF = (K * (features > 0)) + ((1-K) *  features) / (DataType(FeatureType.TFIDF)(np.max(features, axis=1))).reshape([features.shape[0], 1])
+		TF = (K * (features > 0)) + ((1-K) *  features) / (1 + DataType(FeatureType.TFIDF)(np.max(features, axis=1))).reshape([features.shape[0], 1])
 		IDF = np.log(num_samples / (1 + DataType(FeatureType.TFIDF)(np.sum(features > 0, axis = 0))))
 		features = TF * IDF
 		TF = 0

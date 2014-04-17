@@ -70,8 +70,8 @@ def MakeSmallTest(orig_dir, new_dir,TopK=3,NumDocOfEach=np.inf):
 	uniq_class_labels = np.unique(orig_train_classes)
 	uniq_class_labels= uniq_class_labels.reshape([uniq_class_labels.shape[0], 1]);
 	num_occurances = np.sum(uniq_class_labels == orig_train_classes, axis=1)
-	train_count_of_each_in_small_test = np.zeros_like(uniq_class_labels)
-	test_count_of_each_in_small_test = np.zeros_like(uniq_class_labels)
+	train_count_of_each_in_small_test = np.zeros_like(uniq_class_labels,dtype=np.uint64)
+	test_count_of_each_in_small_test = np.zeros_like(uniq_class_labels,dtype=np.uint64)
 	cut_off = np.flipud(np.sort(num_occurances))[TopK-1]
 	counter = 0
 	for filename in os.listdir(os.path.join(orig_dir, 'train')):
@@ -89,4 +89,4 @@ def MakeSmallTest(orig_dir, new_dir,TopK=3,NumDocOfEach=np.inf):
 				test_classes.write(str(orig_test_classes[counter]) + "\n")
 				test_count_of_each_in_small_test[orig_test_classes[counter]] = test_count_of_each_in_small_test[orig_test_classes[counter]] + 1
 			counter = counter + 1
-	print(train_count_of_each_in_small_test)
+	return (train_count_of_each_in_small_test, test_count_of_each_in_small_test)
