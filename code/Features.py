@@ -214,7 +214,7 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 		TF = 0
 		IDF = 0
 
-	#features = csr_matrix(features, dtype=DataType(ftype))
+	features = csr_matrix(features, dtype=DataType(ftype))
 	return (feature, features) 
 
 def get_num_samples(dirname):
