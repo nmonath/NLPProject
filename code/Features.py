@@ -6,13 +6,16 @@ from scipy.sparse import csr_matrix
 from Util import *
 from enum import Enum
 
+global USE_LEMMA 
+USE_LEMMA = True
+
 def DataType(argin):
 		if argin == FeatureType.BINARY:
 			return np.bool
-		elif argin == FeatureType.TDIDF:
+		elif argin == FeatureType.TFIDF:
 			return np.float16
 		elif argin == FeatureType.COUNT:
-			return np.uint32
+			return np.dtype(int)
 		elif argin == FeatureRepresentation.HASH:
 			return np.dtype(int)
 		elif argin == FeatureRepresentation.STRING:
@@ -31,7 +34,7 @@ class FeatureUnits(Enum):
 
 class FeatureType(Enum):
 	BINARY = 'BINARY'
-	TDIDF = 'td-idf'
+	TFIDF = 'tf-idf'
 	COUNT = 'COUNT'
 
 class FeatureRepresentation(Enum):
@@ -64,10 +67,10 @@ class Word:
 		return not self.eq(other)
 
 	def __str__(self):
-		return self.lemma
+		return self.lemma if USE_LEMMA else self.form
 
 	def __hash__(self):
-		return hash(self.lemma)
+		return hash(self.lemma) if USE_LEMMA else hash(self.form)
 
 class Dependency:
 	"""
@@ -93,14 +96,14 @@ class Dependency:
 		return s
 
 	def __str__(self):
-		return self.head.lemma + " " + self.complement.lemma
+		return self.head.lemma + " " + self.complement.lemma if USE_LEMMA else self.head.form + " " + self.complement.form
 
 	def __hash__(self):
-		return (hash(self.head.lemma + " " + self.complement.lemma))
+		return (hash(self.head.lemma + " " + self.complement.lemma)) if USE_LEMMA else (hash(self.head.form + " " + self.complement.form)) 
 
 def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH):
 	""" 
-		This function reads a dep format file into a list of Dependency objects.
+		This function reads a dep format file into a (python) list of Word and or Dependency objects.
 	"""
 	Words = list()
 	Dependencies = list()
@@ -160,11 +163,13 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH):
 		elif funit == FeatureUnits.BOTH:
 			return Dependencies + Words
 
-def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=FeatureRepresentation.HASH, feature=None):
+def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=FeatureRepresentation.HASH, feature=None, K=0.5, UseLemma=True):
 	"""
 		Creates an M-by-N matrix where N is the length of the feature vector and M is number of documents
 		The documents used are all the .srl files stored in the directory dirname
 	"""		
+
+	USE_LEMMA = UseLemma
 
 	f_data_type = DataType(ftype);
 
@@ -179,8 +184,7 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 
 		# Rearrange the feature so that it can be used for broadcasting
 		feature = feature.reshape([feature.shape[0], 1])
-	print(num_samples)
-	print(feature.shape)
+
 	# Init the features matrix, uint16 to save space.
 	features = np.zeros((num_samples, feature.shape[0]), dtype=DataType(ftype))
 
@@ -196,10 +200,21 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 	# iterate over all the files in the directory
 	for filename in os.listdir(dirname):
 		if '.srl' in filename:
-			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5)) # print just to see code is progressing
-			features[count, :] = ExtractFeature(feature, DefineFeature(ReadDependencyParseFile(os.path.join(dirname, filename), funit=funit), frep=frep) ,ftype=ftype)
+			features[count, :] = ExtractFeature(feature, Convert(RemoveItemsWithPOSExcept(ReadDependencyParseFile(os.path.join(dirname, filename))),frep=frep),ftype=ftype)
 			count = count + 1
-	features = csr_matrix(features, dtype=DataType(ftype))
+			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5)) # print just to see code is progressing
+
+	if ftype == FeatureType.TFIDF:
+		# Augmented Term Frequency
+		# TF = K * binaryTF + (1-K) * count/(maxcount)
+		# IDF = log (NumDocuments / Number of Documents which the term appears in)
+		TF = (K * (features > 0)) + ((1-K) *  features) / (1 + DataType(FeatureType.TFIDF)(np.max(features, axis=1))).reshape([features.shape[0], 1])
+		IDF = np.log(num_samples / (1 + DataType(FeatureType.TFIDF)(np.sum(features > 0, axis = 0))))
+		features = TF * IDF
+		TF = 0
+		IDF = 0
+
+	#features = csr_matrix(features, dtype=DataType(ftype))
 	return (feature, features) 
 
 def get_num_samples(dirname):
@@ -228,12 +243,22 @@ def RemoveItemsWithPOSExcept(words_or_deps, keepers=None):
 				result.append(w_or_d)
 	return result
 
-def DefineFeature(words_or_deps,  frep=FeatureRepresentation.HASH):
+def Convert(words_or_deps, frep=FeatureRepresentation.HASH):
+	"""
+		Convert a list of Dependency objects into an numpy array of strings
+	"""
+	f = ConversionFunction(frep)
+	return np.array([f(w_or_d) for w_or_d in (words_or_deps)], dtype=DataType(frep)) 
+
+def DefineFeature(words_or_deps, frep=FeatureRepresentation.HASH):
 	"""
 		Convert a list of Dependency objects into an numpy array of strings
 	"""
 	f = ConversionFunction(frep)
 	return np.array([f(w_or_d) for w_or_d in set(words_or_deps)], dtype=DataType(frep)) 
+
+def NumberOfHashCollisions(words_or_deps):
+	return len([hash(w_or_d) for w_or_d in set(words_or_deps)]) - len(set([hash(w_or_d) for w_or_d in set(words_or_deps)])) 
 
 def ExtractFeature(ffv, allff, ftype=FeatureType.BINARY):
 	"""
@@ -247,7 +272,7 @@ def ExtractFeature(ffv, allff, ftype=FeatureType.BINARY):
 	if ftype == FeatureType.BINARY:
 		return np.any(ffv == allff, axis=1)
 	else:
-		return np.sum(ffv == allff, axis=1, dtype=DataType(ftype)) # Make sure this is ok interms of MAXing out values
+		return np.sum(ffv == allff, axis=1, dtype=DataType(FeatureType.COUNT)) # Make sure this is ok interms of MAXing out values
 			 
 def KeeperPOS():
 	return ["JJ", "JJR", "JJS", "NN", "NNS", "NNP", "NNPS", "RR", "RBR", "RBS", "VB", "VBD", "VBG", "VBN", "VBP", "VBZ"]
@@ -258,8 +283,8 @@ def LoadAllUnitsFromFiles(dirname, funit=FeatureUnits.WORD):
 	sys.stdout.write("\nDocuments Processed: 00000")
 	for filename in os.listdir(dirname):
 		if '.srl' in filename:
-			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5))
 			count = count + 1
+			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5))
 			deps = deps + ReadDependencyParseFile(os.path.join(dirname, filename), funit=funit)
 	sys.stdout.write('\n')
 	return deps
@@ -274,11 +299,4 @@ def Display(dep):
 		elif d.__class__ == Dependency:
 			print(d.fancy_string())
 
-def LoadClassFile(filename):
-	Y = list()
-	f = open(filename, 'r')
-	for line in f:
-		spl = line.split(' ')
-		Y.append(int(spl[0]))
-	return np.array(Y, dtype=np.dtype(int))
 

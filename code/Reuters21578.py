@@ -1,11 +1,10 @@
 from nltk.corpus import reuters
 import os
+import Util
+import numpy as np
 
-def SRL(dirname, traintest):
-	"""
-    	Calls clearnlp parser on all the files in the given directories
-  	"""
-    os.system("java -XX:+UseConcMarkSweepGC -Xmx3g com.clearnlp.nlp.engine.NLPDecode -z srl -c config_en_srl.xml -i "  + os.path.join(dirname, traintest) + " -oe srl")
+
+
 
 
 def MakeDataSetFiles(dirname):
