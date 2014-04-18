@@ -2,7 +2,7 @@ import numpy as np
 import os
 import tempfile
 import sys
-from scipy.sparse import csr_matrix
+#from scipy.sparse import csr_matrix
 from Util import *
 from enum import Enum
 
@@ -249,6 +249,13 @@ def Convert(words_or_deps, frep=FeatureRepresentation.HASH):
 	"""
 	f = ConversionFunction(frep)
 	return np.array([f(w_or_d) for w_or_d in (words_or_deps)], dtype=DataType(frep)) 
+
+def ConvertUnit(words_or_deps, frep=FeatureRepresentation.HASH):
+	"""
+		Convert a list of Dependency objects into an numpy array of strings
+	"""
+	f = ConversionFunction(frep)
+	return f(words_or_deps) 
 
 def DefineFeature(words_or_deps, frep=FeatureRepresentation.HASH):
 	"""
