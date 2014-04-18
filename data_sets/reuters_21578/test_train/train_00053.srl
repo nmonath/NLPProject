@@ -1,0 +1,24 @@
+1	EMHART	emhart	NNP	_	2	nn	_
+2	CORP	corp	NNP	_	0	root	_
+3	&	&	CC	_	2	cc	_
+4	lt	lt	NNP	p2=RB	2	conj	_
+5	;	;	:	p2=NNPS	11	punct	_
+6	EMH	emh	NNP	p2=UH	7	nsubj	_
+7	>	>	XX	p2=POS	0	root	_
+8	QTLY	qtly	RB	p2=NNP	11	advmod	11:AM-TMP
+9	DIVIDEND	dividend	NNP	p2=VBP	10	nn	_
+10	Qtly	qtly	NNP	p2=RB	11	nsubj	11:A0
+11	div	div	VBD	p2=VBP|pb=div.01	0	root	_
+12	35	0	CD	_	13	num	_
+13	cts	ct	NNS	_	11	dobj	11:A1
+14	vs	vs	IN	_	11	prep	11:AM-TMP
+15	35	0	CD	_	16	num	_
+16	cts	ct	NNS	_	17	npadvmod	_
+17	prior	prior	RB	p2=JJ	14	pcomp	_
+18	Payable	payable	NNP	p2=JJ	19	nn	_
+19	March	march	NNP	_	17	npadvmod	_
+20	31	0	CD	_	19	num	_
+21	Record	record	NNP	_	22	nn	_
+22	March	march	NNP	_	19	appos	_
+23	nine	#crd#	CD	_	22	num	_
+

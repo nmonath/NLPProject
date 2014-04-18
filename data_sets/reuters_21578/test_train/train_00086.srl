@@ -1,0 +1,23 @@
+1	TONKA	tonka	NNP	_	2	nn	_
+2	CORP	corp	NNP	_	0	root	_
+3	&	&	CC	_	2	cc	_
+4	lt	lt	NNP	p2=RB	2	conj	_
+5	;	;	:	p2=NNPS	2	punct	_
+6	TKA	tka	NNP	_	2	conj	_
+7	>	>	XX	p2=POS	11	dep	_
+8	RAISES	raises	NNP	p2=VBZ	10	nn	_
+9	DIVIDEND	dividend	NNP	p2=VBD	10	nn	_
+10	Qtly	qtly	NNP	p2=RB	11	nsubj	11:A0
+11	div	div	VBD	p2=VBP|pb=div.01	0	root	_
+12	two	#crd#	CD	_	13	num	_
+13	cts	ct	NNS	_	11	dobj	11:A1
+14	vs	vs	IN	_	17	mark	_
+15	1.7	0	CD	_	16	num	_
+16	cts	ct	NNS	_	17	nsubj	17:A0=PAG
+17	Pay	pay	VBP	p2=NNP|pb=pay.01	11	advcl	11:AM-TMP
+18	March	march	NNP	_	17	npadvmod	17:AM-TMP
+19	26	0	CD	_	18	num	_
+20	Record	record	NNP	_	21	nn	_
+21	March	march	NNP	_	17	npadvmod	17:AM-TMP
+22	12	0	CD	_	21	num	_
+

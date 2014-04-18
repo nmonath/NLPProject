@@ -1,0 +1,11 @@
+1	26	0	CD	p2=LS	3	hmod	_
+2	-	-	HYPH	p2=:	3	hyph	_
+3	FEB	feb	NNP	p2=NN	5	hmod	_
+4	-	-	HYPH	p2=:	5	hyph	_
+5	1987	0	CD	_	6	number	_
+6	26	0	CD	_	8	hmod	_
+7	-	-	HYPH	_	8	hyph	_
+8	FEB	feb	NNP	p2=NN	10	hmod	_
+9	-	-	HYPH	p2=.	10	hyph	_
+10	1987	0	CD	p2=NNP	0	root	_
+

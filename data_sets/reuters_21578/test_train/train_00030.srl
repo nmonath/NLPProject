@@ -1,0 +1,27 @@
+1	ASSETS	asset	NNS	p2=NNPS	26	nn	_
+2	OF	of	IN	_	1	prep	_
+3	MONEY	money	NN	p2=NNP	4	nn	_
+4	MARKET	market	NN	_	6	nn	_
+5	MUTUAL	mutual	NN	p2=NNP	6	nn	_
+6	FUNDS	fund	NNS	_	2	pobj	_
+7	ROSE	rose	NNP	p2=VBD	10	nn	_
+8	720.4	0	CD	_	10	num	_
+9	MLN	mln	NNP	_	10	nn	_
+10	DLRS	dlrs	NNP	p2=NNPS	6	appos	_
+11	IN	in	IN	p2=NNP	10	prep	_
+12	LATEST	latest	NNP	p2=JJS	14	nn	_
+13	WEEK	week	NNP	_	14	nn	_
+14	ASSETS	asset	NNPS	_	11	pobj	_
+15	OF	of	IN	_	14	prep	_
+16	MONEY	money	NN	p2=NNP	17	nn	_
+17	MARKET	market	NN	_	19	nn	_
+18	MUTUAL	mutual	NN	p2=NNP	19	nn	_
+19	FUNDS	fund	NNS	_	15	pobj	_
+20	ROSE	rose	NNP	p2=VBD	23	nn	_
+21	720.4	0	CD	_	23	num	_
+22	MLN	mln	NNP	_	23	nn	_
+23	DLRS	dlrs	NNP	p2=NNPS	19	appos	_
+24	IN	in	IN	p2=NNP	23	prep	_
+25	LATEST	latest	NNP	p2=JJS	24	pobj	_
+26	WEEK	week	NNP	p2=NN	0	root	_
+

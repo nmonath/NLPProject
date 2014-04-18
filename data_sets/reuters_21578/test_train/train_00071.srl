@@ -1,0 +1,25 @@
+1	TULTEX	tultex	NNP	_	2	nn	_
+2	CORP	corp	NNP	_	0	root	_
+3	&	&	CC	_	2	cc	_
+4	lt	lt	NNP	p2=RB	2	conj	_
+5	;	;	:	p2=NNPS	2	punct	_
+6	TTX	ttx	NNP	_	2	conj	_
+7	>	>	XX	p2=POS	12	dep	_
+8	SETS	sets	NNP	p2=VBZ	11	nn	_
+9	QUARTERLY	quarterly	NNP	_	11	nn	_
+10	DIVIDEND	dividend	NNP	_	11	nn	_
+11	Qtly	qtly	NNP	p2=RB	12	nsubj	12:A0
+12	div	div	VBD	p2=VBZ|pb=div.01	0	root	_
+13	eights	#crd#	NNS	p2=CD	14	nn	_
+14	cts	ct	NNS	p2=VBZ	12	dobj	12:A1
+15	vs	vs	IN	_	16	quantmod	_
+16	eight	#crd#	CD	_	17	num	_
+17	cts	ct	NNS	_	19	nsubj	19:A0=PAG
+18	prior	prior	RB	p2=JJ	19	advmod	19:AM-TMP
+19	Pay	pay	VB	p2=VBP|pb=pay.01	13	rcmod	_
+20	April	april	NNP	_	19	iobj	19:A2=GOL
+21	one	#crd#	CD	p2=NN	20	num	_
+22	Record	record	NNP	_	23	nn	_
+23	March	march	NNP	_	19	npadvmod	19:AM-TMP
+24	13	0	CD	_	23	num	_
+

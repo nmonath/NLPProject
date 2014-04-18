@@ -1,0 +1,24 @@
+1	SYSTEMATICS	systematics	NNS	p2=NNP	2	nn	_
+2	INC	inc	NNP	_	11	nsubj	11:A0
+3	&	&	CC	_	2	cc	_
+4	lt	lt	RB	p2=VBD	2	conj	_
+5	;	;	:	p2=,	2	punct	_
+6	SYST	syst	NNP	p2=VB	2	conj	_
+7	>	>	XX	p2=VBD	2	dep	_
+8	REGULAR	regular	JJ	p2=NNP	10	amod	_
+9	PAYOUT	payout	NNP	p2=NN	10	nn	_
+10	Qtly	qtly	NNP	p2=RB	2	conj	_
+11	div	div	VBD	p2=VBP|pb=div.01	0	root	_
+12	three	#crd#	CD	_	13	num	_
+13	cts	ct	NNS	_	11	dobj	11:A1
+14	vs	vs	IN	_	13	prep	_
+15	three	#crd#	CD	_	16	num	_
+16	cts	ct	NNS	_	18	nsubj	18:A0=PAG
+17	prior	prior	RB	p2=JJ	18	advmod	18:AM-TMP
+18	Pay	pay	VBP	p2=NNP|pb=pay.01	11	ccomp	_
+19	March	march	NNP	_	18	iobj	18:A2=GOL
+20	13	0	CD	_	19	num	_
+21	Record	record	NNP	_	22	nn	_
+22	February	february	NNP	_	18	dobj	_
+23	27	0	CD	_	22	num	_
+

@@ -1,0 +1,27 @@
+1	OWENS	owen	NNS	p2=NNP	0	root	_
+2	AND	and	CC	_	1	cc	_
+3	MINOR	minor	NNP	p2=JJ	4	nn	_
+4	INC	inc	NNP	_	1	conj	_
+5	&	&	CC	_	4	cc	_
+6	lt	lt	NNP	p2=RB	4	conj	_
+7	;	;	:	p2=NNPS	4	punct	_
+8	OBOD	obod	NNP	p2=XX	4	conj	_
+9	>	>	XX	p2=POS	14	dep	_
+10	RAISES	raises	NNP	p2=VBZ	13	nn	_
+11	QTLY	qtly	NNP	p2=RB	13	nn	_
+12	DIVIDEND	dividend	NNP	_	13	nn	_
+13	Qtly	qtly	NNP	p2=RB	14	nsubj	14:A0
+14	div	div	VBD	p2=VBZ|pb=div.01	1	rcmod	_
+15	eights	#crd#	NNS	p2=CD	16	nn	_
+16	cts	ct	NNS	p2=VBZ	14	dobj	14:A1
+17	vs	vs	IN	_	14	prep	14:A2
+18	7.5	0	CD	_	19	num	_
+19	cts	ct	NNS	_	17	pobj	_
+20	prior	prior	RB	p2=CC	21	amod	_
+21	Pay	pay	NNP	p2=VBP	22	nn	_
+22	March	march	NNP	_	14	npadvmod	14:AM-TMP
+23	31	0	CD	_	22	num	_
+24	Record	record	NNP	_	25	nn	_
+25	March	march	NNP	_	22	appos	_
+26	13	0	CD	_	25	num	_
+
