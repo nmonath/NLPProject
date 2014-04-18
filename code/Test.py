@@ -37,4 +37,12 @@ def test001Word2VecHash():
 	comp_vec = vec1-vec3H
 
 	assert max(abs(comp_vec))==0.0
+	del model 
+
+	#check if after deleting the model it still works
+	word = dictWord2Vec.keys()[random_word_index]
+	pointer = dictWord2Vec[word]
+
+	vec1ad = fpr[pointer+3]
+	assert (len(vec1ad)==len(vec1))
 
