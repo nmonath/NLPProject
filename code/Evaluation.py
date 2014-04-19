@@ -23,17 +23,16 @@ from sklearn.utils.extmath import density
 from sklearn import metrics
 
 
-def Evaluate(x_train, y_train, x_test, y_test, select_chi2=False):
+def Evaluate(x_train, y_train, x_test, y_test, select_chi2=None):
 
   # Display progress logs on stdout
   logging.basicConfig(level=logging.INFO,
                       format='%(asctime)s %(levelname)s %(message)s')
 
   if select_chi2:
-      print("Extracting %d best features by a chi-squared test" %
-            opts.select_chi2)
+      print("Extracting %d best features by a chi-squared test" % select_chi2)
       t0 = time()
-      ch2 = SelectKBest(chi2, k=opts.select_chi2)
+      ch2 = SelectKBest(chi2, k=select_chi2)
       x_train = ch2.fit_transform(x_train, y_train)
       x_test = ch2.transform(x_test)
       print("done in %fs" % (time() - t0))
