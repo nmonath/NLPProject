@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import shutil
+from sklearn import preprocessing
 
 def tic():
     #Homemade version of matlab tic and toc functions
@@ -20,8 +21,13 @@ def LoadClassFile(filename):
 	f = open(filename, 'r')
 	for line in f:
 		spl = line.split(' ')
-		Y.append(int(spl[0]))
-	return np.array(Y, dtype=np.uint8)
+		Y.append([int(s) for s in spl])
+	lb = preprocessing.LabelBinarizer()
+	Yprime = lb.fit_transform(Y)
+	if not np.all(np.sum(Yprime, axis=1) == 1):
+		return Yprime
+	else:
+		return np.array([item for sublist in Y for item in sublist], dtype=np.uint8)
 
 def WriteClassFile(class_labels, filename):
 	f = file(filename, 'w')
