@@ -5,9 +5,16 @@ import sys
 from scipy.sparse import csr_matrix
 from Util import *
 from enum import Enum
+import re
 
 global USE_LEMMA 
 USE_LEMMA = True
+
+global SYMBOLS_TO_REMOVE
+SYMBOLS_TO_REMOVE = '[!@#$%^&*()-_=+\[\]{}\\|;:\'\",.<>/?`~]'
+
+global REMOVE_SINGLE_CHARACTERS
+REMOVE_SINGLE_CHARACTERS = True
 
 def DataType(argin):
 		if argin == FeatureType.BINARY:
@@ -204,6 +211,11 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 			count = count + 1
 			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5)) # print just to see code is progressing
 
+
+	# Feature Reduction
+
+
+
 	if ftype == FeatureType.TFIDF:
 		# Augmented Term Frequency
 		# TF = K * binaryTF + (1-K) * count/(maxcount)
@@ -213,6 +225,9 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 		features = TF * IDF
 		TF = 0
 		IDF = 0
+	elif ftype == FeatureType.BINARY:
+		features = features > 0
+
 
 	#features = csr_matrix(features, dtype=DataType(ftype))
 	return (feature, features) 
@@ -237,10 +252,17 @@ def RemoveItemsWithPOSExcept(words_or_deps, keepers=None):
 	for w_or_d in words_or_deps:
 		if w_or_d.__class__ == Word:
 			if w_or_d.posTag in keepers:
-				result.append(w_or_d)
+				# Remove Symbols
+				if len(re.sub(SYMBOLS_TO_REMOVE, '', str(w_or_d))) == len(str(w_or_d)):
+					if (not REMOVE_SINGLE_CHARACTERS) or len(str(w_or_d)) > 1:
+						result.append(w_or_d)
 		elif w_or_d.__class__ == Dependency:
 			if w_or_d.head.posTag in keepers and w_or_d.complement.posTag in keepers:
-				result.append(w_or_d)
+				if len(re.sub(SYMBOLS_TO_REMOVE, '', str(w_or_d.head))) == len(str(w_or_d.head)):
+					if len(re.sub(SYMBOLS_TO_REMOVE, '', str(w_or_d.complement))) == len(str(w_or_d.complement)):
+						if (not REMOVE_SINGLE_CHARACTERS) or len(str(w_or_d.head)) > 1:
+							if (not REMOVE_SINGLE_CHARACTERS) or len(str(w_or_d.head)) > 1:
+								result.append(w_or_d)
 	return result
 
 def Convert(words_or_deps, frep=FeatureRepresentation.HASH):
@@ -269,10 +291,10 @@ def ExtractFeature(ffv, allff, ftype=FeatureType.BINARY):
 					is number of times the i^th element of ffv appeared in allff
 	"""	
 	# Transpose so dimensions match up and then sum, gives the count of how many times each element of ffv appears
-	if ftype == FeatureType.BINARY:
-		return np.any(ffv == allff, axis=1)
-	else:
-		return np.sum(ffv == allff, axis=1, dtype=DataType(FeatureType.COUNT)) # Make sure this is ok interms of MAXing out values
+	# if ftype == FeatureType.BINARY:
+	# 	return np.any(ffv == allff, axis=1)
+	# else:
+	return np.sum(ffv == allff, axis=1, dtype=DataType(FeatureType.COUNT)) # Make sure this is ok interms of MAXing out values
 			 
 def KeeperPOS():
 	return ["JJ", "JJR", "JJS", "NN", "NNS", "NNP", "NNPS", "RR", "RBR", "RBS", "VB", "VBD", "VBG", "VBN", "VBP", "VBZ"]
