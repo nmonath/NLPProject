@@ -57,6 +57,10 @@ def SRL(dirname, traintest):
     	Calls clearnlp parser on all the files in the given directories
   	"""
   	os.system("java -XX:+UseConcMarkSweepGC -Xmx3g com.clearnlp.nlp.engine.NLPDecode -z srl -c config_en_srl.xml -i "  + os.path.join(dirname, traintest) + " -oe srl")
+  	for filename in os.listdir(os.path.join(dirname, traintest)):
+  		if filename.startswith('.') and filename[-4:] == '.srl':
+  			os.remove(os.path.join(dirname, traintest, filename))
+
 
 def FeatureOccuranceReport(feature_def, x):
 	"""
