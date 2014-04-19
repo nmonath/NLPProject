@@ -1,0 +1,27 @@
+1	NEW	new	JJ	p2=NNP	3	nn	_
+2	YORK	york	NNP	p2=NN	3	nn	_
+3	BANK	bank	NNP	_	9	nn	_
+4	DISCOUNT	discount	NNP	_	5	nn	_
+5	WINDOW	window	NNP	_	6	nn	_
+6	BORROWINGS	borrowings	NNP	_	9	nn	_
+7	64	0	CD	_	9	num	_
+8	MLN	mln	NNP	_	9	nn	_
+9	DLRS	dlrs	NNP	p2=NNPS	0	root	_
+10	IN	in	IN	p2=NNP	9	prep	_
+11	FEB	feb	NNP	_	10	pobj	_
+12	25	0	CD	_	11	num	_
+13	WEEK	week	NNP	p2=NN	26	nn	_
+14	NEW	new	NNP	p2=JJ	16	nn	_
+15	YORK	york	NNP	_	16	nn	_
+16	BANK	bank	NNP	_	17	nn	_
+17	DISCOUNT	discount	NNP	_	18	nn	_
+18	WINDOW	window	NNP	_	19	nn	_
+19	BORROWINGS	borrowings	NNP	_	22	nn	_
+20	64	0	CD	_	22	num	_
+21	MLN	mln	NNP	_	22	nn	_
+22	DLRS	dlrs	NNP	p2=NNPS	11	appos	_
+23	IN	in	IN	p2=NNP	22	prep	_
+24	FEB	feb	NNP	_	23	pobj	_
+25	25	0	CD	_	24	num	_
+26	WEEK	week	NNP	p2=NN	22	npadvmod	_
+

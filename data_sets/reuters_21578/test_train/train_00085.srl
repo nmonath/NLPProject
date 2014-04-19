@@ -1,0 +1,25 @@
+1	COMBUSTION	combustion	NN	p2=NNP	3	nn	_
+2	ENGINEERING	engineering	NNP	p2=VBG	3	nn	_
+3	INC	inc	NNP	_	0	root	_
+4	&	&	CC	_	3	cc	_
+5	lt	lt	NNP	p2=RB	3	conj	_
+6	;	;	:	p2=,	12	punct	_
+7	CSP	csp	NNP	p2=VB	8	nsubj	_
+8	>	>	XX	p2=VBD	0	root	_
+9	REGULAR	regular	JJ	p2=NNP	11	amod	_
+10	DIV	div	NNP	_	11	nn	_
+11	Qtly	qtly	NNP	p2=RB	12	nsubj	12:A0
+12	div	div	VBD	p2=VBP|pb=div.01	0	root	_
+13	25	0	CD	_	14	num	_
+14	cts	ct	NNS	_	12	dobj	12:A1
+15	vs	vs	IN	_	12	prep	12:AM-TMP
+16	25	0	CD	_	17	num	_
+17	cts	ct	NNS	_	18	npadvmod	_
+18	prior	prior	RB	p2=CC	15	pcomp	_
+19	Pay	pay	NNP	p2=VBP	20	nn	_
+20	April	april	NNP	_	18	npadvmod	_
+21	30	0	CD	_	20	num	_
+22	Record	record	NNP	_	23	nn	_
+23	April	april	NNP	_	20	npadvmod	_
+24	16	0	CD	_	23	num	_
+
