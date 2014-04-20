@@ -16,6 +16,19 @@ def toc():
     else:
         print "Toc: start time not set"
 
+def WriteClassLabelFile(filename, labels):
+	f = open(filename, 'w')
+	for l in labels:
+		f.write(str(l) + '\n')
+	f.close()
+
+def LoadClassLabels(filename):
+	y_label = list()
+	f = open(filename, 'r')
+	for line in f:
+		y_label.append(line.strip())
+	return y_label
+
 def LoadClassFile(filename):
 	Y = list()
 	f = open(filename, 'r')
@@ -86,6 +99,9 @@ def MakeSmallTest(orig_dir, new_dir,TopK=3,NumDocOfEach=np.inf):
 	if not os.path.exists(os.path.join(new_dir, 'test')):
 		os.mkdir(os.path.join(new_dir, 'test'))
 
+	class_labels = np.array(LoadClassLabels(os.path.join(orig_dir, 'class_label_index.txt')), dtype=np.object)
+
+
 	train_classes = file(os.path.join(new_dir, 'train_classes.txt'), 'w');
 	test_classes = file(os.path.join(new_dir, 'test_classes.txt'), 'w');
  
@@ -99,6 +115,10 @@ def MakeSmallTest(orig_dir, new_dir,TopK=3,NumDocOfEach=np.inf):
 	train_count_of_each_in_small_test = np.zeros_like(uniq_class_labels,dtype=np.uint64)
 	test_count_of_each_in_small_test = np.zeros_like(uniq_class_labels,dtype=np.uint64)
 	cut_off = np.flipud(np.sort(num_occurances))[TopK-1]
+
+	new_class_labels = class_labels[num_occurances >= cut_off]
+	WriteClassLabelFile(os.path.join(new_dir, 'class_label_index.txt'), new_class_labels)
+
 	counter = 0
 	for filename in os.listdir(os.path.join(orig_dir, 'train')):
 		if filename[-4:] == '.srl':

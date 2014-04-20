@@ -6,6 +6,7 @@ import sys
 from Util import *
 from enum import Enum
 import re
+from copy import copy
 
 global USE_LEMMA 
 USE_LEMMA = True
@@ -44,6 +45,7 @@ class FeatureUnits(Enum):
 	WORD = 'WORD'
 	DEPENDENCY_PAIR = 'DP'
 	BOTH = 'BOTH'
+	PRED_ARG = "PA"
 
 class FeatureType(Enum):
 	BINARY = 'BINARY'
@@ -114,12 +116,41 @@ class Dependency:
 	def __hash__(self):
 		return (hash(self.head.lemma + " " + self.complement.lemma)) if USE_LEMMA else (hash(self.head.form + " " + self.complement.form)) 
 
+
+class PredicateArgument:
+	"""
+		A Structure for predicate argument structure
+	"""
+
+	def __init__(self, pred, args):
+		self.pred = pred
+		self.args = args
+		
+	def __str__(self):
+		if not self.args:
+			return "{Rel: " + str(self.pred) + "}"
+		s = "{Rel: " + str(self.pred)
+		arg_labels = self.args.keys()
+		arg_labels.sort()
+		s = s + "| " + arg_labels[0] + ":"
+		for w in self.args[arg_labels[0]]:
+			s = s + " " + (w.form)
+		for a in range(1, len(arg_labels)):
+			s = s + ", " + arg_labels[a] + ": " 
+			for w in self.args[arg_labels[a]]:
+				s = s + " " + (w.form)
+		s = s + "}"
+		return s
+	
+
+
 def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH):
 	""" 
 		This function reads a dep format file into a (python) list of Word and or Dependency objects.
 	"""
 	Words = list()
 	Dependencies = list()
+	PredArgs = list()
 
 	if funit == FeatureUnits.WORD or funit == FeatureUnits.BOTH:
 		f = open(filename, 'r')
@@ -176,6 +207,62 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH):
 		elif funit == FeatureUnits.BOTH:
 			return Dependencies + Words
 
+	if funit == FeatureUnits.PRED_ARG:
+		f = open(filename, 'r')
+		# Mapping from (sentence number, head id number) to a list of the complements of the head id number
+		ComplementsOfHeadInSentence = dict()
+		WordsInSentence = dict()
+		WordsInSentence[0] = []
+		sentenceNo = 0
+		# Mapping from (sentence number, rel id number) to a list of dictionaries of (arglabel, word id number)
+		PredArgInSentence = dict()
+		for line in f:
+			spl = line.split()
+			if len(spl) == 8:
+				wordno = int(spl[0])-1
+				wordform = spl[1]
+				lemma = spl[2]
+				posTag = spl[3]
+				feat = spl[4]
+				head = int(spl[5])-1
+				depRel = spl[6]
+				argTag = spl[7]
+				WordsInSentence[sentenceNo].append(Word(wordform, lemma, posTag, feat, depRel))
+				if not argTag=='_':
+					args = argTag.split(";")
+					for a in args:
+						tuple_rel_arglabel = a.split(":")
+						rel = int(tuple_rel_arglabel[0])-1
+						arglabel = tuple_rel_arglabel[1]
+						if (sentenceNo, rel) in PredArgInSentence:
+							PredArgInSentence[(sentenceNo, rel)].append((arglabel,wordno))
+						else:
+							PredArgInSentence[(sentenceNo, rel)] = [(arglabel,wordno)]
+				if not head == -1:
+					if (sentenceNo, head) in ComplementsOfHeadInSentence:
+						ComplementsOfHeadInSentence[(sentenceNo, head)].append(wordno)
+					else:
+						ComplementsOfHeadInSentence[(sentenceNo, head)] = [wordno]
+			else:
+				sentenceNo = sentenceNo + 1
+				WordsInSentence[sentenceNo] = []
+		for (sentno, relno) in PredArgInSentence:
+			args = PredArgInSentence[(sentno, relno)]
+			args_with_word_objects = dict()
+			for a in args:
+				list_of_word_nos = list([a[1]])
+				if (sentno, a[1]) in ComplementsOfHeadInSentence:
+					list_of_word_nos = list_of_word_nos + ComplementsOfHeadInSentence[(sentno, a[1])]; #Concat
+				list_of_word_nos = list(set(list_of_word_nos))
+				list_of_word_nos.sort()
+				list_of_word_obj = [WordsInSentence[sentno][wno] for wno in list_of_word_nos]
+				args_with_word_objects[a[0]] = copy(list_of_word_obj);
+			PredArgs.append(PredicateArgument(WordsInSentence[sentno][relno], copy(args_with_word_objects)))
+		return PredArgs
+
+
+
+
 def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=FeatureRepresentation.HASH, feature=None, K=0.5, UseLemma=True):
 	"""
 		Creates an M-by-N matrix where N is the length of the feature vector and M is number of documents
@@ -187,6 +274,8 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 	f_data_type = DataType(ftype);
 
 	num_samples = get_num_samples(dirname)
+
+	is_testing = not (feature == None)
 
 	if feature == None:
 
@@ -208,7 +297,7 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 	all_units = 0;
 
 	# Just to keep track on what has been done
-	sys.stdout.write("\nDocuments Processed: 00000")
+	sys.stdout.write("\nExtracting Features, Documents Processed: 00000")
 
 	# iterate over all the files in the directory
 	for filename in os.listdir(dirname):
@@ -219,15 +308,16 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 
 
 	# Feature Reduction
-	if REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME:
-		num_occurances = np.sum(features, axis=0)
-		feature = feature[ num_occurances > 1 ]
-		features = features[:, num_occurances > 1]
+	if not is_testing:
+		if REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME:
+			num_occurances = np.sum(features, axis=0)
+			feature = feature[ num_occurances > 1 ]
+			features = features[:, num_occurances > 1]
 
-	if REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT:
-		num_occurances = np.sum(features > 0, axis=0)
-		feature = feature[ num_occurances > 1 ]
-		features = features[:, num_occurances > 1]
+		if REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT:
+			num_occurances = np.sum(features > 0, axis=0)
+			feature = feature[ num_occurances > 1 ]
+			features = features[:, num_occurances > 1]
 
 	if ftype == FeatureType.TFIDF:
 		# Augmented Term Frequency
@@ -243,7 +333,24 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 
 
 	#features = csr_matrix(features, dtype=DataType(ftype))
-	return (feature, features) 
+	if is_testing:
+		return features
+	else:
+		return (feature, features) 
+
+
+def ToTFIDF(features, K=0.5):
+	num_samples = features.shape[0]
+	TF = (K * (features > 0)) + ((1-K) *  features) / (1 + DataType(FeatureType.TFIDF)(np.max(features, axis=1))).reshape([features.shape[0], 1])
+	IDF = np.log(num_samples / (1 + DataType(FeatureType.TFIDF)(np.sum(features > 0, axis = 0))))
+	return TF * IDF
+
+def ToBINARY(features):
+	return features > 0
+
+
+
+
 
 def get_num_samples(dirname):
 	count = 0
@@ -340,5 +447,7 @@ def Display(dep):
 			print(d.form)
 		elif d.__class__ == Dependency:
 			print(d.fancy_string())
+		elif d.__class__ == PredicateArgument:
+			print(str(d))
 
 
