@@ -16,6 +16,12 @@ SYMBOLS_TO_REMOVE = '[!@#$%^&*()-_=+\[\]{}\\|;:\'\",.<>/?`~]'
 global REMOVE_SINGLE_CHARACTERS
 REMOVE_SINGLE_CHARACTERS = True
 
+global REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT
+REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT = True
+
+global REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME
+REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = True
+
 def DataType(argin):
 		if argin == FeatureType.BINARY:
 			return np.bool
@@ -213,8 +219,15 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 
 
 	# Feature Reduction
+	if REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME:
+		num_occurances = np.sum(features, axis=0)
+		feature = feature[ num_occurances > 1 ]
+		features = features[:, num_occurances > 1]
 
-
+	if REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT:
+		num_occurances = np.sum(features > 0, axis=0)
+		feature = feature[ num_occurances > 1 ]
+		features = features[:, num_occurances > 1]
 
 	if ftype == FeatureType.TFIDF:
 		# Augmented Term Frequency
