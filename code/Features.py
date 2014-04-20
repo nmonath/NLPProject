@@ -7,6 +7,7 @@ from Util import *
 from enum import Enum
 import re
 from copy import copy
+import itertools
 
 global USE_LEMMA 
 USE_LEMMA = True
@@ -283,9 +284,9 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 	if feature == None:
 
 		# Loads all the units from all the documents
-		all_units = LoadAllUnitsFromFiles(dirname, funit=funit)
+		all_units = LoadAllUnitsFromFiles(dirname, funit=funit, keep_duplicates=False, remove_stop_words=True)
 
-		feature = DefineFeature(RemoveItemsWithPOSExcept(all_units), frep=frep) 
+		feature = DefineFeature(all_units, frep=frep) 
 
 		# Rearrange the feature so that it can be used for broadcasting
 		feature = feature.reshape([feature.shape[0], 1])
@@ -436,7 +437,7 @@ def ExtractFeature(ffv, allff, ftype=FeatureType.BINARY):
 def KeeperPOS():
 	return ["JJ", "JJR", "JJS", "NN", "NNS", "NNP", "NNPS", "RR", "RBR", "RBS", "VB", "VBD", "VBG", "VBN", "VBP", "VBZ"]
 
-def LoadAllUnitsFromFiles(dirname, funit=FeatureUnits.WORD):
+def LoadAllUnitsFromFiles(dirname, funit=FeatureUnits.WORD, keep_duplicates=False, remove_stop_words=True):
 	deps = []
 	count = 0
 	sys.stdout.write("\nDocuments Processed: 00000")
@@ -444,7 +445,16 @@ def LoadAllUnitsFromFiles(dirname, funit=FeatureUnits.WORD):
 		if '.srl' in filename:
 			count = count + 1
 			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5))
-			deps = deps + ReadDependencyParseFile(os.path.join(dirname, filename), funit=funit)
+			if keep_duplicates:
+				if remove_stop_words:
+					deps.extend(RemoveItemsWithPOSExcept(ReadDependencyParseFile(os.path.join(dirname, filename), funit=funit)))
+				else:
+					deps.extend(ReadDependencyParseFile(os.path.join(dirname, filename), funit=funit))
+			else:
+				if remove_stop_words:
+					deps.extend(set(RemoveItemsWithPOSExcept(ReadDependencyParseFile(os.path.join(dirname, filename), funit=funit))))
+				else:
+					deps.extend(set(ReadDependencyParseFile(os.path.join(dirname, filename), funit=funit)))
 	sys.stdout.write('\n')
 	return deps
 	
