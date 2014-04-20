@@ -23,6 +23,9 @@ REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT = True
 global REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME
 REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = True
 
+global USE_MEMORY_MAP
+USE_MEMORY_MAP = True
+
 def DataType(argin):
 		if argin == FeatureType.BINARY:
 			return np.bool
@@ -288,7 +291,14 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 		feature = feature.reshape([feature.shape[0], 1])
 
 	# Init the features matrix, uint16 to save space.
-	features = np.zeros((num_samples, feature.shape[0]), dtype=DataType(ftype))
+	if USE_MEMORY_MAP:
+		if is_testing:
+			features = np.memmap("testing_features.dat", shape=(num_samples, feature.shape[0]), dtype=DataType(ftype), mode='w+')
+		else:
+			features = np.memmap("training_features.dat", shape=(num_samples, feature.shape[0]), dtype=DataType(ftype), mode='w+')
+	else:
+		features = np.zeros((num_samples, feature.shape[0]), dtype=DataType(ftype))
+
 
 	# Counter
 	count = 0;
