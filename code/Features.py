@@ -128,8 +128,8 @@ class PredicateArgument:
 		
 	def __str__(self):
 		if not self.args:
-			return "{Rel: " + str(self.pred) + "}"
-		s = "{Rel: " + str(self.pred)
+			return "{Pred: " + (self.pred.form) + "}"
+		s = "{Pred: " + (self.pred.form)
 		arg_labels = self.args.keys()
 		arg_labels.sort()
 		s = s + "| " + arg_labels[0] + ":"
