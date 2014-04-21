@@ -25,7 +25,7 @@ global REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME
 REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = True
 
 global USE_MEMORY_MAP
-USE_MEMORY_MAP = True
+USE_MEMORY_MAP = False
 
 def DataType(argin):
 		if argin == FeatureType.BINARY:
@@ -265,8 +265,6 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH):
 		return PredArgs
 
 
-
-
 def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=FeatureRepresentation.HASH, feature=None, K=0.5, UseLemma=True):
 	"""
 		Creates an M-by-N matrix where N is the length of the feature vector and M is number of documents
@@ -286,7 +284,7 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 		# Loads all the units from all the documents
 		all_units = LoadAllUnitsFromFiles(dirname, funit=funit, keep_duplicates=False, remove_stop_words=True)
 
-		feature = DefineFeature(all_units, frep=frep) 
+		feature = DefineFeature(all_units, frep=frep, funit=funit) 
 
 		# Rearrange the feature so that it can be used for broadcasting
 		feature = feature.reshape([feature.shape[0], 1])
@@ -313,11 +311,11 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 	# iterate over all the files in the directory
 	for filename in os.listdir(dirname):
 		if '.srl' in filename:
-			features[count, :] = ExtractFeature(feature, Convert(RemoveItemsWithPOSExcept(ReadDependencyParseFile(os.path.join(dirname, filename))),frep=frep),ftype=ftype)
+			features[count, :] = ExtractFeature(feature, Convert(RemoveItemsWithPOSExcept(ReadDependencyParseFile(os.path.join(dirname, filename), funit=funit)),frep=frep, funit=funit),ftype=ftype)
 			count = count + 1
 			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5)) # print just to see code is progressing
 
-
+	str(feature)
 	# Feature Reduction
 	if not is_testing:
 		if REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME:
@@ -359,10 +357,6 @@ def ToTFIDF(features, K=0.5):
 def ToBINARY(features):
 	return features > 0
 
-
-
-
-
 def get_num_samples(dirname):
 	count = 0
 	for filename in os.listdir(dirname):
@@ -394,14 +388,27 @@ def RemoveItemsWithPOSExcept(words_or_deps, keepers=None):
 						if (not REMOVE_SINGLE_CHARACTERS) or len(str(w_or_d.head)) > 1:
 							if (not REMOVE_SINGLE_CHARACTERS) or len(str(w_or_d.head)) > 1:
 								result.append(w_or_d)
+		elif w_or_d.__class__ == PredicateArgument:
+			result.append(w_or_d)
 	return result
 
-def Convert(words_or_deps, frep=FeatureRepresentation.HASH):
+def Convert(words_or_deps, frep=FeatureRepresentation.HASH, funit=FeatureUnits.WORD):
 	"""
 		Convert a list of Dependency objects into an numpy array of strings
 	"""
-	f = ConversionFunction(frep)
-	return np.array([f(w_or_d) for w_or_d in (words_or_deps)], dtype=DataType(frep)) 
+	if funit == FeatureUnits.PRED_ARG:
+		f_def = list()
+		f = ConversionFunction(frep)
+		for pa in words_or_deps:
+			f_def.append(f(pa.pred))
+			for w_list in pa.args.values():
+				word = [str(w) for w in w_list]
+				word = re.sub(SYMBOLS_TO_REMOVE, '', str(word))
+				f_def.append(f(word))
+		return np.array(f_def, dtype=DataType(frep))
+	else:
+		f = ConversionFunction(frep)
+		return np.array([f(w_or_d) for w_or_d in words_or_deps], dtype=DataType(frep)) 
 
 def ConvertUnit(words_or_deps, frep=FeatureRepresentation.HASH):
 	"""
@@ -410,12 +417,23 @@ def ConvertUnit(words_or_deps, frep=FeatureRepresentation.HASH):
 	f = ConversionFunction(frep)
 	return f(words_or_deps) 
 
-def DefineFeature(words_or_deps, frep=FeatureRepresentation.HASH):
+def DefineFeature(words_or_deps, frep=FeatureRepresentation.HASH, funit=FeatureUnits.WORD):
 	"""
 		Convert a list of Dependency objects into an numpy array of strings
 	"""
-	f = ConversionFunction(frep)
-	return np.array([f(w_or_d) for w_or_d in set(words_or_deps)], dtype=DataType(frep)) 
+	if funit == FeatureUnits.PRED_ARG:
+		f_def = list()
+		f = ConversionFunction(frep)
+		for pa in words_or_deps:
+			f_def.append(f(pa.pred))
+			for w_list in pa.args.values():
+				word = [str(w) for w in w_list]
+				word = re.sub(SYMBOLS_TO_REMOVE, '', str(word))
+				f_def.append(f(word))
+		return np.array(list(set(f_def)), dtype=DataType(frep))
+	else:
+		f = ConversionFunction(frep)
+		return np.array([f(w_or_d) for w_or_d in set(words_or_deps)], dtype=DataType(frep)) 
 
 def NumberOfHashCollisions(words_or_deps):
 	return len([hash(w_or_d) for w_or_d in set(words_or_deps)]) - len(set([hash(w_or_d) for w_or_d in set(words_or_deps)])) 
