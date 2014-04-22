@@ -50,6 +50,7 @@ class FeatureUnits(Enum):
 	DEPENDENCY_PAIR = 'DP'
 	BOTH = 'BOTH'
 	PRED_ARG = "PA"
+	WORDS_PA = "WPA"
 
 class FeatureType(Enum):
 	BINARY = 'BINARY'
@@ -197,7 +198,6 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 			count = count + 1
 			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5)) # print just to see code is progressing
 
-	str(feature)
 	# Feature Reduction
 	if not is_testing:
 		if REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME:
@@ -377,7 +377,7 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH, remove=True):
 
 	keepers = KeeperPOS()
 
-	if funit == FeatureUnits.WORD or funit == FeatureUnits.BOTH:
+	if funit == FeatureUnits.WORD or funit == FeatureUnits.BOTH or funit == FeatureUnits.WORDS_PA:
 		f = open(filename, 'r')
 		# Mapping from (sentence number, head id number) to a list of the complements of the head id number
 		sentenceNo = 0
@@ -433,7 +433,7 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH, remove=True):
 		elif funit == FeatureUnits.BOTH:
 			return Dependencies + Words
 
-	if funit == FeatureUnits.PRED_ARG:
+	if funit == FeatureUnits.PRED_ARG or funit == FeatureUnits.WORDS_PA:
 		f = open(filename, 'r')
 		# Mapping from (sentence number, head id number) to a list of the complements of the head id number
 		ComplementsOfHeadInSentence = dict()
@@ -489,7 +489,10 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH, remove=True):
 					list_of_word_obj = [WordsInSentence[sentno][wno] for wno in list_of_word_nos]
 					args_with_word_objects[a[0]] = copy(list_of_word_obj);
 				PredArgs.append(PredicateArgument(WordsInSentence[sentno][relno], copy(args_with_word_objects)))
-		return PredArgs
+		if funit == FeatureUnits.PRED_ARG:
+			return PredArgs
+		elif funit == FeatureUnits.WORDS_PA:
+			return Words + PredArgs
 
 def not_contains_symbols(s):
 	return len(re.sub(SYMBOLS_TO_REMOVE, '', str(s))) == len(str(s))
