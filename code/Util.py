@@ -29,12 +29,14 @@ def LoadClassLabels(filename):
 		y_label.append(line.strip())
 	return y_label
 
-def LoadClassFile(filename):
+def LoadClassFile(filename, out_multi_class_matrix=False):
 	Y = list()
 	f = open(filename, 'r')
 	for line in f:
-		spl = line.split(' ')
+		spl = line.strip().split(' ')
 		Y.append([int(s) for s in spl])
+	if not out_multi_class_matrix:
+		return Y
 	lb = preprocessing.LabelBinarizer()
 	Yprime = lb.fit_transform(Y)
 	if not np.all(np.sum(Yprime, axis=1) == 1):
@@ -136,3 +138,54 @@ def MakeSmallTest(orig_dir, new_dir,TopK=3,NumDocOfEach=np.inf):
 				test_count_of_each_in_small_test[orig_test_classes[counter]] = test_count_of_each_in_small_test[orig_test_classes[counter]] + 1
 			counter = counter + 1
 	return (train_count_of_each_in_small_test, test_count_of_each_in_small_test)
+
+
+
+
+
+
+
+def MakeReutersTest(orig_dir, new_dir):
+	if not os.path.exists(new_dir):
+		os.mkdir(new_dir)
+	if not os.path.exists(os.path.join(new_dir, 'train')):
+		os.mkdir(os.path.join(new_dir, 'train'))
+	if not os.path.exists(os.path.join(new_dir, 'test')):
+		os.mkdir(os.path.join(new_dir, 'test'))
+
+	most_freq = ['acq', 'corn', 'crude', 'earn', 'grain', 'interest', 'money-fx', 'ship', 'trade', 'wheat']
+
+	class_labels = LoadClassLabels(os.path.join(orig_dir, 'class_label_index.txt'))
+	most_freq_idx = [class_labels.index(x) for x in most_freq]
+
+	train_classes = file(os.path.join(new_dir, 'train_classes.txt'), 'w');
+	test_classes = file(os.path.join(new_dir, 'test_classes.txt'), 'w');
+	orig_train_classes = LoadClassFile(os.path.join(orig_dir, 'train_classes.txt'))
+	orig_test_classes = LoadClassFile(os.path.join(orig_dir, 'test_classes.txt'))
+
+
+	counter = 0
+	for filename in os.listdir(os.path.join(orig_dir, 'train')):
+		if filename[-4:] == '.srl':
+			overlap = set(most_freq_idx).intersection(set(orig_train_classes[counter]))
+			if overlap:
+				shutil.copyfile(os.path.join(orig_dir, 'train', filename), os.path.join(new_dir, 'train', filename))
+				for l in overlap:
+					train_classes.write(str(l) + " ")
+				train_classes.write("\n")
+			counter = counter + 1
+	counter = 0
+ 	for filename in os.listdir(os.path.join(orig_dir, 'test')):
+		if filename[-4:] == '.srl':
+			overlap = set(most_freq_idx).intersection(set(orig_test_classes[counter]))
+			if overlap:
+				shutil.copyfile(os.path.join(orig_dir, 'test', filename), os.path.join(new_dir, 'test', filename))
+				for l in overlap:
+					test_classes.write(str(l) + " ")
+				test_classes.write("\n")
+			counter = counter + 1
+
+
+	WriteClassLabelFile(os.path.join(new_dir, 'class_label_index.txt'), most_freq)
+
+
