@@ -12,6 +12,10 @@ import itertools
 global USE_LEMMA 
 USE_LEMMA = True
 
+global USE_FEATURE_TAGS
+USE_FEATURE_TAGS = False
+
+
 global SYMBOLS_TO_REMOVE
 SYMBOLS_TO_REMOVE = '[!@#$%^&*()-_=+\[\]{}\\|;:\'\",.<>/?`~]'
 
@@ -461,18 +465,18 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH, remove=True):
 						rel = int(tuple_rel_arglabel[0])-1
 						arglabel = tuple_rel_arglabel[1]
 						if (sentenceNo, rel) in PredArgInSentence:
-							if (not remove) or (posTag in keepers and ((USE_LEMMA and not_single_character(lemma)) or ((not USE_LEMMA) and not_single_character(wordform)))  and ((USE_LEMMA and not_contains_symbols(lemma)) or ((not USE_LEMMA) and not_contains_symbols(wordform)))):
-								PredArgInSentence[(sentenceNo, rel)].append((arglabel,wordno))
+							#if (not remove) or (posTag in keepers and ((USE_LEMMA and not_single_character(lemma)) or ((not USE_LEMMA) and not_single_character(wordform)))  and ((USE_LEMMA and not_contains_symbols(lemma)) or ((not USE_LEMMA) and not_contains_symbols(wordform)))):
+							PredArgInSentence[(sentenceNo, rel)].append((arglabel,wordno))
 						else:
-							if (not remove) or (posTag in keepers and ((USE_LEMMA and not_single_character(lemma)) or ((not USE_LEMMA) and not_single_character(wordform)))  and ((USE_LEMMA and not_contains_symbols(lemma)) or ((not USE_LEMMA) and not_contains_symbols(wordform)))):
-								PredArgInSentence[(sentenceNo, rel)] = [(arglabel,wordno)]
+							#if (not remove) or (posTag in keepers and ((USE_LEMMA and not_single_character(lemma)) or ((not USE_LEMMA) and not_single_character(wordform)))  and ((USE_LEMMA and not_contains_symbols(lemma)) or ((not USE_LEMMA) and not_contains_symbols(wordform)))):
+							PredArgInSentence[(sentenceNo, rel)] = [(arglabel,wordno)]
 				if not head == -1:
 					if (sentenceNo, head) in ComplementsOfHeadInSentence:
-						if (not remove) or (posTag in keepers and ((USE_LEMMA and not_single_character(lemma)) or ((not USE_LEMMA) and not_single_character(wordform)))  and ((USE_LEMMA and not_contains_symbols(lemma)) or ((not USE_LEMMA) and not_contains_symbols(wordform)))):
-							ComplementsOfHeadInSentence[(sentenceNo, head)].append(wordno)
+						#if (not remove) or (posTag in keepers and ((USE_LEMMA and not_single_character(lemma)) or ((not USE_LEMMA) and not_single_character(wordform)))  and ((USE_LEMMA and not_contains_symbols(lemma)) or ((not USE_LEMMA) and not_contains_symbols(wordform)))):
+						ComplementsOfHeadInSentence[(sentenceNo, head)].append(wordno)
 					else:
-						if (not remove) or (posTag in keepers and ((USE_LEMMA and not_single_character(lemma)) or ((not USE_LEMMA) and not_single_character(wordform)))  and ((USE_LEMMA and not_contains_symbols(lemma)) or ((not USE_LEMMA) and not_contains_symbols(wordform)))):
-							ComplementsOfHeadInSentence[(sentenceNo, head)] = [wordno]
+						#if (not remove) or (posTag in keepers and ((USE_LEMMA and not_single_character(lemma)) or ((not USE_LEMMA) and not_single_character(wordform)))  and ((USE_LEMMA and not_contains_symbols(lemma)) or ((not USE_LEMMA) and not_contains_symbols(wordform)))):
+						ComplementsOfHeadInSentence[(sentenceNo, head)] = [wordno]
 			else:
 				sentenceNo = sentenceNo + 1
 				WordsInSentence[sentenceNo] = []
@@ -481,13 +485,18 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH, remove=True):
 				args = PredArgInSentence[(sentno, relno)]
 				args_with_word_objects = dict()
 				for a in args:
-					list_of_word_nos = list([a[1]])
+					list_of_word_nos = list()
+					if (not remove) or (WordsInSentence[sentno][a[1]].posTag in keepers and ((USE_LEMMA and not_single_character(WordsInSentence[sentno][a[1]].lemma)) or ((not USE_LEMMA) and not_single_character(WordsInSentence[sentno][a[1]].wordform)))  and ((USE_LEMMA and not_contains_symbols(WordsInSentence[sentno][a[1]].lemma)) or ((not USE_LEMMA) and not_contains_symbols(WordsInSentence[sentno][a[1]].wordform)))):
+						list_of_word_nos.extend([a[1]])
 					if (sentno, a[1]) in ComplementsOfHeadInSentence:
-						list_of_word_nos = list_of_word_nos + ComplementsOfHeadInSentence[(sentno, a[1])]; #Concat
+						for wn in ComplementsOfHeadInSentence[(sentno, a[1])]:
+							if (not remove) or (WordsInSentence[sentno][wn].posTag in keepers and ((USE_LEMMA and not_single_character(WordsInSentence[sentno][wn].lemma)) or ((not USE_LEMMA) and not_single_character(WordsInSentence[sentno][wn].wordform)))  and ((USE_LEMMA and not_contains_symbols(WordsInSentence[sentno][wn].lemma)) or ((not USE_LEMMA) and not_contains_symbols(WordsInSentence[sentno][wn].wordform)))):
+								list_of_word_nos.extend([wn]);
 					list_of_word_nos = list(set(list_of_word_nos))
 					list_of_word_nos.sort()
 					list_of_word_obj = [WordsInSentence[sentno][wno] for wno in list_of_word_nos]
-					args_with_word_objects[a[0]] = copy(list_of_word_obj);
+					if len(list_of_word_obj) > 0:
+						args_with_word_objects[a[0]] = copy(list_of_word_obj);
 				PredArgs.append(PredicateArgument(WordsInSentence[sentno][relno], copy(args_with_word_objects)))
 		if funit == FeatureUnits.PRED_ARG:
 			return PredArgs
