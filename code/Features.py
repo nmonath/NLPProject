@@ -462,7 +462,7 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH, remove=True):
 				WordsInSentence[sentenceNo] = []
 		for (sentno, headno) in ComplementsOfHeadInSentence:
 			for compno in ComplementsOfHeadInSentence[(sentno, headno)]:
-				if (not remove) or (WordsInSentence[sentno][headno].posTag in keepers and ((USE_LEMMA and not_single_character(WordsInSentence[sentno][headno].lemma)) or ((not USE_LEMMA) and not_single_character(WordsInSentence[sentno][headno].wordform)))  and ((USE_LEMMA and not_contains_symbols(WordsInSentence[sentno][headno].lemma)) or ((not USE_LEMMA) and not_contains_symbols(WordsInSentence[sentno][headno].wordform)))):
+				if (not remove) or (WordsInSentence[sentno][headno].posTag in keepers and ((USE_LEMMA and not_single_character(WordsInSentence[sentno][headno].lemma)) or ((not USE_LEMMA) and not_single_character(WordsInSentence[sentno][headno].form)))  and ((USE_LEMMA and not_contains_symbols(WordsInSentence[sentno][headno].lemma)) or ((not USE_LEMMA) and not_contains_symbols(WordsInSentence[sentno][headno].form)))):
 					Dependencies.append(Dependency(WordsInSentence[sentno][headno], WordsInSentence[sentno][compno], sentno))
 		
 		if funit == FeatureUnits.DEPENDENCY_PAIR:
@@ -514,16 +514,16 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH, remove=True):
 				sentenceNo = sentenceNo + 1
 				WordsInSentence[sentenceNo] = []
 		for (sentno, relno) in PredArgInSentence:
-			if (not remove) or (WordsInSentence[sentno][relno].posTag in keepers and ((USE_LEMMA and not_single_character(WordsInSentence[sentno][relno].lemma)) or ((not USE_LEMMA) and not_single_character(WordsInSentence[sentno][relno].wordform)))  and ((USE_LEMMA and not_contains_symbols(WordsInSentence[sentno][relno].lemma)) or ((not USE_LEMMA) and not_contains_symbols(WordsInSentence[sentno][relno].wordform)))):
+			if (not remove) or (WordsInSentence[sentno][relno].posTag in keepers and ((USE_LEMMA and not_single_character(WordsInSentence[sentno][relno].lemma)) or ((not USE_LEMMA) and not_single_character(WordsInSentence[sentno][relno].form)))  and ((USE_LEMMA and not_contains_symbols(WordsInSentence[sentno][relno].lemma)) or ((not USE_LEMMA) and not_contains_symbols(WordsInSentence[sentno][relno].form)))):
 				args = PredArgInSentence[(sentno, relno)]
 				args_with_word_objects = dict()
 				for a in args:
 					list_of_word_nos = list()
-					if (not remove) or (WordsInSentence[sentno][a[1]].posTag in keepers and ((USE_LEMMA and not_single_character(WordsInSentence[sentno][a[1]].lemma)) or ((not USE_LEMMA) and not_single_character(WordsInSentence[sentno][a[1]].wordform)))  and ((USE_LEMMA and not_contains_symbols(WordsInSentence[sentno][a[1]].lemma)) or ((not USE_LEMMA) and not_contains_symbols(WordsInSentence[sentno][a[1]].wordform)))):
+					if (not remove) or (WordsInSentence[sentno][a[1]].posTag in keepers and ((USE_LEMMA and not_single_character(WordsInSentence[sentno][a[1]].lemma)) or ((not USE_LEMMA) and not_single_character(WordsInSentence[sentno][a[1]].form)))  and ((USE_LEMMA and not_contains_symbols(WordsInSentence[sentno][a[1]].lemma)) or ((not USE_LEMMA) and not_contains_symbols(WordsInSentence[sentno][a[1]].form)))):
 						list_of_word_nos.extend([a[1]])
 					if (sentno, a[1]) in ComplementsOfHeadInSentence:
 						for wn in ComplementsOfHeadInSentence[(sentno, a[1])]:
-							if (not remove) or (WordsInSentence[sentno][wn].posTag in keepers and ((USE_LEMMA and not_single_character(WordsInSentence[sentno][wn].lemma)) or ((not USE_LEMMA) and not_single_character(WordsInSentence[sentno][wn].wordform)))  and ((USE_LEMMA and not_contains_symbols(WordsInSentence[sentno][wn].lemma)) or ((not USE_LEMMA) and not_contains_symbols(WordsInSentence[sentno][wn].wordform)))):
+							if (not remove) or (WordsInSentence[sentno][wn].posTag in keepers and ((USE_LEMMA and not_single_character(WordsInSentence[sentno][wn].lemma)) or ((not USE_LEMMA) and not_single_character(WordsInSentence[sentno][wn].form)))  and ((USE_LEMMA and not_contains_symbols(WordsInSentence[sentno][wn].lemma)) or ((not USE_LEMMA) and not_contains_symbols(WordsInSentence[sentno][wn].form)))):
 								list_of_word_nos.extend([wn]);
 					list_of_word_nos = list(set(list_of_word_nos))
 					list_of_word_nos.sort()
