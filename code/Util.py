@@ -67,14 +67,14 @@ def SVMLightWrite(targets, features, filename):
 	fid.write('\n');
 	fid.close()
 
-def SRL(dirname, traintest):
+def SRL(dirname):
 	"""
     	Calls clearnlp parser on all the files in the given directories
   	"""
-  	os.system("java -XX:+UseConcMarkSweepGC -Xmx3g com.clearnlp.nlp.engine.NLPDecode -z srl -c config_en_srl.xml -i "  + os.path.join(dirname, traintest) + " -oe srl")
-  	for filename in os.listdir(os.path.join(dirname, traintest)):
+  	os.system("java -XX:+UseConcMarkSweepGC -Xmx3g com.clearnlp.nlp.engine.NLPDecode -z srl -c config_en_srl.xml -i "  + dirname + " -oe srl")
+  	for filename in os.listdir(dirname):
   		if filename.startswith('.') and filename[-4:] == '.srl':
-  			os.remove(os.path.join(dirname, traintest, filename))
+  			os.remove(os.path.join(dirname, filename))
 
 
 def FeatureOccuranceReport(feature_def, x):
@@ -145,7 +145,7 @@ def MakeSmallTest(orig_dir, new_dir,TopK=3,NumDocOfEach=np.inf):
 
 
 
-def MakeReutersTest(orig_dir, new_dir):
+def MakeReutersTest(orig_dir, new_dir, classification=False):
 	if not os.path.exists(new_dir):
 		os.mkdir(new_dir)
 	if not os.path.exists(os.path.join(new_dir, 'train')):
@@ -168,7 +168,7 @@ def MakeReutersTest(orig_dir, new_dir):
 	for filename in os.listdir(os.path.join(orig_dir, 'train')):
 		if filename[-4:] == '.srl':
 			overlap = set(most_freq_idx).intersection(set(orig_train_classes[counter]))
-			if overlap:
+			if overlap and ((not classification) or len(overlap)==1):
 				shutil.copyfile(os.path.join(orig_dir, 'train', filename), os.path.join(new_dir, 'train', filename))
 				for l in overlap:
 					train_classes.write(str(l) + " ")
@@ -178,7 +178,7 @@ def MakeReutersTest(orig_dir, new_dir):
  	for filename in os.listdir(os.path.join(orig_dir, 'test')):
 		if filename[-4:] == '.srl':
 			overlap = set(most_freq_idx).intersection(set(orig_test_classes[counter]))
-			if overlap:
+			if overlap and ((not classification) or len(overlap)==1):
 				shutil.copyfile(os.path.join(orig_dir, 'test', filename), os.path.join(new_dir, 'test', filename))
 				for l in overlap:
 					test_classes.write(str(l) + " ")
