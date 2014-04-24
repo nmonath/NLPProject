@@ -10,7 +10,6 @@ class Document:
 		if (embeddings== None and (not word_index == None) and (not model == None)):
 			(idx, embeddings) = Word2VecExecuter.Word2VecLoadWordsHashTable(model, word_index)
 			embeddings = np.array(embeddings)
-			del word_index
 
 		self.kd_tree = KDTree(normalize(embeddings), leaf_size=30, metric='euclidean')
 
