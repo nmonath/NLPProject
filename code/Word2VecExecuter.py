@@ -57,7 +57,7 @@ def GetVectorsForWords(model, list_of_words):
 def Word2VecLoadWordsHashTable(model, list_of_words, representation=FeatureRepresentation.STRING):
 
 	list_of_words = set(list_of_words)
-	list_of_words = RemoveItemsWithPOSExcept(list_of_words)
+	#list_of_words = RemoveItemsWithPOSExcept(list_of_words)
 	#number_of_words = len(list_of_words); 
 	fpr = None
 	counter=0; 
