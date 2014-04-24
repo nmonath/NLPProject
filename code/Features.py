@@ -101,23 +101,23 @@ class Word:
 				if USE_LEMMA:
 					return self.lemma + "/" + self.posTag + "-" + self.depRel
 				else:
-					return self.wordform + "/" + self.posTag + "-" + self.depRel
+					return self.form + "/" + self.posTag + "-" + self.depRel
 			else:
 				if USE_LEMMA:
 					return self.lemma  + "-" + self.depRel
 				else:
-					return self.wordform  + "-" + self.depRel
+					return self.form  + "-" + self.depRel
 		else:
 			if USE_POS_TAGS:
 				if USE_LEMMA:
 					return self.lemma + "/" + self.posTag 
 				else:
-					return self.wordform + "/" + self.posTag 
+					return self.form + "/" + self.posTag 
 			else:
 				if USE_LEMMA:
 					return self.lemma  
 				else:
-					return self.wordform 
+					return self.form 
 
 	def __hash__(self):
 		return hash(str(self))
