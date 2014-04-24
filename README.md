@@ -9,10 +9,14 @@ You will also need to install the Enum package for Python, which can be done wit
 ```
 $ easy_install enum
 ```
-As well as the Genism package, which can be done with the command:
+As well as the Gensim package, which can be done with the command:
 ```
 $ easy_install -U gensim
 ```
+
+Gensim provides an interface with Word2Vec in Python. 
+
+Finally, to perform the Fuzzy Clustering experiments. You'll need to download and install _peach_. You can download it from here: https://code.google.com/p/peach/ Just unzip the directory and place in the folder containing your Python libraries.
 
 # Using Features.py
 
@@ -61,7 +65,10 @@ FeatureUnit determines the base elements of the vector space model. Right now th
 FeatureUnit.WORD
 FeatureUnit.DEPENDENCY_PAIR
 FeatureUnit.BOTH
+FeatureUnit.PRED_ARG
+FeatureUnit.WORDS_PA
 ```
+_WORD_ provides a traditional bag of words approach. _DEPENDENDENCY\_PAIR_ uses only dependency pairs. _BOTH_ uses both words and dependency pairs. _PRED\_ARG_ uses only predicate argument structures. _WORDS_PA_ uses both words and predicate argument structures. 
 
 There are two options for FeatureRepresentation, which determines whether Hash values are used to reprsent the FeatureUnits or if Strings are used.
 
@@ -70,6 +77,9 @@ FeatureRepresentation.HASH
 FeatureRepresentation.STRING
 ```
 
+Using a hashed representation of the characters is much faster, but can lead to some collisions. Reports about the number of collisions on average are coming soon.
+
+
 There are three options for FeatureType, which determines the values inside of the vector space features.
 
 ```
@@ -77,6 +87,22 @@ FeatureType.BINARY
 FeatureType.TFIDF
 FeatureType.COUNT
 ```
+
+You can also use the following options to change the features:
+
+```
+Features.USE_LEMMA = True/False
+
+Features.USE_DEP_TAGS = True/False
+
+Features.USE_POS_TAGS = True/False
+
+Features.USE_ARG_LABELS = True/False
+
+```
+
+These determine if the lemmatized form of words are used and whether meta-data from the parser is used.
+
 
 If you wanted to use dependency pairs as the feature unit, hashed representations, and term frequency-inverse document frequency, we would do:
 
