@@ -2,14 +2,21 @@ from sklearn.neighbors import KDTree
 from sklearn.preprocessing import normalize
 import Word2VecExecuter
 import numpy as np
+import Features
 
 class Document:
 
-	def __init__(self, embeddings=None, word_index=None, model=None):
+	def __init__(self, embeddings=None, doc_file_name=None, word_index=None, model=None, use_lemma=False):
 		# Normal case, build kdtree right from embeddings:
 		if (embeddings== None and (not word_index == None) and (not model == None)):
 			(idx, embeddings) = Word2VecExecuter.Word2VecLoadWordsHashTable(model, word_index)
 			embeddings = np.array(embeddings)
+		elif ((not doc_file_name == None) and (not model == None)):
+			Features.USE_LEMMA = use_lemma
+			words = Features.ReadDependencyParseFile(doc_file_name, funit=Features.FeatureUnits.WORD, remove=False)
+			(word_index, embeddings) = Word2VecExecuter.Word2VecLoadWordsHashTable(model, words)
+			embeddings = np.array(embeddings)
+			del word_index
 
 		self.kd_tree = KDTree(normalize(embeddings), leaf_size=30, metric='euclidean')
 
