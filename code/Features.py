@@ -12,9 +12,14 @@ import itertools
 global USE_LEMMA 
 USE_LEMMA = True
 
-global USE_FEATURE_TAGS
-USE_FEATURE_TAGS = False
+global USE_DEP_TAGS
+USE_DEP_TAGS = False
 
+global USE_POS_TAGS
+USE_POS_TAGS = False
+
+global USE_ARG_LABELS
+USE_ARG_LABELS = False
 
 global SYMBOLS_TO_REMOVE
 SYMBOLS_TO_REMOVE = '[!@#$%^&*()-_=+\[\]{}\\|;:\'\",.<>/?`~]'
@@ -91,10 +96,31 @@ class Word:
 		return not self.eq(other)
 
 	def __str__(self):
-		return self.lemma if USE_LEMMA else self.form
+		if USE_DEP_TAGS:
+			if USE_POS_TAGS:
+				if USE_LEMMA:
+					return self.lemma + "/" + self.posTag + "-" + self.depRel
+				else:
+					return self.wordform + "/" + self.posTag + "-" + self.depRel
+			else:
+				if USE_LEMMA:
+					return self.lemma  + "-" + self.depRel
+				else:
+					return self.wordform  + "-" + self.depRel
+		else:
+			if USE_POS_TAGS:
+				if USE_LEMMA:
+					return self.lemma + "/" + self.posTag 
+				else:
+					return self.wordform + "/" + self.posTag 
+			else:
+				if USE_LEMMA:
+					return self.lemma  
+				else:
+					return self.wordform 
 
 	def __hash__(self):
-		return hash(self.lemma) if USE_LEMMA else hash(self.form)
+		return hash(str(self))
 
 class Dependency:
 	"""
@@ -120,11 +146,10 @@ class Dependency:
 		return s
 
 	def __str__(self):
-		return self.head.lemma + " " + self.complement.lemma if USE_LEMMA else self.head.form + " " + self.complement.form
+		return str(self.head) + " " + str(self.complement)
 
 	def __hash__(self):
-		return (hash(self.head.lemma + " " + self.complement.lemma)) if USE_LEMMA else (hash(self.head.form + " " + self.complement.form)) 
-
+		return hash(str(self))
 
 class PredicateArgument:
 	"""
@@ -150,6 +175,24 @@ class PredicateArgument:
 				s = s + " " + (w.form)
 		s = s + "}"
 		return s
+
+	def getFeatures(self, frep=FeatureRepresentation.HASH):
+		f_def = list()
+		f = ConversionFunction(frep)
+		f_def.append(f(self.pred))
+		for a_label in self.args:
+				# Convert list of words into string
+				word_string = str(self.args[a_label][0])
+				for w in range(1, len(self.args[a_label])):
+					word_string = word_string + " " + str(self.args[a_label][w])
+				if USE_ARG_LABELS:
+					f_def.append(f(a_label + " " + word_string))
+				else:
+					f_def.append(f(word_string))
+		return f_def
+
+	def __hash__(self):
+		return hash(str(self))
 	
 
 def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=FeatureRepresentation.HASH, feature=None, K=0.5, UseLemma=True):
@@ -280,23 +323,18 @@ def RemoveItemsWithPOSExcept(words_or_deps, keepers=None):
 					result.append()
 	return result
 
-def Convert(words_or_deps, frep=FeatureRepresentation.HASH, funit=FeatureUnits.WORD):
+def Convert(units, frep=FeatureRepresentation.HASH, funit=FeatureUnits.WORD):
 	"""
 		Convert a list of Dependency objects into an numpy array of strings
 	"""
 	if funit == FeatureUnits.PRED_ARG:
 		f_def = list()
-		f = ConversionFunction(frep)
-		for pa in words_or_deps:
-			f_def.append(f(pa.pred))
-			for w_list in pa.args.values():
-				word = [str(w) for w in w_list]
-				word = re.sub(SYMBOLS_TO_REMOVE, '', str(word))
-				f_def.append(f(word))
+		for u in units:
+			f_def.extend(u.getFeatures(frep=frep))
 		return np.array(f_def, dtype=DataType(frep))
 	else:
-		f = ConversionFunction(frep)
-		return np.array([f(w_or_d) for w_or_d in words_or_deps], dtype=DataType(frep)) 
+		conv = ConversionFunction(frep)
+		return np.array([conv(u) for u in units], dtype=DataType(frep)) 
 
 def ConvertUnit(words_or_deps, frep=FeatureRepresentation.HASH):
 	"""
@@ -305,23 +343,18 @@ def ConvertUnit(words_or_deps, frep=FeatureRepresentation.HASH):
 	f = ConversionFunction(frep)
 	return f(words_or_deps) 
 
-def DefineFeature(words_or_deps, frep=FeatureRepresentation.HASH, funit=FeatureUnits.WORD):
+def DefineFeature(units, frep=FeatureRepresentation.HASH, funit=FeatureUnits.WORD):
 	"""
 		Convert a list of Dependency objects into an numpy array of strings
 	"""
 	if funit == FeatureUnits.PRED_ARG:
 		f_def = list()
-		f = ConversionFunction(frep)
-		for pa in words_or_deps:
-			f_def.append(f(pa.pred))
-			for w_list in pa.args.values():
-				word = [str(w) for w in w_list]
-				word = re.sub(SYMBOLS_TO_REMOVE, '', str(word))
-				f_def.append(f(word))
+		for pa in units:
+			f_def.extend(pa.getFeatures(frep=frep))
 		return np.array(list(set(f_def)), dtype=DataType(frep))
 	else:
-		f = ConversionFunction(frep)
-		return np.array([f(w_or_d) for w_or_d in set(words_or_deps)], dtype=DataType(frep)) 
+		conv = ConversionFunction(frep)
+		return np.array([conv(u) for u in set(units)], dtype=DataType(frep)) 
 
 def NumberOfHashCollisions(words_or_deps):
 	return len([hash(w_or_d) for w_or_d in set(words_or_deps)]) - len(set([hash(w_or_d) for w_or_d in set(words_or_deps)])) 
@@ -364,9 +397,9 @@ def Display(dep):
 	"""
 	for d in dep:
 		if d.__class__ == Word:
-			print(d.form)
+			print(str(d))
 		elif d.__class__ == Dependency:
-			print(d.fancy_string())
+			print(str(d))
 		elif d.__class__ == PredicateArgument:
 			print(str(d))
 
