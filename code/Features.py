@@ -52,9 +52,9 @@ def DisplayConfiguration():
 	print("------------------------------")
 	print("USE_LEMMA: " + str(USE_LEMMA))
 	print("CASE_SENSITIVE: " + str(CASE_SENSITIVE))
-	print("USE_POS_TAGS" + str(USE_POS_TAGS))
-	print("USE_DEP_TAGS" + str(USE_DEP_TAGS))
-	print("USE_ARG_LABELS" + str(USE_ARG_LABELS))
+	print("USE_POS_TAGS: " + str(USE_POS_TAGS))
+	print("USE_DEP_TAGS: " + str(USE_DEP_TAGS))
+	print("USE_ARG_LABELS: " + str(USE_ARG_LABELS))
 	print("SYMBOLS_TO_KEEP: " + SYMBOLS_TO_KEEP)
 	print("REMOVE_SINGLE_CHARACTERS: " + str(REMOVE_SINGLE_CHARACTERS))
 	print("REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT: " + str(REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT))
@@ -84,9 +84,11 @@ def ConversionFunction(argin):
 class FeatureUnits(Enum):
 	WORD = 'WORD'
 	DEPENDENCY_PAIR = 'DP'
-	BOTH = 'BOTH'
-	PRED_ARG = "PA"
-	WORDS_PA = "WPA"
+	WORDS_AND_DEPENDENCY_PAIRS = 'WDP'
+	PREDICATE_ARGUMENT = "PA"
+	WORDS_AND_PREDICATE_ARGUMENT = "WPA"
+	DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT = 'DPPA'
+	ALL = 'ALL'
 
 class FeatureType(Enum):
 	BINARY = 'BINARY'
@@ -218,7 +220,10 @@ class PredicateArgument:
 	def getFeatures(self, frep=FeatureRepresentation.HASH):
 		f_def = list()
 		f = ConversionFunction(frep)
-		f_def.append(f(self.pred))
+		if USE_ARG_LABELS:
+			f_def.append("Predicate: " + f(self.pred))
+		else:
+			f_def.append(f(self.pred))
 		for a_label in self.args:
 				# Convert list of words into string
 				word_string = str(self.args[a_label][0])
@@ -253,7 +258,7 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 		# Loads all the units from all the documents
 		all_units = LoadAllUnitsFromFiles(dirname, funit=funit, keep_duplicates=False, remove_stop_words=True)
 
-		feature = DefineFeature(all_units, frep=frep, funit=funit) 
+		feature = DefineFeature(all_units, frep=frep) 
 
 		# Rearrange the feature so that it can be used for broadcasting
 		feature = feature.reshape([feature.shape[0], 1])
@@ -280,7 +285,7 @@ def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=Fe
 	# iterate over all the files in the directory
 	for filename in os.listdir(dirname):
 		if '.srl' in filename:
-			features[count, :] = ExtractFeature(feature, Convert((ReadDependencyParseFile(os.path.join(dirname, filename), remove=True, funit=funit)),frep=frep, funit=funit),ftype=ftype)
+			features[count, :] = ExtractFeature(feature, Convert((ReadDependencyParseFile(os.path.join(dirname, filename), remove=True, funit=funit)),frep=frep),ftype=ftype)
 			count = count + 1
 			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5)) # print just to see code is progressing
 
@@ -362,18 +367,18 @@ def RemoveItemsWithPOSExcept(words_or_deps, keepers=None):
 					result.append()
 	return result
 
-def Convert(units, frep=FeatureRepresentation.HASH, funit=FeatureUnits.WORD):
+def Convert(units, frep=FeatureRepresentation.HASH):
 	"""
 		Convert a list of Dependency objects into an numpy array of strings
 	"""
-	if funit == FeatureUnits.PRED_ARG:
-		f_def = list()
-		for u in units:
-			f_def.extend(u.getFeatures(frep=frep))
-		return np.array(f_def, dtype=DataType(frep))
-	else:
-		conv = ConversionFunction(frep)
-		return np.array([conv(u) for u in units], dtype=DataType(frep)) 
+	fdef = list()
+	conv = ConversionFunction(frep)
+	for u in units:
+		if u.__class__==PredicateArgument:
+			fdef.extend(u.getFeatures(frep=frep))
+		else:
+			fdef.append(conv(u))
+	return np.array(fdef, dtype=DataType(frep))
 
 def ConvertUnit(words_or_deps, frep=FeatureRepresentation.HASH):
 	"""
@@ -382,18 +387,20 @@ def ConvertUnit(words_or_deps, frep=FeatureRepresentation.HASH):
 	f = ConversionFunction(frep)
 	return f(words_or_deps) 
 
-def DefineFeature(units, frep=FeatureRepresentation.HASH, funit=FeatureUnits.WORD):
+def DefineFeature(units, frep=FeatureRepresentation.HASH):
 	"""
 		Convert a list of Dependency objects into an numpy array of strings
 	"""
-	if funit == FeatureUnits.PRED_ARG:
-		f_def = list()
-		for pa in units:
-			f_def.extend(pa.getFeatures(frep=frep))
-		return np.array(list(set(f_def)), dtype=DataType(frep))
-	else:
-		conv = ConversionFunction(frep)
-		return np.array([conv(u) for u in set(units)], dtype=DataType(frep)) 
+
+	fdef = list()
+	conv = ConversionFunction(frep)
+	for u in set(units):
+		if u.__class__==PredicateArgument:
+			fdef.extend(u.getFeatures(frep=frep))
+		else:
+			fdef.append(conv(u))
+	return np.array(fdef, dtype=DataType(frep))
+
 
 def NumberOfHashCollisions(words_or_deps):
 	return len([hash(w_or_d) for w_or_d in set(words_or_deps)]) - len(set([hash(w_or_d) for w_or_d in set(words_or_deps)])) 
@@ -453,7 +460,7 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.WORD, remove=True):
 
 	keepers = KeeperPOS()
 
-	if funit == FeatureUnits.WORD or funit == FeatureUnits.BOTH or funit == FeatureUnits.WORDS_PA:
+	if funit  in [FeatureUnits.WORD, FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS, FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT, FeatureUnits.ALL]:
 		f = open(filename, 'r')
 		# Mapping from (sentence number, head id number) to a list of the complements of the head id number
 		sentenceNo = 0
@@ -473,7 +480,7 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.WORD, remove=True):
 				# 	print([wordno, wordform, lemma, posTag, feat, head, depRel])
 		if funit == FeatureUnits.WORD: 
 			return Words
-	if funit == FeatureUnits.DEPENDENCY_PAIR or funit == FeatureUnits.BOTH:
+	if funit in [FeatureUnits.DEPENDENCY_PAIR, FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS, FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT, FeatureUnits.ALL]:
 		f = open(filename, 'r')
 		# Mapping from (sentence number, head id number) to a list of the complements of the head id number
 		ComplementsOfHeadInSentence = dict()
@@ -508,10 +515,10 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.WORD, remove=True):
 		
 		if funit == FeatureUnits.DEPENDENCY_PAIR:
 			return Dependencies
-		elif funit == FeatureUnits.BOTH:
+		elif funit == FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS:
 			return Dependencies + Words
 
-	if funit == FeatureUnits.PRED_ARG or funit == FeatureUnits.WORDS_PA:
+	if funit in [FeatureUnits.PREDICATE_ARGUMENT, FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT, FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT, FeatureUnits.ALL]:
 		f = open(filename, 'r')
 		# Mapping from (sentence number, head id number) to a list of the complements of the head id number
 		ComplementsOfHeadInSentence = dict()
@@ -572,10 +579,14 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.WORD, remove=True):
 					if len(list_of_word_obj) > 0:
 						args_with_word_objects[a[0]] = copy(list_of_word_obj);
 				PredArgs.append(PredicateArgument(WordsInSentence[sentno][relno], copy(args_with_word_objects)))
-		if funit == FeatureUnits.PRED_ARG:
+		if funit == FeatureUnits.PREDICATE_ARGUMENT:
 			return PredArgs
-		elif funit == FeatureUnits.WORDS_PA:
+		elif funit == FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT:
 			return Words + PredArgs
+		elif funit == FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT:
+			return Dependencies + PredArgs
+	if FeatureUnits.ALL:
+		return Words + Dependencies + PredArgs
 
 def not_contains_symbols(s):
 	return len(re.sub(SYMBOLS_TO_KEEP, '', str(s))) == 0

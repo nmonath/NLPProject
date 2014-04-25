@@ -400,7 +400,7 @@ Features.REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = False
 Features.DisplayConfiguration()
 
 
-(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.BOTH,frep=Features.FeatureRepresentation.STRING)
+(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS,frep=Features.FeatureRepresentation.STRING)
 
 print("\nFeature Definition")
 print(fdef)
@@ -442,7 +442,7 @@ Features.REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = False
 Features.DisplayConfiguration()
 
 
-(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.PRED_ARG,frep=Features.FeatureRepresentation.STRING)
+(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.PREDICATE_ARGUMENT,frep=Features.FeatureRepresentation.STRING)
 
 print("\nFeature Definition")
 print(fdef)
@@ -477,7 +477,7 @@ Features.REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = False
 Features.DisplayConfiguration()
 
 
-(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.PRED_ARG,frep=Features.FeatureRepresentation.STRING)
+(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.PREDICATE_ARGUMENT,frep=Features.FeatureRepresentation.STRING)
 
 print("\nFeature Definition")
 print(fdef)
@@ -510,7 +510,7 @@ Features.REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = True
 Features.DisplayConfiguration()
 
 
-(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.PRED_ARG,frep=Features.FeatureRepresentation.STRING)
+(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.PREDICATE_ARGUMENT,frep=Features.FeatureRepresentation.STRING)
 
 print("\nFeature Definition")
 print(fdef)
@@ -544,7 +544,7 @@ Features.REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = False
 Features.DisplayConfiguration()
 
 
-(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.PRED_ARG,frep=Features.FeatureRepresentation.STRING)
+(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.PREDICATE_ARGUMENT,frep=Features.FeatureRepresentation.STRING)
 
 print("\nFeature Definition")
 print(fdef)
@@ -577,7 +577,7 @@ Features.REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = True
 Features.DisplayConfiguration()
 
 
-(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.PRED_ARG,frep=Features.FeatureRepresentation.STRING)
+(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.PREDICATE_ARGUMENT,frep=Features.FeatureRepresentation.STRING)
 
 print("\nFeature Definition")
 print(fdef)
@@ -614,7 +614,7 @@ Features.REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = False
 Features.DisplayConfiguration()
 
 
-(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.PRED_ARG,frep=Features.FeatureRepresentation.STRING)
+(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.PREDICATE_ARGUMENT,frep=Features.FeatureRepresentation.STRING)
 
 print("\nFeature Definition")
 print(fdef)
@@ -635,5 +635,249 @@ print(doc4c)
 print("\n")
 
 
+print('%' * 80)
+print('%' * 80 + "\n")
+print("Words and Predicate Argument Structures.\n")
+print('%' * 80 )
+print('%' * 80 + "\n")
+
+
+print('%' * 80 + "\n")
+print("Shown below is a feature defined by words and predicate arguments. It is lemmatized and documents appearing 1 time or in 1 document are included")
+print('%' * 80 + "\n")
+
+
+
+Features.USE_LEMMA = True
+Features.USE_DEP_TAGS = False
+Features.USE_POS_TAGS = False
+Features.USE_ARG_LABELS = False
+Features.CASE_SENSITIVE = False
+Features.REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT = False
+Features.REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = False
+Features.DisplayConfiguration()
+
+
+(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT,frep=Features.FeatureRepresentation.STRING)
+
+print("\nFeature Definition")
+print(fdef)
+print("\nX matrix")
+print(X)
+
+print("\nThis should make sense given the following contents of the documents\n")
+
+doc1c = "Document 1: \n" + file('../data_sets/unit_test2/train/train_00001.srl').read()
+doc2c = "Document 2: \n" + file('../data_sets/unit_test2/train/train_00002.srl').read()
+doc3c = "Document 3: \n" + file('../data_sets/unit_test2/train/train_00003.srl').read()
+doc4c = "Document 4: \n" +file('../data_sets/unit_test2/train/train_00004.srl').read()
+
+print(doc1c)
+print(doc2c)
+print(doc3c)
+print(doc4c)
+print("\n")
+
+
+
+
+print('%' * 80 + "\n")
+print("Below is the same feature as above but with all labels")
+print('%' * 80 + "\n")
+
+
+
+Features.USE_LEMMA = True
+Features.USE_DEP_TAGS = True
+Features.USE_POS_TAGS = True
+Features.USE_ARG_LABELS = True
+Features.CASE_SENSITIVE = False
+Features.REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT = False
+Features.REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = False
+Features.DisplayConfiguration()
+
+
+(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT,frep=Features.FeatureRepresentation.STRING)
+
+print("\nFeature Definition")
+print(fdef)
+print("\nX matrix")
+print(X)
+
+print("\nThis should make sense given the following contents of the documents\n")
+
+doc1c = "Document 1: \n" + file('../data_sets/unit_test2/train/train_00001.srl').read()
+doc2c = "Document 2: \n" + file('../data_sets/unit_test2/train/train_00002.srl').read()
+doc3c = "Document 3: \n" + file('../data_sets/unit_test2/train/train_00003.srl').read()
+doc4c = "Document 4: \n" +file('../data_sets/unit_test2/train/train_00004.srl').read()
+
+print(doc1c)
+print(doc2c)
+print(doc3c)
+print(doc4c)
+print("\n")
+
+print('%' * 80)
+print('%' * 80 + "\n")
+print("Dependency Pairs and Predicate Argument Structures.\n")
+print('%' * 80 )
+print('%' * 80 + "\n")
+
+print('%' * 80 + "\n")
+print("Shown below is a feature defined by dep pairs and predicate arguments. It is lemmatized and documents appearing 1 time or in 1 document are included")
+print('%' * 80 + "\n")
+
+
+
+Features.USE_LEMMA = True
+Features.USE_DEP_TAGS = False
+Features.USE_POS_TAGS = False
+Features.USE_ARG_LABELS = False
+Features.CASE_SENSITIVE = False
+Features.REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT = False
+Features.REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = False
+Features.DisplayConfiguration()
+
+
+(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT,frep=Features.FeatureRepresentation.STRING)
+
+print("\nFeature Definition")
+print(fdef)
+print("\nX matrix")
+print(X)
+
+print("\nThis should make sense given the following contents of the documents\n")
+
+doc1c = "Document 1: \n" + file('../data_sets/unit_test2/train/train_00001.srl').read()
+doc2c = "Document 2: \n" + file('../data_sets/unit_test2/train/train_00002.srl').read()
+doc3c = "Document 3: \n" + file('../data_sets/unit_test2/train/train_00003.srl').read()
+doc4c = "Document 4: \n" +file('../data_sets/unit_test2/train/train_00004.srl').read()
+
+print(doc1c)
+print(doc2c)
+print(doc3c)
+print(doc4c)
+print("\n")
+
+
+
+
+print('%' * 80 + "\n")
+print("Below is the same feature as above but with all labels")
+print('%' * 80 + "\n")
+
+
+
+Features.USE_LEMMA = True
+Features.USE_DEP_TAGS = True
+Features.USE_POS_TAGS = True
+Features.USE_ARG_LABELS = True
+Features.CASE_SENSITIVE = False
+Features.REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT = False
+Features.REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = False
+Features.DisplayConfiguration()
+
+
+(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT,frep=Features.FeatureRepresentation.STRING)
+
+print("\nFeature Definition")
+print(fdef)
+print("\nX matrix")
+print(X)
+
+print("\nThis should make sense given the following contents of the documents\n")
+
+doc1c = "Document 1: \n" + file('../data_sets/unit_test2/train/train_00001.srl').read()
+doc2c = "Document 2: \n" + file('../data_sets/unit_test2/train/train_00002.srl').read()
+doc3c = "Document 3: \n" + file('../data_sets/unit_test2/train/train_00003.srl').read()
+doc4c = "Document 4: \n" +file('../data_sets/unit_test2/train/train_00004.srl').read()
+
+print(doc1c)
+print(doc2c)
+print(doc3c)
+print(doc4c)
+print("\n")
+
+
+print('%' * 80)
+print('%' * 80 + "\n")
+print("ALL FEATURES\n")
+print('%' * 80 )
+print('%' * 80 + "\n")
+
+print('%' * 80 + "\n")
+print("Shown below is a feature defined by words, dep pairs and predicate arguments. It is lemmatized and documents appearing 1 time or in 1 document are included")
+print('%' * 80 + "\n")
+
+
+
+Features.USE_LEMMA = True
+Features.USE_DEP_TAGS = False
+Features.USE_POS_TAGS = False
+Features.USE_ARG_LABELS = False
+Features.CASE_SENSITIVE = False
+Features.REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT = False
+Features.REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = False
+Features.DisplayConfiguration()
+
+
+(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.ALL,frep=Features.FeatureRepresentation.STRING)
+
+print("\nFeature Definition")
+print(fdef)
+print("\nX matrix")
+print(X)
+
+print("\nThis should make sense given the following contents of the documents\n")
+
+doc1c = "Document 1: \n" + file('../data_sets/unit_test2/train/train_00001.srl').read()
+doc2c = "Document 2: \n" + file('../data_sets/unit_test2/train/train_00002.srl').read()
+doc3c = "Document 3: \n" + file('../data_sets/unit_test2/train/train_00003.srl').read()
+doc4c = "Document 4: \n" +file('../data_sets/unit_test2/train/train_00004.srl').read()
+
+print(doc1c)
+print(doc2c)
+print(doc3c)
+print(doc4c)
+print("\n")
+
+
+
+
+print('%' * 80 + "\n")
+print("Below is the same feature as above but with all labels")
+print('%' * 80 + "\n")
+
+
+
+Features.USE_LEMMA = True
+Features.USE_DEP_TAGS = True
+Features.USE_POS_TAGS = True
+Features.USE_ARG_LABELS = True
+Features.CASE_SENSITIVE = False
+Features.REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT = False
+Features.REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = False
+Features.DisplayConfiguration()
+
+
+(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.ALL,frep=Features.FeatureRepresentation.STRING)
+
+print("\nFeature Definition")
+print(fdef)
+print("\nX matrix")
+print(X)
+
+print("\nThis should make sense given the following contents of the documents\n")
+
+doc1c = "Document 1: \n" + file('../data_sets/unit_test2/train/train_00001.srl').read()
+doc2c = "Document 2: \n" + file('../data_sets/unit_test2/train/train_00002.srl').read()
+doc3c = "Document 3: \n" + file('../data_sets/unit_test2/train/train_00003.srl').read()
+doc4c = "Document 4: \n" +file('../data_sets/unit_test2/train/train_00004.srl').read()
+
+print(doc1c)
+print(doc2c)
+print(doc3c)
+print(doc4c)
+print("\n")
 
 
