@@ -12,6 +12,9 @@ import itertools
 global USE_LEMMA 
 USE_LEMMA = True
 
+global CASE_SENSITIVE
+CASE_SENSITIVE = True
+
 global USE_DEP_TAGS
 USE_DEP_TAGS = False
 
@@ -22,7 +25,10 @@ global USE_ARG_LABELS
 USE_ARG_LABELS = False
 
 global SYMBOLS_TO_REMOVE
-SYMBOLS_TO_REMOVE = '[!@#$%^&*()-_=+\[\]{}\\|;:\'\",.<>/?`~]'
+SYMBOLS_TO_REMOVE = '[!@#\$%\^&\*\(\)-_=\+\[\]\{\}\\\|;:\'\",\.<>/\?`~]'
+
+global SYMBOLS_TO_KEEP
+SYMBOLS_TO_KEEP = '[a-zA-Z0-9]*'
 
 global REMOVE_SINGLE_CHARACTERS
 REMOVE_SINGLE_CHARACTERS = True
@@ -101,23 +107,35 @@ class Word:
 				if USE_LEMMA:
 					return self.lemma + "/" + self.posTag + "-" + self.depRel
 				else:
-					return self.form + "/" + self.posTag + "-" + self.depRel
+					if CASE_SENSITIVE:
+						return self.form + "/" + self.posTag + "-" + self.depRel
+					else:
+						return self.form.lower() + "/" + self.posTag + "-" + self.depRel
 			else:
 				if USE_LEMMA:
 					return self.lemma  + "-" + self.depRel
 				else:
-					return self.form  + "-" + self.depRel
+					if CASE_SENSITIVE:
+						return self.form  + "-" + self.depRel
+					else:
+						return self.form.lower() + "-" + self.depRel
 		else:
 			if USE_POS_TAGS:
 				if USE_LEMMA:
 					return self.lemma + "/" + self.posTag 
 				else:
-					return self.form + "/" + self.posTag 
+					if CASE_SENSITIVE:
+						return self.form + "/" + self.posTag 
+					else:
+						return self.form.lower() + "/" + self.posTag
 			else:
 				if USE_LEMMA:
 					return self.lemma  
 				else:
-					return self.form 
+					if CASE_SENSITIVE:
+						return self.form 
+					else:
+						return self.form.lower()
 
 	def __hash__(self):
 		return hash(str(self))
@@ -404,7 +422,7 @@ def Display(dep):
 			print(str(d))
 
 
-def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH, remove=True):
+def ReadDependencyParseFile(filename, funit=FeatureUnits.WORD, remove=True):
 	""" 
 		This function reads a dep format file into a (python) list of Word and or Dependency objects.
 	"""
@@ -430,6 +448,8 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH, remove=True):
 				depRel = spl[6]
 				if (not remove) or (posTag in keepers and ((USE_LEMMA and not_single_character(lemma)) or ((not USE_LEMMA) and not_single_character(wordform)))  and ((USE_LEMMA and not_contains_symbols(lemma)) or ((not USE_LEMMA) and not_contains_symbols(wordform)))):
 					Words.append(Word(wordform, lemma, posTag, feat, depRel))
+				else:
+					print([wordno, wordform, lemma, posTag, feat, head, depRel])
 		if funit == FeatureUnits.WORD: 
 			return Words
 	if funit == FeatureUnits.DEPENDENCY_PAIR or funit == FeatureUnits.BOTH:
@@ -537,7 +557,7 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.BOTH, remove=True):
 			return Words + PredArgs
 
 def not_contains_symbols(s):
-	return len(re.sub(SYMBOLS_TO_REMOVE, '', str(s))) == len(str(s))
+	return len(re.sub(SYMBOLS_TO_KEEP, '', str(s))) == 0
 
 def not_single_character(s):
 	return len(s) > 1
