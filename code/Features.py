@@ -394,12 +394,12 @@ def DefineFeature(units, frep=FeatureRepresentation.HASH):
 
 	fdef = list()
 	conv = ConversionFunction(frep)
-	for u in set(units):
+	for u in units:
 		if u.__class__==PredicateArgument:
 			fdef.extend(u.getFeatures(frep=frep))
 		else:
 			fdef.append(conv(u))
-	return np.array(fdef, dtype=DataType(frep))
+	return np.array(list(set(fdef)), dtype=DataType(frep))
 
 
 def NumberOfHashCollisions(words_or_deps):
