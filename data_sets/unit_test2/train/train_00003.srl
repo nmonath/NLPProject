@@ -1,0 +1,14 @@
+1	They	they	PRP	_	2	nsubj	2:A0
+2	saw	see	VBD	pb=see.01	0	root	_
+3	the	the	DT	_	5	det	_
+4	shooting	shooting	NN	p2=VBG	5	nn	_
+5	stars	star	NNS	_	2	dobj	2:A1
+6	.	.	.	_	2	punct	_
+
+1	They	they	PRP	_	2	nsubj	2:A0=PAG
+2	shoot	shoot	VBP	p2=VBD|pb=shoot.02	0	root	_
+3	across	across	IN	_	2	prep	2:AM-DIR
+4	the	the	DT	_	5	det	_
+5	sky	sky	NN	_	3	pobj	_
+6	.	.	.	_	2	punct	_
+
