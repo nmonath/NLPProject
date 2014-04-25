@@ -448,8 +448,8 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.WORD, remove=True):
 				depRel = spl[6]
 				if (not remove) or (posTag in keepers and ((USE_LEMMA and not_single_character(lemma)) or ((not USE_LEMMA) and not_single_character(wordform)))  and ((USE_LEMMA and not_contains_symbols(lemma)) or ((not USE_LEMMA) and not_contains_symbols(wordform)))):
 					Words.append(Word(wordform, lemma, posTag, feat, depRel))
-				else:
-					print([wordno, wordform, lemma, posTag, feat, head, depRel])
+				# else:
+				# 	print([wordno, wordform, lemma, posTag, feat, head, depRel])
 		if funit == FeatureUnits.WORD: 
 			return Words
 	if funit == FeatureUnits.DEPENDENCY_PAIR or funit == FeatureUnits.BOTH:
