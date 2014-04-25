@@ -122,7 +122,7 @@ def run(dirname):
 	binary_x_train_DEPENDENCY_PAIR = csr_matrix(Features.ToBINARY(x_train_DEPENDENCY_PAIR))
 	binary_x_test_DEPENDENCY_PAIR = csr_matrix(Features.ToBINARY(x_test_DEPENDENCY_PAIR))
 
-	Evaluation.Evaluate(binary_x_train_DEPENDENCY_PAIR, y_train, binary_x_test_DEPENDENCY_PAIR, y_test, categories=categories)
+	Evaluation.Evaluate(binary_x_train_DEPENDENCY_PAIR, y_train, binary_x_test_DEPENDENCY_PAIR, y_test, categories=categories) 
 
 	binary_x_train_DEPENDENCY_PAIR = 0;
 	binary_x_test_DEPENDENCY_PAIR = 0;

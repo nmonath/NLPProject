@@ -214,7 +214,7 @@ print('%' * 80 + "\n")
 
 print("\n")
 print('%' * 80 + "\n")
-print("First let's make a feature with all the dependency pairs occuring in the documents. The pairs are case sensitive and use lemmatization.")
+print("First let's make a feature with all the dependency pairs occuring in the documents. The pairs are case sensitive and do not use lemmatization.")
 print('%' * 80 + "\n")
 
 
@@ -430,7 +430,7 @@ print('%' * 80 + "\n")
 
 print("\n")
 print('%' * 80 + "\n")
-print("First let's make a feature with all the predicate argument occuring in the documents. The PAs are case sensitive and use lemmatization.")
+print("First let's make a feature with all the predicate argument occuring in the documents. The PAs are case sensitive and do not use lemmatization.")
 print('%' * 80 + "\n")
 
 

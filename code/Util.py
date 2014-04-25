@@ -29,7 +29,7 @@ def LoadClassLabels(filename):
 		y_label.append(line.strip())
 	return y_label
 
-def LoadClassFile(filename, out_multi_class_matrix=False):
+def LoadClassFile(filename, out_multi_class_matrix=True):
 	Y = list()
 	f = open(filename, 'r')
 	for line in f:
