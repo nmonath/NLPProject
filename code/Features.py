@@ -42,6 +42,27 @@ REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = True
 global USE_MEMORY_MAP
 USE_MEMORY_MAP = False
 
+global KEEPER_POS
+KEEPER_POS = ["JJ", "JJR", "JJS", "NN", "NNS", "NNP", "NNPS", "RR", "RBR", "RBS", "VB", "VBD", "VBG", "VBN", "VBP", "VBZ"]
+
+
+
+def DisplayConfiguration():
+	print("Feature Configuration Settings")
+	print("------------------------------")
+	print("USE_LEMMA: " + str(USE_LEMMA))
+	print("CASE_SENSITIVE: " + str(CASE_SENSITIVE))
+	print("USE_POS_TAGS" + str(USE_POS_TAGS))
+	print("USE_DEP_TAGS" + str(USE_DEP_TAGS))
+	print("USE_ARG_LABELS" + str(USE_ARG_LABELS))
+	print("SYMBOLS_TO_KEEP: " + SYMBOLS_TO_KEEP)
+	print("REMOVE_SINGLE_CHARACTERS: " + str(REMOVE_SINGLE_CHARACTERS))
+	print("REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT: " + str(REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT))
+	print("REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME: " + str(REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME))
+	print("USE_MEMORY_MAP: " + str(USE_MEMORY_MAP))
+	print("KEEPER_POS: " + str(KEEPER_POS))
+
+
 def DataType(argin):
 		if argin == FeatureType.BINARY:
 			return np.bool
@@ -392,7 +413,7 @@ def ExtractFeature(ffv, allff, ftype=FeatureType.BINARY):
 	return np.sum(ffv == allff, axis=1, dtype=DataType(FeatureType.COUNT)) # Make sure this is ok interms of MAXing out values
 			 
 def KeeperPOS():
-	return ["JJ", "JJR", "JJS", "NN", "NNS", "NNP", "NNPS", "RR", "RBR", "RBS", "VB", "VBD", "VBG", "VBN", "VBP", "VBZ"]
+	return KEEPER_POS
 
 def LoadAllUnitsFromFiles(dirname, funit=FeatureUnits.WORD, keep_duplicates=False, remove_stop_words=True):
 	deps = []
