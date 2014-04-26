@@ -18,7 +18,65 @@ Gensim provides an interface with Word2Vec in Python.
 
 Finally, to perform the Fuzzy Clustering experiments. You'll need to download and install **peach**. You can download it from here: https://code.google.com/p/peach/ Just unzip the directory and place in the folder containing your Python libraries.
 
+# Preliminaries
+## Data Set Organization
+
+These modules allow you to perform classification and clustering experiments on data sets formatted in the following way:
+
+The _data\_set_ folders are of the following format:
+
+```
+data_set
+       <data_set_name>
+              train_classes.txt
+              test_classes.txt
+              class_label_index.txt
+              train/
+                     train_00001
+                     train_00001.srl
+              test/
+                     test_00001
+                     test_00001.srl
+```
+
+Each file train/test\_XXXXX is a raw text file containing a training or testing document, train/test\_XXXX.srl, is the dependency parsed and semantic role labeled version of document.  _train\_classes.txt_ and _test\_classes.txt_ store the class labels of the training and testing documents. They are organized such that the class label of the ith file (determined by number after train/test in filename) in the train/test folders is on the ith line of the file. 
+
+## Utility Functions
+
+The **Util** module provides several key functions that will be used throughout this explanation. These functions are used to perform the parsing of documents in a corpus, reading class label files, etc. We highlight a few of these key functions here. See the full documentation for more details.
+
+### Dependency Parsing and Semantic Role Labeling
+
+The ```SRL``` function of the **Util** module runs the _ClearNLP_ parser to extract both dependency pairs and semantic role labels in all of the files in a specified directory. For example, if I had a data set called ```my_data_set``` in the ```data_sets``` folder. I would run the parser on both my training and testing data in the following way.
+
+```Python
+import Util
+Util.SRL('<Path-To>/data_sets/my_data_set/train'):
+Util.SRL('<Path-To>/data_sets/my_data_set/test'):
+```
+
+The parser will produce a ```.srl``` file for every file in ```train``` and ```test```, as shown in the above description of datasets. This file contains both the depedency pairs and semantic role information.
+
+**NOTE**. Please first set up the _ClearNLP_ parser as speficied by: http://clearnlp.wikispaces.com/
+
+**NOTE**. Please refer to the _ClearNLP_ documentation for the speficiations of the ```.srl``` file format: http://clearnlp.wikispaces.com/dataFormat
+
+**NOTE**. The parser _WILL_ parse hidden files in the given directories, but the ```SRL``` function will delete the _parsed_ version of these files. 
+
+### Loading Class Label Files
+
+The class labels associated with each document in data set are stored in the ```train_classes.txt``` and ```test_classes.txt```. The _ith_ line of these documents stores, in plain text, the class labels of the document with filename is lexicographically _ith_ in the respective folders. If a document has multiple labels, the labels are store on the same line seperated by white space. The function ```LoadClassFile``` is used to load the class labels. These class labels are stored as numbers (typically 0 based).
+
+```
+Y = Util.LoadClassFile('<Path-To>/data_sets/<Data-Set-Name>/train_classes.txt')
+Y = Util.LoadClassFile('<Path-To>/data_sets/<Data-Set-Name>/test_classes.txt')
+```
+
+In the case where _every_ document only has one label, ```Y``` in the above example is a 1-by-N numpy array of class label numbers, where N is the number of documents. In the case where _one or more_ documents have _at least_ one label, ```Y``` is an N-by-C matrix where ```C``` is the total number of class labels and ```N``` is the number of documents. Each class label corresponds to a column of ```Y```. Each document has a corresponding row in ```Y``` with 0s and 1s in each column representing whether or not the document has that class label. This follows the specification in the ``sklearn`` package for multiclass-multioutput labels. 
+
+
 # The Features Module
+## Configuration
 
 The **Features** module is used to extract Vector Space Model feature vectors from parsed text documents. The parsing comes as a preprocessing step using **ClearNLP**'s parser (this will be explained below). The **Features** module allows for several different _flavors_ of features in addition to the traditional bag-of-words features. It also allows for several different options such as the use of lemmatization, the inclusion of part-of-speech tags, etc. 
 
@@ -144,27 +202,28 @@ FREP: Hash
 FTYPE: TF-IDF
 ```
 
+## Defining Features
+
+The **Features** module provides the method ```Features()``` to define a _feature definition_ and extract _feature vectors_ from a set of documents. First configure your **Features** module as described above. Then, given a training set of documents ```<Path-To>/data_sets/<Data-Set-Name>/train``` we can extract features from all of the ```.srl``` files in ```train``` in the following way:
+
+```
+(feature_def, X_train) = Features.Features('<Path-To>/data_sets/<Data-Set-Name>/train')
+```
+
+The first output argument ```feature_def``` is a 1-by-D array of the _units_ which correspond to each each of the D columns of ```X_train```. The second output argument is ```X_train``` an N by D matrix where N is the number of documents and D is the dimensionality of the _feature definition_. The _ith_ row of ```X_train``` corresponds to the lexicographically _ith_ document in ```'<Path-To>/data_sets/<Data-Set-Name>/train'```. 
+
+To extract features from another set of documents (e.g. a testing set of documents) using the same _feature definition_ we pass  ```feature_def``` as an argument to the method. This optional argument has the name ```feature```. For example, extracting _feature vectors_ from ```'<Path-To>/data_sets/<Data-Set-Name>/test'```
+
+```Python
+X_test = Features.Features('<Path-To>/data_sets/<Data-Set-Name>/train', feature=feature_def)
+```
+
+The next section explains how these can be used in supervised and unsupervised learning.
+
+
 # Using SupervisedLearning.py and UnsupervisedLearning.py
 
-These modules allow you to perform classification and clustering experiments on data sets formatted in the following way:
 
-The _data\_set_ folders are of the following format:
-
-```
-data_set
-       <data_set_name>
-              train_classes.txt
-              test_classes.txt
-              class_label_index.txt
-              train/
-                     train_00001
-                     train_00001.srl
-              test/
-                     test_00001
-                     test_00001.srl
-```
-
-Each file train/test\_XXXXX is a raw text file containing a training or testing document, train/test\_XXXX.srl, is the dependency parsed and semantic role labeled version of document.  _train\_classes.txt_ and _test\_classes.txt_ store the class labels of the training and testing documents. They are organized such that the class label of the ith file (determined by number after train/test in filename) in the train/test folders is on the ith line of the file. 
 
 In order to use these modules, you first need to import the Features module:
 
