@@ -9,6 +9,51 @@ import re
 from copy import copy
 import itertools
 
+
+def DataType(argin):
+		if argin == FeatureType.BINARY:
+			return np.bool
+		elif argin == FeatureType.TFIDF:
+			return np.float16
+		elif argin == FeatureType.COUNT:
+			return np.dtype(int)
+		elif argin == FeatureRepresentation.HASH:
+			return np.dtype(int)
+		elif argin == FeatureRepresentation.STRING:
+			return np.object
+
+def ConversionFunction(argin):
+		if argin == FeatureRepresentation.HASH:
+			return hash
+		elif argin == FeatureRepresentation.STRING:
+			return str
+	
+class FeatureUnits(Enum):
+	WORD = 'Words'
+	DEPENDENCY_PAIR = 'Dependency Pairs'
+	WORDS_AND_DEPENDENCY_PAIRS = 'Words and Dependency Pairs'
+	PREDICATE_ARGUMENT = "Predicate Argument Components"
+	WORDS_AND_PREDICATE_ARGUMENT = "Words and Predicate Argument Components"
+	DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT = 'Dedependency Pairs and Predicate Argument Components'
+	ALL = 'Words, Dependency Pairs, and Predicate Argument Components'
+
+class FeatureType(Enum):
+	BINARY = 'BINARY'
+	TFIDF = 'TF-IDF'
+	COUNT = 'COUNT'
+
+class FeatureRepresentation(Enum):
+	HASH = 'Hash'
+	STRING = 'String'
+
+
+
+
+
+
+
+
+
 global USE_LEMMA 
 USE_LEMMA = True
 
@@ -271,7 +316,7 @@ def Features(dirname, funit=FUNIT, ftype=FTYPE, frep=FREP, feature=None, K=0.5, 
 		# Loads all the units from all the documents
 		all_units = LoadAllUnitsFromFiles(dirname, funit=funit, keep_duplicates=False, remove_stop_words=True)
 
-		feature = DefineFeature(all_units, frep=frep) 
+		feature = DefineFeature(all_units, frep=frep, funit=funit) 
 
 		# Rearrange the feature so that it can be used for broadcasting
 		feature = feature.reshape([feature.shape[0], 1])
@@ -298,7 +343,7 @@ def Features(dirname, funit=FUNIT, ftype=FTYPE, frep=FREP, feature=None, K=0.5, 
 	# iterate over all the files in the directory
 	for filename in os.listdir(dirname):
 		if '.srl' in filename:
-			features[count, :] = ExtractFeature(feature, Convert((ReadDependencyParseFile(os.path.join(dirname, filename), remove=True, funit=funit)),frep=frep),ftype=ftype)
+			features[count, :] = ExtractFeature(feature, Convert(ReadDependencyParseFile(os.path.join(dirname, filename), remove=True, funit=funit), frep=frep, funit=funit),ftype=ftype)
 			count = count + 1
 			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5)) # print just to see code is progressing
 
@@ -380,18 +425,26 @@ def RemoveItemsWithPOSExcept(words_or_deps, keepers=None):
 					result.append()
 	return result
 
-def Convert(units, frep=FeatureRepresentation.HASH):
+def Convert(units, frep=FREP, funit=FUNIT):
 	"""
 		Convert a list of Dependency objects into an numpy array of strings
+
 	"""
-	fdef = list()
-	conv = ConversionFunction(frep)
-	for u in units:
-		if u.__class__==PredicateArgument:
-			fdef.extend(u.getFeatures(frep=frep))
-		else:
-			fdef.append(conv(u))
-	return np.array(fdef, dtype=DataType(frep))
+
+	# Optimize for speed when you can
+	if funit in [FeatureUnits.PREDICATE_ARGUMENT, FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT, FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT, FeatureUnits.ALL]:
+		fdef = list()
+		conv = ConversionFunction(frep)
+		for u in units:
+			if u.__class__==PredicateArgument:
+				fdef.extend(u.getFeatures(frep=frep))
+			else:
+				fdef.append(conv(u))
+		return np.array(fdef, dtype=DataType(frep))
+	else:
+		conv = ConversionFunction(frep)
+		fdef = [conv(u) for u in units]
+		return np.array(fdef, dtype=DataType(frep))
 
 def ConvertUnit(words_or_deps, frep=FeatureRepresentation.HASH):
 	"""
@@ -400,19 +453,25 @@ def ConvertUnit(words_or_deps, frep=FeatureRepresentation.HASH):
 	f = ConversionFunction(frep)
 	return f(words_or_deps) 
 
-def DefineFeature(units, frep=FeatureRepresentation.HASH):
+def DefineFeature(units, frep=FREP, funit=FUNIT):
 	"""
 		Convert a list of Dependency objects into an numpy array of strings
 	"""
 
-	fdef = list()
-	conv = ConversionFunction(frep)
-	for u in units:
-		if u.__class__==PredicateArgument:
-			fdef.extend(u.getFeatures(frep=frep))
-		else:
-			fdef.append(conv(u))
-	return np.array(list(set(fdef)), dtype=DataType(frep))
+	# Optimize for speed when you can
+	if funit in [FeatureUnits.PREDICATE_ARGUMENT, FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT, FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT, FeatureUnits.ALL]:
+		fdef = list()
+		conv = ConversionFunction(frep)
+		for u in units:
+			if u.__class__==PredicateArgument:
+				fdef.extend(u.getFeatures(frep=frep))
+			else:
+				fdef.append(conv(u))
+		return np.array(list(set(fdef)), dtype=DataType(frep))
+	else:
+		conv = ConversionFunction(frep)
+		fdef = [conv(u) for u in units]
+		return np.array(list(set(fdef)), dtype=DataType(frep))
 
 
 def NumberOfHashCollisions(words_or_deps):

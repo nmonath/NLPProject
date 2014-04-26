@@ -35,7 +35,9 @@ def NormalizedMutualInformation(cluster_labels, true_labels):
 			clss = unique_class_labels[j]
 			num_with_class_label_in_clust = np.sum(true_labels[cluster_labels==lab]==clss)
 			num_with_class_label = np.sum(true_labels==clss)
-			nmi +=  (num_with_class_label_in_clust / N) * np.log((1 + N*num_with_class_label_in_clust) / (num_in_clust * num_with_class_label))
+			print [num_with_class_label_in_clust,N,num_in_clust, num_with_class_label]
+			print (num_with_class_label_in_clust/N) / (num_in_clust * num_with_class_label)
+			nmi +=  ( (1+num_with_class_label_in_clust) / N) * np.log2(((1+num_with_class_label_in_clust)/N) / (num_in_clust * num_with_class_label))
 
 	nmi = nmi / ( (Entropy(cluster_labels) + Entropy(true_labels))/2 )
 	return nmi
@@ -47,7 +49,7 @@ def Entropy(labels):
 	for i in range(0, unique_labels.shape[0]):
 		lab = unique_labels[i]
 		num_with_lab = np.sum(labels==lab)
-		H -= ( num_with_lab/N ) * ( np.log( (1 + num_with_lab)/N ) )
+		H -= ( num_with_lab/N ) * ( np.log2( (1+num_with_lab)/N ) )
 	return H
 
 def RandIndex(cluster_labels, true_labels):
