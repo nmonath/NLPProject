@@ -3,6 +3,8 @@ from sklearn import cluster
 import numpy as np
 from sklearn import mixture
 import Metrics
+import Util
+import os
 
 def Eval(X, Y, clstr, return_cluster_labels=False):
 	"""
@@ -38,5 +40,13 @@ def Eval(X, Y, clstr, return_cluster_labels=False):
 		return (Metrics.Purity(C,Y), Metrics.NormalizedMutualInformation(C,Y), Metrics.RandIndex(C,Y))
 
 
+def Run(FeaturesModule, clstr, dirname, train_test='train'):
+	(feature_def, X) = FeaturesModule.Features(os.path.join(dirname, train_test))
+	if train_test.lower() == 'train':
+		Y = Util.LoadClassFile(os.path.join(dirname, 'train_classes.txt'))
+	else:
+		Y = Util.LoadClassFile(os.path.join(dirname, 'test_classes.txt'))
+
+	return Eval(X,Y, clstr)
 
 
