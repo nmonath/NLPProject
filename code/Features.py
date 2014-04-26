@@ -45,6 +45,16 @@ USE_MEMORY_MAP = False
 global KEEPER_POS
 KEEPER_POS = ["JJ", "JJR", "JJS", "NN", "NNS", "NNP", "NNPS", "RR", "RBR", "RBS", "VB", "VBD", "VBG", "VBN", "VBP", "VBZ"]
 
+global FUNIT
+FUNIT = FeatureUnits.ALL
+
+global FREP
+FREP = FeatureRepresentation.HASH
+
+global FTYPE
+FTYPE = FeatureType.TFIDF
+
+
 
 
 def DisplayConfiguration():
@@ -61,6 +71,9 @@ def DisplayConfiguration():
 	print("REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME: " + str(REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME))
 	print("USE_MEMORY_MAP: " + str(USE_MEMORY_MAP))
 	print("KEEPER_POS: " + str(KEEPER_POS))
+	print("FUNIT: " + FUNIT)
+	print("FREP: " + FREP)
+	print("FTYPE: " + FTYPE)
 
 
 def DataType(argin):
@@ -82,22 +95,22 @@ def ConversionFunction(argin):
 			return str
 	
 class FeatureUnits(Enum):
-	WORD = 'WORD'
-	DEPENDENCY_PAIR = 'DP'
-	WORDS_AND_DEPENDENCY_PAIRS = 'WDP'
-	PREDICATE_ARGUMENT = "PA"
-	WORDS_AND_PREDICATE_ARGUMENT = "WPA"
-	DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT = 'DPPA'
-	ALL = 'ALL'
+	WORD = 'Words'
+	DEPENDENCY_PAIR = 'Dependency Pairs'
+	WORDS_AND_DEPENDENCY_PAIRS = 'Words and Dependency Pairs'
+	PREDICATE_ARGUMENT = "Predicate Argument Components"
+	WORDS_AND_PREDICATE_ARGUMENT = "Words and Predicate Argument Components"
+	DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT = 'Dedependency Pairs and Predicate Argument Components'
+	ALL = 'Words, Dependency Pairs, and Predicate Argument Components'
 
 class FeatureType(Enum):
 	BINARY = 'BINARY'
-	TFIDF = 'tf-idf'
+	TFIDF = 'TF-IDF'
 	COUNT = 'COUNT'
 
 class FeatureRepresentation(Enum):
-	HASH = 'HASH'
-	STRING = 'STRING'
+	HASH = 'Hash'
+	STRING = 'String'
 
 class Word:
 	"""
@@ -239,7 +252,7 @@ class PredicateArgument:
 		return hash(str(self))
 	
 
-def Features(dirname, funit=FeatureUnits.WORD, ftype=FeatureType.BINARY, frep=FeatureRepresentation.HASH, feature=None, K=0.5, UseLemma=True):
+def Features(dirname, funit=FUNIT, ftype=FTYPE, frep=FREP, feature=None, K=0.5, UseLemma=USE_LEMMA):
 	"""
 		Creates an M-by-N matrix where N is the length of the feature vector and M is number of documents
 		The documents used are all the .srl files stored in the directory dirname
