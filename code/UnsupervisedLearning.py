@@ -5,6 +5,7 @@ from sklearn import mixture
 import Metrics
 import Util
 import os
+import sklearn.metrics
 
 def Eval(X, Y, clstr, return_cluster_labels=False):
 	"""
@@ -35,9 +36,9 @@ def Eval(X, Y, clstr, return_cluster_labels=False):
 	C = clstr.predict(X)
 
 	if return_cluster_labels:
-		return (Metrics.Purity(C,Y), Metrics.NormalizedMutualInformation(C,Y), Metrics.RandIndex(C,Y), C)
+		return (Metrics.Purity(C,Y), sklearn.metrics.normalized_mutual_info_score(Y,C), Metrics.RandIndex(C,Y), C)
 	else:
-		return (Metrics.Purity(C,Y), Metrics.NormalizedMutualInformation(C,Y), Metrics.RandIndex(C,Y))
+		return (Metrics.Purity(C,Y), sklearn.metrics.normalized_mutual_info_score(Y,C), Metrics.RandIndex(C,Y))
 
 
 def Run(FeaturesModule, clstr, dirname, train_test='train'):
