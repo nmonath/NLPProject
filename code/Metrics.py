@@ -34,9 +34,7 @@ def NormalizedMutualInformation(cluster_labels, true_labels):
 		for j in range(0, unique_class_labels.shape[0]):
 			clss = unique_class_labels[j]
 			num_with_class_label_in_clust = np.sum(true_labels[cluster_labels==lab]==clss)
-			print num_with_class_label_in_clust/N
 			num_with_class_label = np.sum(true_labels==clss)
-			print num_with_class_label/N
 			nmi +=  (num_with_class_label_in_clust / N) * np.log((1 + N*num_with_class_label_in_clust) / (num_in_clust * num_with_class_label))
 
 	nmi = nmi / ( (Entropy(cluster_labels) + Entropy(true_labels))/2 )
