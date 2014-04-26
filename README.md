@@ -202,7 +202,7 @@ FREP: Hash
 FTYPE: TF-IDF
 ```
 
-## Defining Features
+## Defining and Extracting Features
 
 The **Features** module provides the method ```Features()``` to define a _feature definition_ and extract _feature vectors_ from a set of documents. First configure your **Features** module as described above. Then, given a training set of documents ```<Path-To>/data_sets/<Data-Set-Name>/train``` we can extract features from all of the ```.srl``` files in ```train``` in the following way:
 
@@ -221,128 +221,47 @@ X_test = Features.Features('<Path-To>/data_sets/<Data-Set-Name>/train', feature=
 The next section explains how these can be used in supervised and unsupervised learning.
 
 
-# Using SupervisedLearning.py and UnsupervisedLearning.py
+# Supervised Learning
 
+To do supervised learning with the features extracted from documents we provide the ```SupervisedLearning``` module, which acts as a wrapper to some of the classifiers provided by ```sklearn```. 
 
+The easiest way to use ```SupervisedLearning`` is to use its ``Run`` function. The signature for the function is:
 
-In order to use these modules, you first need to import the Features module:
-
-```
-import Features
-```
-
-Now, configure the Features module the way you would like to extract features. There are several different options. The first decision you should make is what the base "unit" of the your vector space model is. The base unit can be words, dependency pairs, or the predicates and arguments discovered via semantic role labeling, or any combination of these. To select which base unit is used, set the FUNIT global variable of the features model to one of the values in the Features.FeatureUnits enum. For example,
-
-```
-Features.FUNIT = Features.FeatureUnits.WORD
-Features.FUNIT = Features.FeatureUnits.DEPENDENCY_PAIR
-Features.FUNIT = Features.FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS
-Features.FUNIT = Features.FeatureUnits.PREDICATE_ARGUMENT 
-Features.FUNIT = Features.FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT
-Features.FUNIT = Features.FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT 
-Features.FUNIT = Features.FeatureUnits.ALL 
+```Python
+def Run(FeaturesModule, clf, dirname):
 ```
 
+The inputs are a configured ```Features``` module, the string name of a classifier to use, and the directory of the data set to be used (formatted in the way that is described above). ```clf``` can alternatively be one of the classifier objects of ```sklearn``` (additional documentation for this to come). The possible values for ```clf``` using the string input are: ```'ridge', 'percepton', 'Passive Aggressive', 'LinearSVM', 'SVM', 'SGD'```. 
 
-# Using Features.py
-
-Import the Features module by
-
-```
-import Features
-```
-
-The _data\_set_ folders are of the following format:
+The output of the function is a tuple containing the following information in this order:
 
 ```
-data_set
-       <data_set_name>
-              train_classes.txt
-              test_classes.txt
-              class_label_index.txt
-              train/
-                     train_00001
-                     train_00001.srl
-              test/
-                     test_00001
-                     test_00001.srl
+Accuracy
+Overall Preicision
+Overall Recall
+Overall F1 score
+Avg. Precision per class
+Avg. Recall per class
+F1 Score
+Precision per class
+Recall per class
+F1 Score per class
 ```
 
-Each file train/test\_XXXXX is a raw text file containing a training or testing document, train/test\_XXXX.srl, is the dependency parsed and semantic role labeled version of document.  _train\_classes.txt_ and _test\_classes.txt_ store the class labels of the training and testing documents. They are organized such that the class label of the ith file (determined by number after train/test in filename) in the train/test folders is on the ith line of the file. 
+# Unsupervised Learning
 
-To determine the defintion of a feature vector for a set of documents, and to extract feature vectors from all documents, use the following command.
+The document clustering or ```UnsupervisedLearning``` module is used in much of the same way as the Supervised module. The signature of the method ```Run``` in this case is:
 
-```
-data_set_path = '<PATH_TO>/data_set/<DATA_SET_NAME>/train'
-(feature_definition, x_train) = Features.Features(data_set_path)
-```
-
-Several different feature types can be used. These are determined by the optional arguments passed in to the Features method. There are three sets of parameters to specify
-
-```
-funit (FeatureUnit)
-frep (FeatureRepresentation)
-ftype (FeatureType)
+```Python
+def Run(FeaturesModule, clstr, dirname, train_test='train'):
 ```
 
-FeatureUnit determines the base elements of the vector space model. Right now there are three possible values:
+The inputs are a configured ```Features``` module, the string name of a clustering algorithm (```KMeans``` or ```GMM```), the directory of the data set and whether the training document or testing documents of the training set are to be used. 
+
+The method returns a tuple with the following information in the order presented below:
 
 ```
-FeatureUnit.WORD
-FeatureUnit.DEPENDENCY_PAIR
-FeatureUnit.BOTH
-FeatureUnit.PRED_ARG
-FeatureUnit.WORDS_PA
+Purity Score
+Normalized Mutual Information Score
+Rand Index Score
 ```
-_WORD_ provides a traditional bag of words approach. _DEPENDENDENCY\_PAIR_ uses only dependency pairs. _BOTH_ uses both words and dependency pairs. _PRED\_ARG_ uses only predicate argument structures. _WORDS_PA_ uses both words and predicate argument structures. 
-
-There are two options for FeatureRepresentation, which determines whether Hash values are used to reprsent the FeatureUnits or if Strings are used.
-
-```
-FeatureRepresentation.HASH
-FeatureRepresentation.STRING
-```
-
-Using a hashed representation of the characters is much faster, but can lead to some collisions. Reports about the number of collisions on average are coming soon.
-
-
-There are three options for FeatureType, which determines the values inside of the vector space features.
-
-```
-FeatureType.BINARY
-FeatureType.TFIDF
-FeatureType.COUNT
-```
-
-You can also use the following options to change the features:
-
-```
-Features.USE_LEMMA = True/False
-
-Features.USE_DEP_TAGS = True/False
-
-Features.USE_POS_TAGS = True/False
-
-Features.USE_ARG_LABELS = True/False
-
-```
-
-These determine if the lemmatized form of words are used and whether meta-data from the parser is used.
-
-
-If you wanted to use dependency pairs as the feature unit, hashed representations, and term frequency-inverse document frequency, we would do:
-
-
-```
-train_data_set_path = '<PATH_TO>/data_set/<DATA_SET_NAME>/train'
-(feature_definition, x_train) = Features.Features(train_data_set_path, funit=Feature.FeatureUnit.DEPENDENCY_PAIR, frep=Feature.FeatureRepresentation.HASH, ftype=Feature.FeatureType.TFIDF)
-```
-
-We can pass in a feature definition with the optional argument <feature> to extract feature vectors from the testing documents using the feature defined by the training documents. 
-
-```
-test_data_set_path = '<PATH_TO>/data_set/<DATA_SET_NAME>/test'
-x_test = Features.Features(test_data_set_path, funit=Feature.FeatureUnit.DEPENDENCY_PAIR, frep=Feature.FeatureRepresentation.HASH, ftype=Feature.FeatureType.TFIDF, feature=feature_definition)
-```
-
-
