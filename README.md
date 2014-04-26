@@ -18,6 +18,48 @@ Gensim provides an interface with Word2Vec in Python.
 
 Finally, to perform the Fuzzy Clustering experiments. You'll need to download and install _peach_. You can download it from here: https://code.google.com/p/peach/ Just unzip the directory and place in the folder containing your Python libraries.
 
+
+# Using SupervisedLearning.py and UnsupervisedLearning.py
+
+These modules allow you to perform classification and clustering experiments on data sets formatted in the following way:
+
+The _data\_set_ folders are of the following format:
+
+```
+data_set
+       <data_set_name>
+              train_classes.txt
+              test_classes.txt
+              class_label_index.txt
+              train/
+                     train_00001
+                     train_00001.srl
+              test/
+                     test_00001
+                     test_00001.srl
+```
+
+Each file train/test\_XXXXX is a raw text file containing a training or testing document, train/test\_XXXX.srl, is the dependency parsed and semantic role labeled version of document.  _train\_classes.txt_ and _test\_classes.txt_ store the class labels of the training and testing documents. They are organized such that the class label of the ith file (determined by number after train/test in filename) in the train/test folders is on the ith line of the file. 
+
+In order to use these modules, you first need to import the Features module:
+
+```
+import Features
+```
+
+Now, configure the Features module the way you would like to extract features. There are several different options. The first decision you should make is what the base "unit" of the your vector space model is. The base unit can be words, dependency pairs, or the predicates and arguments discovered via semantic role labeling, or any combination of these. To select which base unit is used, set the FUNIT global variable of the features model to one of the values in the Features.FeatureUnits enum. For example,
+
+```
+Features.FUNIT = Features.FeatureUnits.WORD
+Features.FUNIT = Features.FeatureUnits.DEPENDENCY_PAIR
+Features.FUNIT = Features.FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS
+Features.FUNIT = Features.FeatureUnits.PREDICATE_ARGUMENT 
+Features.FUNIT = Features.FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT
+Features.FUNIT = Features.FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT 
+Features.FUNIT = Features.FeatureUnits.ALL 
+```
+
+
 # Using Features.py
 
 Import the Features module by
