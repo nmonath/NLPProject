@@ -188,4 +188,9 @@ def MakeReutersTest(orig_dir, new_dir, classification=False):
 
 	WriteClassLabelFile(os.path.join(new_dir, 'class_label_index.txt'), most_freq)
 
-
+def get_num_samples(dirname):
+	count = 0
+	for filename in os.listdir(dirname):
+		if '.srl' in filename:
+			count = count + 1
+	return count
