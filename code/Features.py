@@ -289,13 +289,18 @@ class PredicateArgument:
 		return hash(str(self))
 	
 
-def Features(dirname, funit=FUNIT, ftype=FTYPE, frep=FREP, feature=None, K=0.5, UseLemma=USE_LEMMA):
+def Features(dirname, funit=None, ftype=None, frep=None, feature=None, K=0.5):
 	"""
 		Creates an M-by-N matrix where N is the length of the feature vector and M is number of documents
 		The documents used are all the .srl files stored in the directory dirname
 	"""		
 
-	USE_LEMMA = UseLemma
+	if funit == None:
+		funit = FUNIT
+	if ftype == None:
+		ftype = FTYPE
+	if frep == None:
+		frep = FREP
 
 	f_data_type = DataType(ftype);
 
