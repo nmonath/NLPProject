@@ -46,14 +46,6 @@ class FeatureRepresentation(Enum):
 	HASH = 'Hash'
 	STRING = 'String'
 
-
-
-
-
-
-
-
-
 global USE_LEMMA 
 USE_LEMMA = True
 
@@ -120,7 +112,7 @@ def DisplayConfiguration():
 	print("FREP: " + FREP)
 	print("FTYPE: " + FTYPE)
 
-
+'''
 def DataType(argin):
 		if argin == FeatureType.BINARY:
 			return np.bool
@@ -156,7 +148,7 @@ class FeatureType(Enum):
 class FeatureRepresentation(Enum):
 	HASH = 'Hash'
 	STRING = 'String'
-
+'''
 class Word:
 	"""
 		A Word object consists of the following fields:
@@ -279,7 +271,7 @@ class PredicateArgument:
 		f_def = list()
 		f = ConversionFunction(frep)
 		if USE_ARG_LABELS:
-			f_def.append("Predicate: " + f(self.pred))
+			f_def.append(f("Predicate: " + str(self.pred)))
 		else:
 			f_def.append(f(self.pred))
 		for a_label in self.args:

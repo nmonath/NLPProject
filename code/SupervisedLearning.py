@@ -24,7 +24,7 @@ def Eval(XTrain, YTrain, XTest, YTest, clf, return_predicted_labels=False):
 		Outputs:
 			A tuple containing (in the following order):
 				Accuracy
-				Overall Preicision
+				Overall Precision
 				Overall Recall
 				Overall F1 score
 				Avg. Precision per class
@@ -34,7 +34,7 @@ def Eval(XTrain, YTrain, XTest, YTest, clf, return_predicted_labels=False):
 				Recall per class
 				F1 Score per class
 				(if return_predicted_labels)
-					predicted class lables for each row in XTest
+					predicted class labels for each row in XTest
 	"""
 
 	if type(clf) == str:

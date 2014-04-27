@@ -7,11 +7,11 @@ def Purity(cluster_labels, true_labels, return_per_cluster=False):
 	Follows: http://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-clustering-1.html#fig:clustfg3
 	"""
 	unique_cluster_labels = np.unique(cluster_labels)
-	per_cluster_purity = np.zeros_like(unique_cluster_labels)
+	per_cluster_purity = np.zeros_like(unique_cluster_labels, dtype=np.float)
 	overall_purity = 0
 	for i in range(0, unique_cluster_labels.shape[0]):
 		lab = unique_cluster_labels[i]
-		per_cluster_purity[lab] = ( 1 / np.sum(cluster_labels==lab)) * stats.mode(true_labels[cluster_labels==lab])[1][0]
+		per_cluster_purity[lab] = ( 1 / float(np.sum(cluster_labels==lab))) * stats.mode(true_labels[cluster_labels==lab])[1][0]
 		overall_purity += stats.mode(true_labels[cluster_labels==lab])[1][0]
 	overall_purity = overall_purity / cluster_labels.shape[0]
 	if return_per_cluster:
