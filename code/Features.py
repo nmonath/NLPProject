@@ -50,7 +50,7 @@ global USE_LEMMA
 USE_LEMMA = True
 
 global CASE_SENSITIVE
-CASE_SENSITIVE = True
+CASE_SENSITIVE = False
 
 global USE_DEP_TAGS
 USE_DEP_TAGS = False
