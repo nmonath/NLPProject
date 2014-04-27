@@ -74,6 +74,11 @@ def RandIndex(cluster_labels, true_labels):
 	return num_agreements/t1
 
 
+def RetrievalPrecision(true_label, retrieved_labels):
+	return np.sum(retrieved_labels==true_label)/np.float32(retrieved_labels.shape[0])
+
+def RetrievalRecall(true_label, retrieved_labels, all_labels, TopK):
+	return np.sum(retrieved_labels==true_label)/min([np.float32(np.sum(all_labels==true_label)), np.float32(TopK)])
 
 
 def choose(n, k):
