@@ -81,7 +81,7 @@ def Word2VecLoadWordsHashTable(model, list_of_words, representation=FeatureRepre
 		if fpr is None:
 			dimensions = len(vec)
 			fpr = np.memmap('file.temp', dtype='float32', mode='w+', shape=(number_of_words,dimensions)); 
-			sys.stdout.write("dimensions: " + str(dimensions))
+			#sys.stdout.write("dimensions: " + str(dimensions))
 		fpr[counter] = vec; 
 		counter = counter + 1
 		
