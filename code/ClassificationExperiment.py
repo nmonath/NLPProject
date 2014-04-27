@@ -69,17 +69,17 @@ def run(dirname):
 
 	if not os.path.exists('training_and_testing_files'):
 		os.mkdir('training_and_testing_files')
-	(feature_def_both, x_train_both) = Features.Features(os.path.join(dirname, 'train'), ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.BOTH,frep=Features.FeatureRepresentation.HASH)
-	x_test_both = Features.Features(os.path.join(dirname, 'test'), ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.BOTH,frep=Features.FeatureRepresentation.HASH, feature=feature_def_both)
+#	(feature_def_both, x_train_both) = Features.Features(os.path.join(dirname, 'train'), ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.BOTH,frep=Features.FeatureRepresentation.HASH)
+#	x_test_both = Features.Features(os.path.join(dirname, 'test'), ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.BOTH,frep=Features.FeatureRepresentation.HASH, feature=feature_def_both)
 	print(' ')
 
-	np.save(os.path.join('training_and_testing_files', 'feature_def_both.npy'), feature_def_both)
-	np.save(os.path.join('training_and_testing_files', 'x_train_both.npy'), x_test_both)
+#	np.save(os.path.join('training_and_testing_files', 'feature_def_both.npy'), feature_def_both)
+#	np.save(os.path.join('training_and_testing_files', 'x_train_both.npy'), x_test_both)
 
-	binary_x_train_both = csr_matrix(Features.ToBINARY(x_train_both))
-	binary_x_test_both = csr_matrix(Features.ToBINARY(x_test_both))
+#	binary_x_train_both = csr_matrix(Features.ToBINARY(x_train_both))
+#	binary_x_test_both = csr_matrix(Features.ToBINARY(x_test_both))
 
-	Evaluation.Evaluate(binary_x_train_both, y_train, binary_x_test_both, y_test, categories=categories)
+#	Evaluation.Evaluate(binary_x_train_both, y_train, binary_x_test_both, y_test, categories=categories)
 
 
 	binary_x_train_both = 0;
@@ -93,12 +93,12 @@ def run(dirname):
 
 
 
-	tfidf_x_train_both = csr_matrix(Features.ToTFIDF(x_train_both))
-	tfidf_x_test_both = csr_matrix(Features.ToTFIDF(x_test_both))
+#	tfidf_x_train_both = csr_matrix(Features.ToTFIDF(x_train_both))
+#	tfidf_x_test_both = csr_matrix(Features.ToTFIDF(x_test_both))
 	x_train_both = 0;
 	x_test_both = 0;
 
-	Evaluation.Evaluate(tfidf_x_train_both, y_train, tfidf_x_test_both, y_test, categories=categories)
+#	Evaluation.Evaluate(tfidf_x_train_both, y_train, tfidf_x_test_both, y_test, categories=categories)
 
 	tfidf_x_train_both = 0;
 	tfidf_x_test_both = 0;
@@ -146,4 +146,4 @@ def run(dirname):
 
 
 
-
+run("../data_sets/unit_test2/")
