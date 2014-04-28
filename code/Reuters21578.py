@@ -8,10 +8,10 @@ import numpy as np
 
 
 def MakeDataSetFiles(dirname):
-	 """
+	"""
 	    Creates the data files. Downloads them from the web
 
-	 """
+	"""
 	if not os.path.exists(dirname):
 		os.mkdir(dirname)
 	if not os.path.exists(os.path.join(dirname, 'train')):
