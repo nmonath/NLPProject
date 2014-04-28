@@ -62,6 +62,7 @@ def Eval(XTrain, YTrain, XTest, YTest, clf, return_predicted_labels=False):
 	avg_recall_per_class = np.mean(recall_per_class)
 	avg_f1_per_class = np.mean(f1_per_class)
 
+	del clf
 
 	if return_predicted_labels:
 		return (accuracy, overall_precision, overall_recall, overall_f1, avg_precision_per_class, avg_recall_per_class, avg_f1_per_class, precision_per_class, recall_per_class, f1_per_class, YPred)

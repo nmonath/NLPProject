@@ -65,43 +65,43 @@ def run(dirname):
 	Features.FUNIT = Features.FeatureUnits.ALL
 	RunClassificationExperiment(Features, dirname)
 
-	##################################################################################################################################
-	'''                                            First Run the following Unlemmatized Features                                     '''
-	'''        BLOCK 2                             Word, Word + DP, Word + PAs, All                                                '''
-	'''                                            No Argument Labels    			                                               '''
-	'''											   Both Binary & TFIDF 															   '''
-	'''											   Distance Function: Euclidean & Normalized Euclidean (Cosine)					   '''
-	##################################################################################################################################
+	# ##################################################################################################################################
+	# '''                                            First Run the following Unlemmatized Features                                     '''
+	# '''        BLOCK 2                             Word, Word + DP, Word + PAs, All                                                '''
+	# '''                                            No Argument Labels    			                                               '''
+	# '''											   Both Binary & TFIDF 															   '''
+	# '''											   Distance Function: Euclidean & Normalized Euclidean (Cosine)					   '''
+	# ##################################################################################################################################
 
 
-	###############################################
-	# Settings									  #			
-	###############################################
+	# ###############################################
+	# # Settings									  #			
+	# ###############################################
 	
-	Features.USE_LEMMA = False
-	Features.CASE_SENSITIVE = False
-	Features.USE_DEP_TAGS = False
-	Features.USE_POS_TAGS = False
-	Features.USE_ARG_LABELS = False
-	Features.USE_MEMORY_MAP = False
-	Features.FREP = Features.FeatureRepresentation.HASH
+	# Features.USE_LEMMA = False
+	# Features.CASE_SENSITIVE = False
+	# Features.USE_DEP_TAGS = False
+	# Features.USE_POS_TAGS = False
+	# Features.USE_ARG_LABELS = False
+	# Features.USE_MEMORY_MAP = False
+	# Features.FREP = Features.FeatureRepresentation.HASH
 	
-	# Words
-	Features.FUNIT = Features.FeatureUnits.WORD
+	# # Words
+	# Features.FUNIT = Features.FeatureUnits.WORD
 
-	RunClassificationExperiment(Features, dirname)
+	# RunClassificationExperiment(Features, dirname)
 
-	# Words & DP
-	Features.FUNIT = Features.FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS
-	RunClassificationExperiment(Features, dirname)
+	# # Words & DP
+	# Features.FUNIT = Features.FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS
+	# RunClassificationExperiment(Features, dirname)
 
-	# Words & PA
-	Features.FUNIT = Features.FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT
-	RunClassificationExperiment(Features, dirname)
+	# # Words & PA
+	# Features.FUNIT = Features.FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT
+	# RunClassificationExperiment(Features, dirname)
 
-	# ALL
-	Features.FUNIT = Features.FeatureUnits.ALL
-	RunClassificationExperiment(Features, dirname)
+	# # ALL
+	# Features.FUNIT = Features.FeatureUnits.ALL
+	# RunClassificationExperiment(Features, dirname)
 
 
 
@@ -119,6 +119,7 @@ def RunClassificationExperiment(FeaturesModule, dirname):
 	(feature_def, x_train_count) = FeaturesModule.Features(os.path.join(dirname, 'train'), ftype=FeaturesModule.FeatureType.COUNT)
 	x_test_count = FeaturesModule.Features(os.path.join(dirname, 'test'), ftype=FeaturesModule.FeatureType.COUNT, feature=feature_def)
 
+	del feature_def
 	# Use sparse matrix to save on memory
 	# FV1 & FV2
 	x_train_binary = FeaturesModule.ToBINARY(x_train_count)
@@ -243,8 +244,8 @@ def RunClassificationExperiment(FeaturesModule, dirname):
 	print('*' * 80)
 	print('\n')
 
-
-
+	del x_train_tfidf_normalized
+	del x_test_tfidf_normalized
 
 	
 
@@ -279,49 +280,12 @@ def ScoreClassifiers(XTrain, YTrain, XTest, YTest, DistanceFunctionName):
 
 		print('%' * 40 + "\n")
 
-def Eval(XTrain, YTrain, XTest, YTest, clf, return_predicted_labels=False):
-
-	(accuracy, overall_precision, overall_recall, overall_f1, avg_precision_per_class, avg_recall_per_class, avg_f1_per_class, precision_per_class, recall_per_class, f1_per_class) = SupervisedLearning.Run(Features,'ridge','../data_sets/small/')
-
-
-	 
-	if not os.path.exists('training_and_testing_files'):
-		os.mkdir('training_and_testing_files')
-	x_test_word = Features.Features(os.path.join(dirname, 'test'), ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.WORD,frep=Features.FeatureRepresentation.HASH, feature=feature_def_word)
-	print(' ')
-
-	np.save(os.path.join('training_and_testing_files', 'feature_def_word.npy'), feature_def_word)
-	np.save(os.path.join('training_and_testing_files', 'x_train_word.npy'), x_train_word)
-
-	binary_x_train_word = csr_matrix(Features.ToBINARY(x_train_word))
-	binary_x_test_word = csr_matrix(Features.ToBINARY(x_test_word))
-
-	Evaluation.Evaluate(binary_x_train_word, y_train, binary_x_test_word, y_test, categories=categories)
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-	(accuracy, overall_precision, overall_recall, overall_f1, avg_precision_per_class, avg_recall_per_class, avg_f1_per_class, precision_per_class, recall_per_class, f1_per_class) = SupervisedLearning.Run(Features,'ridge','../data_sets/small/')
-
-
-
-
-
-
-
-
-run("../data_sets/NewsGroupsTop3Classes100/")
+run("../data_sets/brown_corpus/")
 
 
 
