@@ -160,8 +160,8 @@ def MakeReutersTest(orig_dir, new_dir, classification=False):
 
 	train_classes = file(os.path.join(new_dir, 'train_classes.txt'), 'w');
 	test_classes = file(os.path.join(new_dir, 'test_classes.txt'), 'w');
-	orig_train_classes = LoadClassFile(os.path.join(orig_dir, 'train_classes.txt'))
-	orig_test_classes = LoadClassFile(os.path.join(orig_dir, 'test_classes.txt'))
+	orig_train_classes = LoadClassFile(os.path.join(orig_dir, 'train_classes.txt'), out_multi_class_matrix=False)
+	orig_test_classes = LoadClassFile(os.path.join(orig_dir, 'test_classes.txt'), out_multi_class_matrix=False)
 
 
 	counter = 0
