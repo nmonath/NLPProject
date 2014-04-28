@@ -13,6 +13,8 @@ class Document:
 			embeddings = np.array(embeddings)
 		elif ((not doc_file_name == None) and (not model == None)):
 			Features.USE_LEMMA = use_lemma
+			Features.REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = False
+			Features.REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT = False
 			words = Features.ReadDependencyParseFile(doc_file_name, funit=Features.FeatureUnits.WORD, remove=False)
 			(word_index, embeddings) = Word2VecExecuter.Word2VecLoadWordsHashTable(model, words)
 			embeddings = np.array(embeddings)
