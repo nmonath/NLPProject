@@ -1,0 +1,8 @@
+Phrase Structure Grammar
+Semantic Roles
+Tree Adjoining Grammars
+WordNet
+Ontology
+CCG
+FrameNet
+Distributed Semantics

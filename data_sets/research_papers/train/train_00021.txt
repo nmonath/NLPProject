@@ -1,0 +1,4 @@
+A Frames Approach to Semantic Analysis
+Charles J Fillmore Collin Baker
+
+In this chapter, we contrast a broad use of the term frame in cognitive science from its related use in a type of linguistic analysis; we describe the principles and data structure of a particular research project (FrameNet) as a model for representing frame-based analyses of lexical meanings; we brieﬂy introduce an extension of the project to include the semantic contributions of grammatical constructions; and we conclude by surveying the implications of a frames perspective on some familiar issues in linguistic semantics. 

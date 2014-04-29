@@ -1,0 +1,5 @@
+Introduction to WordNet: An On-line Lexical Database 
+George A. Miller, Richard Beckwith, Christiane Fellbaum, 
+Derek Gross, and Katherine Miller 
+
+WordNet is an on-line lexical reference system whose design is inspired by current psycholinguistic theories of human lexical memory. English nouns, verbs, and adjectives are organized into synonym sets, each representing one underlying lexical concept. Different relations link the synonym sets. 

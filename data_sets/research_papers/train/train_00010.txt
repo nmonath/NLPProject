@@ -1,0 +1,5 @@
+Nouns in WordNet: A Lexical Inheritance System 
+George A. Miller 
+Definitions of common nouns typically give a superordinate term plus 
+distinguishing features; that information provides the basis for organizing noun files in WordNet. The superordinate relation (hyponymy) generates a 
+hierarchical semantic organization that is duplicated in the noun ﬁles by the use of labeled pointers between sets of synonyms (synsets). The hierarchy is limited in depth, seldom exceeding more than a dozen levels. Distinguishing features are entered in such a way as to create a lexical inheritance system, a system in which each word inherits the distinguishing features of all its superordinates. Three types of distinguishing features are discussed: attributes (modification), parts (meronymy), and functions (predication), but only meronymy is presently implemented in the noun files. Antonymy is also found between nouns, but it is not a fundamental organizing principle for nouns. Coverage is partitioned into twenty-ﬁve topical files, each of which deals with a different primitive semantic component. 

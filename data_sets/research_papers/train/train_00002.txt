@@ -1,0 +1,5 @@
+THE PENN TREEBANK: AN OVERVIEW 
+Ann Taylor
+
+The Penn Treebank, in its eight years of operation (1989-1996), produced approximately 7 million words of part-of-speech tagged text, 3 million words of skeletally parsed text, over 2 million words of text parsed for predicate- argument structure, and 1.6 million words of transcribed spoken text annotated for speech disﬂuencies. This paper describes the design of the three annotation schemes used by the Treebank: POS tagging, syntactic bracketing, and disﬂuency annotation and the methodology employed in production. All available Penn Treebank materials are distributed by the Linguistic Data Consortium 
+http://www.ldc.upenn.edu. 

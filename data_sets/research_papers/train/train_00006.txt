@@ -1,0 +1,4 @@
+Domains of locality
+Aravind K. Joshi
+
+A grammar formalism specifies a domain of locality, i.e., a domain over which various dependencies (syntactic and semantic) can be specified. This issue is related to the use of constrained formal/computational systems just adequate for modeling various aspects of language. It leads to some novel ways of describing locality of structures and brings out the relationship between the complexity of description of primitives and local computations over them. In this paper, we will briefly explore the extended domain of locality provided by the Lexicalized Tree-Adjoining Grammar (LTAG) in the context of some linguistic, computational, and statistical properties.
