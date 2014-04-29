@@ -137,25 +137,25 @@ def RunClusteringExperiment(FeaturesModule, dirname, train_test):
 	############
 	# FV1	   #	
 	############
-	print('\n')
-	print('*' * 80)
-	print('*' * 80)
+	# print('\n')
+	# print('*' * 80)
+	# print('*' * 80)
 
 
 
-	# The following is a HACK so that everything prints out nicely.
-	# If you notice in the call to Features() the type was set to count
-	# Then the ToBINARY/ToTFIDF methods are called, this is to save time. The
-	# Count matrixes can be used to create both binary and tf-idf and so
-	# this makes it so we only need to extract the features once for each representation
-	FeaturesModule.FTYPE = FeaturesModule.FeatureType.BINARY
-	# Print configuration fo FV1
-	FeaturesModule.DisplayConfiguration()
-	ScoreClusterer(x_binary, y, "Euclidean")
+	# # The following is a HACK so that everything prints out nicely.
+	# # If you notice in the call to Features() the type was set to count
+	# # Then the ToBINARY/ToTFIDF methods are called, this is to save time. The
+	# # Count matrixes can be used to create both binary and tf-idf and so
+	# # this makes it so we only need to extract the features once for each representation
+	# FeaturesModule.FTYPE = FeaturesModule.FeatureType.BINARY
+	# # Print configuration fo FV1
+	# FeaturesModule.DisplayConfiguration()
+	# ScoreClusterer(x_binary, y, "Euclidean")
 	
-	print('*' * 80)
-	print('*' * 80)
-	print('\n')
+	# print('*' * 80)
+	# print('*' * 80)
+	# print('\n')
 
 
 	del x_binary
@@ -188,26 +188,26 @@ def RunClusteringExperiment(FeaturesModule, dirname, train_test):
 
 	############
 	# FV3	   #	
-	############
-	print('\n')
-	print('*' * 80)
-	print('*' * 80)
+	# ############
+	# print('\n')
+	# print('*' * 80)
+	# print('*' * 80)
 
 
 
-	# The following is a HACK so that everything prints out nicely.
-	# If you notice in the call to Features() the type was set to count
-	# Then the ToBINARY/ToTFIDF methods are called, this is to save time. The
-	# Count matrixes can be used to create both binary and tf-idf and so
-	# this makes it so we only need to extract the features once for each representation
-	FeaturesModule.FTYPE = FeaturesModule.FeatureType.TFIDF
-	# Print configuration fo FV3
-	FeaturesModule.DisplayConfiguration()
-	ScoreClusterer(x_tfidf, y, "Euclidean")
+	# # The following is a HACK so that everything prints out nicely.
+	# # If you notice in the call to Features() the type was set to count
+	# # Then the ToBINARY/ToTFIDF methods are called, this is to save time. The
+	# # Count matrixes can be used to create both binary and tf-idf and so
+	# # this makes it so we only need to extract the features once for each representation
+	# FeaturesModule.FTYPE = FeaturesModule.FeatureType.TFIDF
+	# # Print configuration fo FV3
+	# FeaturesModule.DisplayConfiguration()
+	# ScoreClusterer(x_tfidf, y, "Euclidean")
 	
-	print('*' * 80)
-	print('*' * 80)
-	print('\n')
+	# print('*' * 80)
+	# print('*' * 80)
+	# print('\n')
 
 	del x_tfidf
 
@@ -260,7 +260,7 @@ def ScoreClusterer(X, Y, DistanceFunctionName):
 		print("\nThe following are the results of unsupervised classification:")
 		print("\nPurity: " + str(purity))
 		print("\nNormalized Mutual Information Score: " + str(mutual_info_score))
-		print("\nRandom Index: " + str(rand_index))
+		print("\nRand Index: " + str(rand_index))
 
 		print('%' * 40 + "\n")
 
@@ -269,7 +269,7 @@ def ScoreClusterer(X, Y, DistanceFunctionName):
 
 
 
-run("../data_sets/reuters_classification/", train_test="test")
+run("../data_sets/brown_clustering/", train_test="train")
 
 
 

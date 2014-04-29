@@ -10,7 +10,7 @@ import SupervisedLearning
 #######################################################################
 
 global classifiers
-classifiers = ["Ridge", "SVM", "LinearSVM", "Passive Aggressive"]
+classifiers = ["LinearSVM"]
 
 
 def run(dirname):
@@ -117,55 +117,59 @@ def RunClassificationExperiment(FeaturesModule, dirname):
 
 
 	(feature_def, x_train_count) = FeaturesModule.Features(os.path.join(dirname, 'train'), ftype=FeaturesModule.FeatureType.COUNT)
-	x_test_count = FeaturesModule.Features(os.path.join(dirname, 'test'), ftype=FeaturesModule.FeatureType.COUNT, feature=feature_def)
 
-	del feature_def
 	# Use sparse matrix to save on memory
 	# FV1 & FV2
 	x_train_binary = FeaturesModule.ToBINARY(x_train_count)
 	x_train_binary_normalized = csr_matrix(normalize(np.float32(x_train_binary)))
 	x_train_binary = csr_matrix(x_train_binary)
-	x_test_binary = FeaturesModule.ToBINARY(x_test_count)
-	x_test_binary_normalized = csr_matrix(normalize(np.float32(x_test_binary)))
-	x_test_binary = csr_matrix(x_test_binary)
+
 	# FV3 & FV4 used below
 	x_train_tfidf = FeaturesModule.ToTFIDF(x_train_count)
 	x_train_tfidf_normalized = csr_matrix(normalize(x_train_tfidf))
 	x_train_tfidf = csr_matrix(x_train_tfidf)
+
+	del x_train_count
+
+	x_test_count = FeaturesModule.Features(os.path.join(dirname, 'test'), ftype=FeaturesModule.FeatureType.COUNT, feature=feature_def)
+	del feature_def
+
+	x_test_binary = FeaturesModule.ToBINARY(x_test_count)
+	x_test_binary_normalized = csr_matrix(normalize(np.float32(x_test_binary)))
+	x_test_binary = csr_matrix(x_test_binary)
 	x_test_tfidf = FeaturesModule.ToTFIDF(x_test_count)
 	x_test_tfidf_normalized = csr_matrix(normalize(x_test_tfidf))
 	x_test_tfidf = csr_matrix(x_test_tfidf)
 
 	del x_test_count
-	del x_train_count
 
 
-	############
-	# FV1	   #	
-	############
-	print('\n')
-	print('*' * 80)
-	print('*' * 80)
+	# ############
+	# # FV1	   #	
+	# ############
+	# print('\n')
+	# print('*' * 80)
+	# print('*' * 80)
 
 
 
-	# The following is a HACK so that everything prints out nicely.
-	# If you notice in the call to Features() the type was set to count
-	# Then the ToBINARY/ToTFIDF methods are called, this is to save time. The
-	# Count matrixes can be used to create both binary and tf-idf and so
-	# this makes it so we only need to extract the features once for each representation
-	FeaturesModule.FTYPE = FeaturesModule.FeatureType.BINARY
-	# Print configuration fo FV1
-	FeaturesModule.DisplayConfiguration()
-	ScoreClassifiers(x_train_binary, y_train, x_test_binary, y_test, "Euclidean")
+	# # The following is a HACK so that everything prints out nicely.
+	# # If you notice in the call to Features() the type was set to count
+	# # Then the ToBINARY/ToTFIDF methods are called, this is to save time. The
+	# # Count matrixes can be used to create both binary and tf-idf and so
+	# # this makes it so we only need to extract the features once for each representation
+	# FeaturesModule.FTYPE = FeaturesModule.FeatureType.BINARY
+	# # Print configuration fo FV1
+	# FeaturesModule.DisplayConfiguration()
+	# ScoreClassifiers(x_train_binary, y_train, x_test_binary, y_test, "Euclidean")
 	
-	print('*' * 80)
-	print('*' * 80)
-	print('\n')
+	# print('*' * 80)
+	# print('*' * 80)
+	# print('\n')
 
 
-	del x_train_binary
-	del x_test_binary
+	# del x_train_binary
+	# del x_test_binary
 
 
 	############
@@ -194,31 +198,31 @@ def RunClassificationExperiment(FeaturesModule, dirname):
 	del x_train_binary_normalized
 	del x_test_binary_normalized
 
-	############
-	# FV3	   #	
-	############
-	print('\n')
-	print('*' * 80)
-	print('*' * 80)
+	# ############
+	# # FV3	   #	
+	# ############
+	# print('\n')
+	# print('*' * 80)
+	# print('*' * 80)
 
 
 
-	# The following is a HACK so that everything prints out nicely.
-	# If you notice in the call to Features() the type was set to count
-	# Then the ToBINARY/ToTFIDF methods are called, this is to save time. The
-	# Count matrixes can be used to create both binary and tf-idf and so
-	# this makes it so we only need to extract the features once for each representation
-	FeaturesModule.FTYPE = FeaturesModule.FeatureType.TFIDF
-	# Print configuration fo FV3
-	FeaturesModule.DisplayConfiguration()
-	ScoreClassifiers(x_train_tfidf, y_train, x_test_tfidf, y_test, "Euclidean")
+	# # The following is a HACK so that everything prints out nicely.
+	# # If you notice in the call to Features() the type was set to count
+	# # Then the ToBINARY/ToTFIDF methods are called, this is to save time. The
+	# # Count matrixes can be used to create both binary and tf-idf and so
+	# # this makes it so we only need to extract the features once for each representation
+	# FeaturesModule.FTYPE = FeaturesModule.FeatureType.TFIDF
+	# # Print configuration fo FV3
+	# FeaturesModule.DisplayConfiguration()
+	# ScoreClassifiers(x_train_tfidf, y_train, x_test_tfidf, y_test, "Euclidean")
 	
-	print('*' * 80)
-	print('*' * 80)
-	print('\n')
+	# print('*' * 80)
+	# print('*' * 80)
+	# print('\n')
 
-	del x_train_tfidf
-	del x_test_tfidf
+	# del x_train_tfidf
+	# del x_test_tfidf
 
 	############
 	# FV4	   #	
@@ -283,13 +287,17 @@ def ScoreClassifiers(XTrain, YTrain, XTest, YTest, DistanceFunctionName):
 
 
 
+print('^'*80)
+print(' ' * 30 + 'NewsGroupsTop15Classes200' + ' ' * 30)
+run("../data_sets/NewsGroupsTop15Classes200/")
+print('v'*80)
 
 
-run("../data_sets/brown_corpus/")
 
-
-
-
+print('^'*80)
+print(' ' * 30 + 'Reuters' + ' ' * 30)
+run("../data_sets/reuters_classification/")
+print('v'*80)
 
 
 
