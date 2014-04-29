@@ -3,7 +3,7 @@ import Features
 import SupervisedLearning
 import UnsupervisedLearning
 
-
+'''
 print('%' * 80)
 print('%' * 80 + "\n")
 print("WORDS\n")
@@ -920,7 +920,7 @@ print(doc2c)
 print(doc3c)
 print(doc4c)
 print("\n")
-
+'''
 ##################################################################################################################################
 '''                                            check for SupervisedLearning                                                    '''
 ##################################################################################################################################
@@ -937,9 +937,15 @@ Features.USE_ARG_LABELS = True
 Features.CASE_SENSITIVE = False
 Features.REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT = False
 Features.REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = False
+Features.FUNIT = Features.FeatureUnits.WORD
+Features.FREP = Features.FeatureRepresentation.STRING
+
 Features.DisplayConfiguration()
 
 
+(feature_def,x) = Features.Features('../data_sets/small/train/')
+print("\nFeature Def is: " + str(feature_def))
+#SupervisedLearning.Run(Features,'ridge','../data_sets/small/')
 (accuracy, overall_precision, overall_recall, overall_f1, avg_precision_per_class, avg_recall_per_class, avg_f1_per_class, precision_per_class, recall_per_class, f1_per_class) = SupervisedLearning.Run(Features,'ridge','../data_sets/small/')
 print("\nThe following are the results of classification:")
 print("\nAccuracy: " + str(accuracy))
@@ -959,7 +965,7 @@ print('%' * 80 + "\n")
 ##################################################################################################################################
 '''                                            check for UnsupervisedLearning                                                    '''
 ##################################################################################################################################
-
+'''
 print('%' * 80 + "\n")
 print("Below is a test for UnsupervisedLearning using kmeans")
 print('%' * 80 + "\n")
@@ -986,3 +992,4 @@ print("\nRandom Index: " + str(rand_index))
 
 print('%' * 80 + "\n")
 
+'''
