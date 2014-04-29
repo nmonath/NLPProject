@@ -1,0 +1,3 @@
+On The Semantic Content of the Notion of `Thematic Role'
+
+The notion of "thematic roles," a more modern term for Fillmore's (1968) cause relations, Jackendoff's (1972, 1976) and Gruber's (1965) thematic relations, and Panini's karakas, has been appealed to by contemporary linguists in the statement o natural language generalizations about syntax, morphology, and semantics for some 20 years now. Until recently, thematic roles were invoked only in research that treated semantics non-formally (i.e. not model-theoretically). The level of semantic rigor behind these notions in this literature is suggested by the characterizations in (1) of some of the roles from Andrews (1985) and Jackendoff (1985), which are very typical of the way roles are introduced in this literature. 

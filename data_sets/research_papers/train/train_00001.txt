@@ -1,0 +1,6 @@
+A step-by-step introduction to the Government and Binding theory of syntax 
+Cheryl A. Black 
+
+
+Designed for use as a textbook, this paper provides a data-motivated, 
+step-by-step introduction to the main tenets of Government and Binding theory of syntax as developed by Noam Chomsky.  An overview of the theory is followed by sections on subcategorization, X-bar theory, movement, semantic roles, case theory, and binding theory.  A number of the more recent additions proposed by other linguists, such as the DP hypothesis and the split structure for Infl, are covered in the final section.  The data used is primarily English, but also includes Abaza, Chichewa, Eskimo, French, Hixkaryana, Mohawk, Tiwa, Tzotzil, Urubú, and Zapotec. 

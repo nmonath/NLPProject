@@ -1,0 +1,4 @@
+English Verbs as a Semantic Net 
+Christiane Fellbaum 
+
+This paper describes the semantic network of English verbs in WordNet. The semantic relations used to build networks of nouns and adjectives cannot be applied without modification, but have to be adapted to ﬁt the semantics of verbs, which differ substantially from those of the other lexical categories. The nature of these relations is discussed, as is their distribution throughout different semantic groups of verbs, which determines certain idiosyncratic patterns of lexicalization. In addition, four variants of lexical entailment are distinguished, which interact in systematic ways with the semantic relations. Finally, the lexical properties of the different verb groups are outlined. 

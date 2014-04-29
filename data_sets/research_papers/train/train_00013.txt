@@ -1,0 +1,6 @@
+Design and Implementation of the WordNet Lexical Database 
+and Searching Software
+Richard Beckwith, George A. Miller, and Randee Tengi
+
+Lexicographers must be concerned with the presentation as well as the content of their work, and this concern is heightened when presentation moves from the printed page to the computer monitor. Printed dictionaries have become relatively standardized through many years of publishing (Vizetelly, 1915); expectations for electronic lexicons are still up for grabs. Indeed, computer technology itself is evolving rapidly; an 
+indeﬁnite variety of ways to present lexical information is possible with this new technology, and the advantages and disadvantages of many possible alternatives are still matters for experimentation and debate. Given this degree of uncertainty, manner of presentation must be a central concern for the electronic lexicographer. WordNet is a pioneering excursion into this new medium. Considerable attention has been devoted to making it useful and convenient, but the solutions described here are unlikely to be the ﬁnal word on these matters. It is hoped that readers will not merely note the shortcomings of this work, but will also be inspired to make improvements on it. 

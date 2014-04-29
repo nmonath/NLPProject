@@ -1,0 +1,28 @@
+Tree-Adjoining Grammars
+Aravind K. Joshi and Yves Schabes
+
+In this paper, we will describe a tree generating system called tree-adjoining grammar (TAG) and state some of the recent results about TAGs. The work on TAGs is motivated by linguistic considerations. However, a number of formal results have been established for TAGS, which we believe, would be of interest to researchers in formal languages and automata, including those interested in tree grammars and tree automata.
+
+After giving a short introduction to TAG, we briefly state these results concerning both the properties of the string sets and tree sets (Section 2). We will also describe the notion of lexicalization of grammars (Section 3.) and investigate the relationship of lexicalization to context-free grammars (CFGs) and TAGs and then summarize the issues on lexicalization (Section 4. 5. and 6.). We then describe an automaton model that exactly corresponds to TAGs. As we have said earlier TAGs were motivated by some important linguistic considerations. The formal aspects of these considerations are mathematically important also. Hence, we have presented a brief discussion of these issues together with some simple examples (Section 8.). We also present in Section 9. some variants of TAGs that are currently under investigation. We then present a bottom up predictive parser for TAGs, which is both theoretically and practically important (Section 10.) and then offer some concluding remarks (Section 11.)
+
+The motivations for the study of tree-adjoining grammars (TAG) are of 
+linguistic and formal nature. The elementary objects manipulated by a TAG 
+are trees, i.e., structured ob jects and not strings. Using structured objects as the elementary ob jects of a formalism, it is possible to construct formalisms whose properties relate directly to the strong generative capacity structural description, which is more relevant to linguistic descriptions than the weak generative capacity (set of strings).
+
+TAG is a tree-generating system rather than a string generating system. 
+The set of trees derived in a TAG constitute the object language. Hence, in 
+order to describe the derivation of a tree in the object language, it is necessary to talk about derivation `trees' for the object language trees. These derivation trees are important both syntactically and semantically. It has also turned out that some other formalisms which are weakly equivalent to TAGs are similar to each other in terms of the properties of the derivation `trees' of these formalisms [Weir1998, Joshi et al.1991].
+ 
+Another important linguistic motivation for TAGs is that TAGs allow 
+factoring recursion from the statement of linguistic constraints (dependencies), thus making these constraints strictly local, and thereby simplifying linguistic description [Kroch and Joshi1985].
+
+Lexicalization of grammar formalism is also one of the key motivations 
+both linguistic and formal. Most current linguistic theories give lexical accounts of several phenomena that used to be considered purely syntactic. 
+The information put in the lexicon is thereby increased in both amount and 
+complexity.
+
+On the formal side, lexicalization allows us to associate each elementary 
+structure in a grammar with a lexical item (terminal symbol in the context of 
+formal grammars). The well-known Greibach Normal Form (CNF) for CFG 
+is a kind of lexicalization, however it is a weak lexicalization in a certain sense as it does not preserve structures of the original grammar. Our tree based approach to lexicalization allows us to achieve lexicalization while preserving structures, which is linguistically very significant. 
+
