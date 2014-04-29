@@ -10,6 +10,11 @@ import copy
 class Document:
 
 	def __init__(self, pred_arg_structures=None, embeddings=None, doc_file_name=None, word_index=None, model=None, use_lemma=True):
+		Features.USE_LEMMA = use_lemma
+		Features.REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = False
+		Features.REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT = False
+		Features.FREP = Features.FeatureRepresentation.STRING
+
 		self.pred_arg_structures = pred_arg_structures
 		self.use_lemma = use_lemma
 		if (embeddings== None and doc_file_name==None and (not word_index == None) and (not model == None)):
@@ -20,7 +25,7 @@ class Document:
 			words = Features.ReadDependencyParseFile(doc_file_name, funit=Features.FeatureUnits.WORD, remove=False)
 			(word_index, embeddings) = Word2VecExecuter.Word2VecLoadWordsHashTable(model, words)
 			embeddings = np.array(embeddings)
-			self.pred_arg_structures = Features.ReadDependencyParseFile(doc_file_name, funit=Features.FeatureUnits.PRED_ARG, remove=False)
+			self.pred_arg_structures = Features.ReadDependencyParseFile(doc_file_name, funit=Features.FeatureUnits.PREDICATE_ARGUMENT, remove=False)
 			del words
 		self.embeddings = normalize(np.array(embeddings))
 		self.word_index = word_index
@@ -33,16 +38,72 @@ class Document:
 
 	def distance(self, other, theta=0.5):
 		dist_self_to_other = 0
-		for pa in self.pred_arg_structures:
-			dist_self_to_other = dist_self_to_other + self.padist(pa, other)
-		dist_self_to_other = dist_self_to_other/len(self.pred_arg_structures)
-
 		dist_other_to_self = 0
-		for pa in other.pred_arg_structures:
-			dist_other_to_self = dist_other_to_self + other.padist(pa, self)
-		dist_other_to_self = dist_other_to_self/len(other.pred_arg_structures)
+		for pa1 in self.pred_arg_structures:
+			mindist = np.Inf
+			for pa2 in other.pred_arg_structures:
+				curr_dist = self.dist_btw_two_pas(other, pa1, pa2)
+				if curr_dist < mindist:
+					mindist = curr_dist
+			dist_self_to_other += mindist
+		dist_self_to_other = dist_self_to_other / len(self.pred_arg_structures)
+		for pa2 in other.pred_arg_structures:
+			mindist = np.Inf
+			for pa1 in self.pred_arg_structures:
+				curr_dist = other.dist_btw_two_pas(self, pa2, pa1)
+				if curr_dist < mindist:
+					mindist = curr_dist
+			dist_other_to_self += mindist
+		dist_other_to_self = dist_other_to_self / len(other.pred_arg_structures)
 
 		return dist_self_to_other*theta + dist_other_to_self*(1-theta)
+
+
+	def dist_btw_two_pas(self, other, pa1, pa2):
+		dist = 0
+		try:
+			dist += euclidean_distances(self.embeddings[self.word_index[str(pa1.pred)], :], other.embeddings[other.word_index[str(pa2.pred)], :])
+		except:
+			dist += 2
+		null_args = 0
+		for arg in pa1.args:
+			if not arg in pa2.args:
+				dist += 2
+			else:
+				emb1 = None
+				emb2 = None
+				for w in pa1.args[arg]:
+					if emb1 == None:
+						try:
+							emb1 = self.embeddings[self.word_index[str(w)], :]
+						except:
+							None
+					else:
+						try:
+							emb1 = emb1 + self.embeddings[self.word_index[str(w)], :]
+						except:
+							None
+				for w in pa2.args[arg]:
+					if emb1 == None:
+						try:
+							emb1 = other.embeddings[other.word_index[str(w)], :]
+						except:
+							None
+					else:
+						try:
+							emb1 = emb1 + other.embeddings[other.word_index[str(w)], :]
+						except:
+							None
+				if not emb1 == None:
+					if not emb2 == None:
+						dist += euclidean_distances(emb1, emb2)
+					else:
+						dist += 2
+				else:
+					null_args += 1
+		dist = dist / (len(pa1.args) + 1 - null_args)
+		return dist
+
 
 	def padist(self, pa_in_self, other, return_pa=False, penalty=2):
 		mindist = 0;

@@ -23,7 +23,7 @@ from sklearn.utils.extmath import density
 from sklearn import metrics
 
 
-def Evaluate(x_train, y_train, x_test, y_test, select_chi2=None):
+def Evaluate(x_train, y_train, x_test, y_test, categories=None, select_chi2=None):
 
   # Display progress logs on stdout
   logging.basicConfig(level=logging.INFO,
@@ -46,31 +46,31 @@ def Evaluate(x_train, y_train, x_test, y_test, select_chi2=None):
           (KNeighborsClassifier(n_neighbors=10), "kNN")):
       print('=' * 80)
       print(name)
-      results.append(benchmark(clf, x_train, y_train, x_test, y_test))
+      results.append(benchmark(clf, x_train, y_train, x_test, y_test, categories=categories))
 
   for penalty in ["l2", "l1"]:
       print('=' * 80)
       print("%s penalty" % penalty.upper())
       # Train Liblinear model
-      results.append(benchmark(LinearSVC(loss='l2', penalty=penalty, dual=False, tol=1e-3), x_train, y_train, x_test, y_test))
+      results.append(benchmark(LinearSVC(loss='l2', penalty=penalty, dual=False, tol=1e-3), x_train, y_train, x_test, y_test,categories=categories))
 
       # Train SGD model
-      results.append(benchmark(SGDClassifier(alpha=.0001, n_iter=50, penalty=penalty), x_train, y_train, x_test, y_test))
+      results.append(benchmark(SGDClassifier(alpha=.0001, n_iter=50, penalty=penalty), x_train, y_train, x_test, y_test,categories=categories))
 
   # Train SGD with Elastic Net penalty
   print('=' * 80)
   print("Elastic-Net penalty")
-  results.append(benchmark(SGDClassifier(alpha=.0001, n_iter=50, penalty="elasticnet"), x_train, y_train, x_test, y_test))
+  results.append(benchmark(SGDClassifier(alpha=.0001, n_iter=50, penalty="elasticnet"), x_train, y_train, x_test, y_test,categories=categories))
 
   # Train NearestCentroid without threshold
   print('=' * 80)
   print("NearestCentroid (aka Rocchio classifier)")
-  results.append(benchmark(NearestCentroid(),x_train, y_train, x_test, y_test))
+  results.append(benchmark(NearestCentroid(),x_train, y_train, x_test, y_test,categories=categories))
 
   #TODO: Normalize Data so we can use this
   # Train sparse Naive Bayes classifiers
-  print('=' * 80)
-  print("Naive Bayes")
+  #print('=' * 80)
+  #print("Naive Bayes")
   #results.append(benchmark(MultinomialNB(alpha=.01),x_train, y_train, x_test, y_test))
   #results.append(benchmark(BernoulliNB(alpha=.01),x_train, y_train, x_test, y_test))
 
@@ -80,8 +80,9 @@ def trim(s):
     """Trim string to fit on terminal (assuming 80-column display)"""
     return s if len(s) <= 80 else s[:77] + "..."
 
-def benchmark(clf, x_train, y_train, x_test, y_test):
-    categories = [str(el) for el in np.unique(y_train)]
+def benchmark(clf, x_train, y_train, x_test, y_test, categories=None):
+    if not categories:
+      categories = [str(el) for el in np.unique(y_train)]
     print('_' * 80)
     print("Training: ")
     print(clf)

@@ -29,6 +29,7 @@ Features.DisplayConfiguration()
 
 (fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.WORD,frep=Features.FeatureRepresentation.STRING)
 
+
 print("\nFeature Definition")
 print(fdef)
 print("\nX matrix")

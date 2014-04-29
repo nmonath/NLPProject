@@ -36,9 +36,9 @@ def Eval(X, Y, clstr, return_cluster_labels=False):
 	C = clstr.predict(X)
 
 	if return_cluster_labels:
-		return (Metrics.Purity(C,Y), sklearn.metrics.normalized_mutual_info_score(Y,C), Metrics.RandIndex(C,Y), C)
+		return (Metrics.Purity(C,Y), sklearn.metrics.normalized_mutual_info_score(Y,C), sklearn.metrics.adjusted_rand_score(Y,C), C)
 	else:
-		return (Metrics.Purity(C,Y), sklearn.metrics.normalized_mutual_info_score(Y,C), Metrics.RandIndex(C,Y))
+		return (Metrics.Purity(C,Y), sklearn.metrics.normalized_mutual_info_score(Y,C), sklearn.metrics.adjusted_rand_score(Y, C))
 
 
 def Run(FeaturesModule, clstr, dirname, train_test='train'):
