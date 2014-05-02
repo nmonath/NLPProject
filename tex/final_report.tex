@@ -166,6 +166,8 @@ Formally, the experimental set up is as follows. Given a collection of documents
 
 The evaluation measures we use are purity, normalized mutual information and the adjusted rand index. 
 
+Similar experiments to these can be found in the literature in \cite{Huang2008} and \cite{Hofmann2000}. 
+
 
 \paragraph{Reuters-21578}
 
@@ -179,27 +181,77 @@ We selected a portion of the test cases of the Mod-Apte split of the Reuters-215
 
 The results for each of our feature vectors are: 
 
+% REUTERS PLOTS
+% PURITY
+\pgfplotsset{width=10cm}
 \begin{figure}[H]
 \centering
 \begin{tikzpicture}
-  \begin{axis}[    ybar,    enlargelimits=0.15,    legend style={at={(0.5,-0.2)},      anchor=north,legend columns=-1},    ylabel={Number of Samples},    symbolic x coords={Words,Words and DP,Words and PA,Words and DP and PA},    xtick=data,    nodes near coords,    nodes near coords align={vertical},    x tick label style={rotate=45,anchor=east},
-  title=Purity    ]    \addplot coordinates {(Words, 0.761149) (Words and DP,0.711835) (Words and PA,0.786878) (Words and DP and PA,0.75) };  \end{axis}
+\pgfkeys{
+    /pgf/number format/precision=5, 
+    /pgf/number format/fixed zerofill=true
+}
+  \begin{axis}[    ybar,    enlargelimits=0.15,    legend style={at={(0.5,-0.4)},      anchor=north,legend columns=-1},    ylabel={Number of Samples},    symbolic x coords={Words,Words and DP,Words and PA,Words and DP and PA},    xtick=data,    nodes near coords,    nodes near coords align={vertical},    x tick label style={rotate=45,anchor=east},
+  title=Purity,
+   y tick label style={/pgf/number format/.cd,
+        fixed,
+        fixed zerofill,
+        precision=2,
+        /tikz/.cd},    ]    \addplot coordinates {(Words, 0.72727) (Words and DP,0.711835) (Words and PA,0.761149) (Words and DP and PA,0.729845) };
+    \addplot coordinates {(Words, 0.761149) (Words and DP,0.699828) (Words and PA,0.786878) (Words and DP and PA,0.75) }; \legend{Binary, TF-IDF}
+     \end{axis}
   \end{tikzpicture}\end{figure}
 
- 
+ % NMI
+\pgfplotsset{width=10cm}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\pgfkeys{
+    /pgf/number format/precision=5, 
+    /pgf/number format/fixed zerofill=true
+}
+  \begin{axis}[    ybar,    enlargelimits=0.15,    legend style={at={(0.5,-0.4)},      anchor=north,legend columns=-1},    ylabel={Number of Samples},    symbolic x coords={Words,Words and DP,Words and PA,Words and DP and PA},    xtick=data,    nodes near coords,    nodes near coords align={vertical},    x tick label style={rotate=45,anchor=east},
+  title=Normalized Mutual Information,
+   y tick label style={/pgf/number format/.cd,
+        fixed,
+        fixed zerofill,
+        precision=2,
+        /tikz/.cd},    ]    \addplot coordinates {(Words, 0.44211) (Words and DP,0.42011) (Words and PA,0.490585) (Words and DP and PA,0.442120) };
+    \addplot coordinates {(Words, 0.50932) (Words and DP,0.34044) (Words and PA,0.5485359) (Words and DP and PA,0.491923) }; \legend{Binary, TF-IDF}
+     \end{axis}
+  \end{tikzpicture}\end{figure}
+
+ % Adjusted Rand Index
+\pgfplotsset{width=10cm}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\pgfkeys{
+    /pgf/number format/precision=5, 
+    /pgf/number format/fixed zerofill=true
+}
+  \begin{axis}[    ybar,    enlargelimits=0.15,    legend style={at={(0.5,-0.4)},      anchor=north,legend columns=-1},    ylabel={Number of Samples},    symbolic x coords={Words,Words and DP,Words and PA,Words and DP and PA},    xtick=data,    nodes near coords,    nodes near coords align={vertical},    x tick label style={rotate=45,anchor=east},
+  title=Adjusted Rand Index,
+   y tick label style={/pgf/number format/.cd,
+        fixed,
+        fixed zerofill,
+        precision=2,
+        /tikz/.cd},    ]    \addplot coordinates {(Words, 0.20537) (Words and DP,0.15659) (Words and PA,0.32799) (Words and DP and PA,0.22446) };
+    \addplot coordinates {(Words, 0.33894) (Words and DP,0.05001) (Words and PA,0.37705) (Words and DP and PA,0.30966) }; \legend{Binary, TF-IDF}
+     \end{axis}
+  \end{tikzpicture}\end{figure}
 
 
 
  
-
-We evaluate the performance of t
 
 
 For example, given a corpus of computational linguistics research papers, we might hope that a clustering of the papers would place all the work on grammars and language representations in one cluster, the work on semantics in another, the work in morphology in a third, etc. 
 
 We will reproduce the experiment in \cite{Hurtado2013},  which uses a corpus of 209 artificial intelligence research papers manually tagged by experts. For each paper, the 30 papers considered most similar using the bag-of-words approach \footnote{With tf-idf as the value of the vector for each unigram} with  the cosine distance function were labeled by an expert as similar or dissimilar. A document similarity measure is evaluated by selecting, for each paper, the 30 closest papers and measure the Mean Average Precision and Mean Reciprocal Rank. We will the results of our approach to that of the authors. 
 
-We will also evaluate our document similarity measures on the Reuters-21578 corpus. Each news article in the Reuters corpus is tagged with a class label. We will perform an experiment in which we cluster the articles in the corpus and measure how well each cluster encompasses a class of article and how well each class is represented by a cluster, both in terms of precision and recall. A comparable experiment is done in \cite{Hofmann2000}. 
+We will also evaluate our document similarity measures on the Reuters-21578 corpus. Each news article in the Reuters corpus is tagged with a class label. We will perform an experiment in which we cluster the articles in the corpus and measure how well each cluster encompasses a class of article and how well each class is represented by a cluster, both in terms of precision and recall. 
 
 Finally, if time allows, we will perform an additional experiment on the clustering of research papers, in which we collect a corpus and for each paper return the top $k$ most similar papers. The list of similar papers will then be evaluated by a human subject and the rate of dissimilar papers will be evaluated. 
 
