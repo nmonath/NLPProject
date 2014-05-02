@@ -24,6 +24,8 @@
  \usepackage{alltt} 
 \usepackage{hyperref}
 \usepackage{pgfplots}
+\definecolor{shadecolor}{rgb}{0.82,0.82,0.82}
+
 
 \newcommand{\bt}[1]{\textbf{#1}}    
    
@@ -53,6 +55,82 @@ In these traditional approaches, the syntactic and semantic relationships of wor
 The most recent work related to document similarity of scientific papers can be found in \cite{Hurtado2011} and \cite{Hurtado2013}, it uses a unigram based language model to represent the documents. The model treats the text as \emph{semi-structured}, taking advantage of the additional features of the keywords of the paper, authors' names, and the name of the journal in which the paper appears.
 
 Our work separates itself from these previous studies in that we propose to use syntactically and semantically related sequences of words extracted from the text, using not only dependency parsing, but also automatic predicate argument structure detection, both in a language model and a vector based representation of documents. In creating a language model, we hope to provide a more robust representation of documents using LDA and other techniques. We will also apply the approach to unsupervised document clustering and pairwise document similarity for applications such as recommender systems. 
+
+
+\section{Document Representations}
+
+
+\subsection{Document Preprocessing}
+
+In order to extract dependency pair and predicate argument structures from documents for use in a feature structure, we must run documents through a parsing algorithm. The parser we used in \emph{ClearNLP}. We set the parsing mode to be \emph{Semantic Role Labeling}, which produces not only an SRL of the text, but also the dependency structure. The parser also provides additional information about each word it the text: the lemmatized form, part of speech tag, dependency label, semantic role label, and other features. 
+
+\subsection{Bag of ``Units'' Document Representation}
+
+In this work we extend the typical vector space model of a bag of words feature representation to include rich units than single words, namely dependency (head-modifier) pairs, and predicate argument structures. By \emph{units} or \emph{base units} we are referring to the terms whose presence/absence in a document determine the values of the feature vector of the document, its document representation. In this way, each unit corresponds to an entry in the feature vector of a document. The value of that vector can be binary, which means the values of the feature vector are 0 or 1 depending on whether or not a unit appears in the document. It can be tf-idf, in which the values of the feature vector are the term-frequency-inverse-document-frequency of a unit. In this project, we used the augmented tf-idf value presented HERE (CITE).
+
+\subsection{Word Representation}
+
+We define an object structure representing a single \emph{word} to have the attributes of the \emph{word form} that appears in the document, the \emph{lemmatized form} of the word, and the \emph{part of speech tag} of the word. 
+
+\subsection{Dependency Pair Representation}
+
+We define an object structure representing a head-modifier dependency pair to be an ordered tuple of \emph{words} with the structured defined above. The first word in the tuple is the $head$ of the dependency pair, and the second word in the tuple is the modifier of the dependency pair.  
+
+\subsubsection{Extracting Dependency Pairs from Parsed File}
+
+The preprocessed document files parsed by the \emph{ClearNLP} parser have the following format:
+
+Given the input document:
+
+\begin{shaded} \tt
+\begin{verbatim}
+My sister thought John Updike's writing was offensive. I disagreed.
+\end{verbatim}
+\end{shaded}
+
+The dependency pairs are discovered using the values in the 
+
+\begin{shaded} \tt
+\footnotesize
+\begin{tabular}{cccccccc}
+1 &	My &	my &	PRP\$ &	 \_	& 2	 & poss	 &\_ \\
+2 &	sister &	sister &	NN &	\_ &	3 &	nsubj &	3:A0 \\
+3 &	thought &	think &	VBD	pb=think.01 &	0 &	root	\_ \\
+4 &	John &	john	 &NNP &	\_ &	5 &	nn &	 \_ \\
+5 &	Updike &	updike &	 NNP &	\_ &	7 &	poss & \_ \\
+6 &	's &	's &	POS	 &\_ &	5 &	possessive &	\_ \\
+7 &	writing &	writing &	NN &	\_ &	8 &	nsubj &	8:A1=PPT \\
+8 &	was &	be &	VBD	pb=be.01 &	3 &	 ccomp &	3:A1=PPT \\
+9 &	offensive &	offensive &	JJ & \_	& 8 &	acomp &	8:A2=PRD \\
+10 & 	. & 	. &	. &	\_ &	3 &	punct &	\_ \\
+
+1 &	I &	I &	PRP	 & \_	 & 2	 & nsubj &	2:A0=PAG \\
+2 &	disagreed &	disagree &	VBD	 & pb=disagree.01 & 	0 & 	root	 & \_ \\
+3 &	. &	. &	. &	\_ &	2 &	punct &	\_ \\
+\end{tabular}
+\end{shaded}
+
+The dependency pairs are extracted making use of the intra-sentence word ID numbers (first column) and the corresponding dependency information (fifth column).
+
+
+
+\subsection{Feature Options Common to All Representations}
+
+Some feature options are common across both our baseline (bag of words) and proposed approaches. These options 
+
+The first options define equivalence between words
+
+\begin{itemize}
+ \item \textbf{Lemmatization}: 
+ \item \textbf{Case Sensitivity}: Determines if capitalization effects the equality of words
+ \item \textbf{Part of Speech Tags}: 
+ 
+ 
+ \end{itemize}
+
+\subsection{Bag of Words Representation}
+
+As a baseline, we implemented a bag-of-words vector space model. In this model, we define a feature 
 
 \section{Proposed Approach}
 
