@@ -107,7 +107,7 @@ In our future experiments we will experiment with using a finite list of stop wo
 
 \subsection{Dependency Pair Representation}
 
-We define an object structure representing a head-modifier dependency pair to be an ordered tuple of \emph{words} with the structured defined above. The first word in the tuple is the $head$ of the dependency pair, and the second word in the tuple is the modifier of the dependency pair.  Equivalence between dependency pairs is important for the same reason equivalence is important in word units. A dependency pair $dp_1$ is said to be equivalent to another dependency pair $dp_2$ if an only if the word unit which is the head of $dp_1$ is equivalent to the word unit which is the head of $dp_2$ and the word unit which is the modifier of $dp_1$ is equivalent to the word unit which is the modifier of $dp_2$. The additional feature of \textbf{dependency labels} can be used in the representation of dependency pairs. If used, this adds an additional component to the definition of equivalence between dependency pairs, which is that the dependency labels in the pairs must also be the same.
+We define an object structure representing a head-modifier dependency pair to be an ordered tuple of \emph{words} with the structured defined above. The first word in the tuple is the $head$ of the dependency pair, and the second word in the tuple is the \emph{modifier} of the dependency pair.  Equivalence between dependency pairs is important for the same reason equivalence is important in word units. A dependency pair $dp_1$ is said to be equivalent to another dependency pair $dp_2$ if an only if the word unit which is the head of $dp_1$ is equivalent to the word unit which is the head of $dp_2$ and the word unit which is the modifier of $dp_1$ is equivalent to the word unit which is the modifier of $dp_2$. The additional feature of \emph{dependency labels} can be used in the representation of dependency pairs. If used, this adds an additional component to the definition of equivalence between dependency pairs, which is that the dependency labels in the pairs must also be the same.
 
 \subsubsection{Removing Stopwords}
 
@@ -120,7 +120,7 @@ Given the input document:
 
 \begin{shaded} \tt
 \begin{verbatim}
-My sister thought John Updike's writing was offensive. Mary disagreed.
+My sister thought John Updike's writing was offensive. I disagreed.
 \end{verbatim}
 \end{shaded}
 
@@ -140,7 +140,7 @@ The parsed file is:
 9 &	offensive &	offensive &	JJ & \_	& 8 &	acomp &	8:A2=PRD \\
 10 & 	. & 	. &	. &	\_ &	3 &	punct &	\_ \\
 
-1 &	Mary &	Mary &	PRP	 & \_	 & 2	 & nsubj &	2:A0=PAG \\
+1 &	I &	I &	PRP	 & \_	 & 2	 & nsubj &	2:A0=PAG \\
 2 &	disagreed &	disagree &	VBD	 & pb=disagree.01 & 	0 & 	root	 & \_ \\
 3 &	. &	. &	. &	\_ &	2 &	punct &	\_ \\
 \end{tabular}
@@ -151,22 +151,22 @@ The dependency pairs are extracted making use of the intra-sentence word ID numb
 
 \subsection{Predicate Argument Units Representation}
 
-The predicate argument structures extracted from the documents using the semantic role labeler of the parser provide the addition of two units to the feature: \textit{predicate} units and \textit{arguments} units. Since we never include one without the other, we refer to them as a group in this report. An additional feature option comes with these units, which is \textit{argument labels}. If argument labels are used, the predicate unit is labeled as a \emph{predicate} and the argument units are labeled with their respective \emph{argument labels} (e.g. A0, AM-TMP etc). Two predicate units are said to be equivalent if the words of the predicate are equivalent and, in case the additional argument labels are used, if they both have the label \emph{predicate}. Argument units consist of an ordered (in the order they appear in the text) list of words. Two argument units are considered equivalent if each word in their lists is equivalent and, in case 
+The predicate argument structures extracted from the documents using the semantic role labeler of the parser provide the addition of two units to the feature: \textit{predicate} units and \textit{arguments} units. Since we never include one without the other, we refer to them as a group in this report. An additional feature option comes with these units, which is \textit{argument labels}. If argument labels are used, the predicate unit is labeled as a \emph{predicate} and the argument units are labeled with their respective \emph{argument label} (e.g. A0, AM-TMP, etc). Two predicate units are said to be equivalent if the words of the predicate are equivalent and, in case the additional argument labels are used, if they both have the label \emph{predicate}. Argument units consist of an ordered (in the order they appear in the text) list of words. Two argument units are considered equivalent if each word in their lists is equivalent and, in case 
 the additional argument labels are used, if they both have the same argument label. 
 
 \subsubsection{Removing Stop Words}
 
-As in the dependency pairs, there are multiple procedures for removing stop words in these units that could be used. The method we used consisted in removing any words from the list of words of an argument which do not have a part of speech tag that is in the set in Figure \ref{fig:KeeperPOS}. An argument is removed entirely if the removal of stop words resulted in it having an empty list of words. A relation is removed if the removal of stop words resulted in empty argument list. 
+As in the dependency pairs, there are multiple procedures for removing stop words in these units that could be used. The method we used consisted of removing any words from the list of words of an argument which do not have a part of speech tag that is in the set in Figure \ref{fig:KeeperPOS}. An argument is removed entirely if the removal of stop words resulted in it having an empty list of words. A relation is removed if the removal of stop words resulted in empty argument list. 
 
 \subsubsection{Discovering Predicate Argument Structure From Parsed Files} 
 
-In the ClearNLP output file shown in Section \ref{sec:Discover}, we see that we can find the predicate argument structure of each sentence by using the values in the eighth column. The numbers correspond to the predicate associated with the word and the argument label for the argument are provided. Note how only the head word of each argument is labeled. We then follow the dependency paths to discover the entire argument. 
+In the \emph{ClearNLP} output file shown in Section \ref{sec:Discover}, we see that we can find the predicate argument structure of each sentence by using the values in the eighth column. The numbers correspond to the predicate associated with the word and the argument label to its thematic role in that structure. Note how only the head word of each argument is labeled. We then follow the dependency paths to discover the entire argument. 
 
 \section{Alternative Document Representations}
 
 \subsection{Embeddings KD Tree}
 
-We define an additional document representation which will be used in the retrieval experiment. In this model, a document is represented as the KD tree of the embeddings of all of the words that appear in the document. The distance between documents $D_1$ and $D_2$ with this representation is defined as 0.5 times the average distance of between each embedding in $D_1$  and the closest embedding $D_2$ plus 0.5 times the average distance of between each embedding in $D_2$  and the closest embedding $D_1$
+We define an additional document representation which will be used in the retrieval experiment. In this model, a document is represented as the KD tree of the embeddings of all of the words that appear in the document. The distance between documents $D_1$ and $D_2$ with this representation is defined as 0.5 times the average distance of between each embedding in $D_1$  and the closest embedding $D_2$ plus 0.5 times the average distance of between each embedding in $D_2$  and the closest embedding $D_1$. A KD Tree is used so that the operation of finding the closest embedding can be done much faster than an exhaustive search.
 
 
 \section{Experiments}
@@ -189,7 +189,7 @@ In these experiments, we compared the performance of four of our feature represe
 \item Words, Dependency Pairs, and Predicate Argument Structures
 \end{itemize}
 
-We experimented with both a binary and a tf-idf valued feature vectors. Due to computational constraints, we used only the lemmatized version of words and did not use part of speech, dependency labels, nor argument labels. Features that appeared in only one document where removed from the feature definition.
+We experimented with both a binary and a tf-idf valued feature vectors. Due to computational constraints, we used only the lemmatized version of words and did not use part of speech, dependency labels, nor argument labels. Features that appeared in only one document were removed from the feature definition.
 
 
 \section{Document Clustering} \label{sec:DocumentClusterting}
@@ -344,9 +344,9 @@ Words, Dep. Pairs, \& Pred. Arg.& tf-idf & \textbf{0.414} & 0.34935 & 0.1424 \\
 
 \subsection{Scientific Paper Dataset} \label{sec:ScientificPaperClustering}
 
-We collected a small dataset of the abstracts, titles, and authors\footnote{There are no meta-data tags of in the documents, only text. This experimental setup was designed to partially mimic the experiments in \cite{Hurtado2013}} of the papers that we read in this course. Each paper was given the \textit{class name} of the unit it was a part of such as ``Tree Adjoining Grammar'' or ``Ontology and Taxonomy''. The name of each paper and the  class label assigned is shown in Table \ref{tbl:ScientificPaperClassListing}. While this is a relatively small dataset of just 22 documents, the domain was significantly different enough from the previous two datasets to be worthy of experimentation. The results are shown in Table \ref{tbl:ScientificPaperClusteringResults}.
+We collected a small dataset of the abstracts, titles, and authors\footnote{There are no meta-data tags of in the documents, only text. This experimental setup was designed to  mimic the experiments in \cite{Hurtado2013}} of the papers that we read in this course. Each paper was given the \textit{class name} of the unit it was a part of such as ``Tree Adjoining Grammar'' or ``Ontology and Taxonomy''. The name of each paper and the  class label assigned is shown in Table \ref{tbl:ScientificPaperClassListing}. While this is a relatively small dataset of just 22 documents, the domain was significantly different enough from the previous two datasets to be worthy of experimentation. The results are shown in Table \ref{tbl:ScientificPaperClusteringResults}.
 
-Note that for a small number of these papers, there was no abstract. In these cases, if the introduction was brief, the introduction was used in lieu of the abstraction, otherwise the document was not a part of the dataset. Also note that the conversion from PDF to plain text was done manually.
+Note that for a small number of the papers we read, there was no abstract. In these cases, if the introduction was brief, the introduction was used in lieu of the abstract, otherwise the document was not a part of the dataset. Also note that the conversion from PDF to plain text was done manually.
 
 
 \begin{table}[H]
@@ -482,7 +482,7 @@ In the first experiment, we were not able to outperform the unigram baseline app
 
 \section{Document Retrieval}
 
-As a final experiment, we ran a simplified version of a document retrieval system. The problem definition is as follows: given a collection of documents $D_1$, $D_2$, $\dots$, $D_N$, each with a class label $Y_1$, $Y_2$, $\dots$, $Y_N$, query the collection on each document $D_i$ and retrieve the top $K$ documents with lowest Cosine distance. The precision/recall of each retrievals is scored and the average across all queries is reported. The feature vectors representing the documents are defined using the entire corpus. 
+As a final experiment, we ran a simplified version of a document retrieval system. The problem definition is as follows: given a collection of documents $D_1$, $D_2$, $\dots$, $D_N$, each with a class label $Y_1$, $Y_2$, $\dots$, $Y_N$, query the collection on each document $D_i$ and retrieve the top $K$ documents with lowest Cosine distance. The precision/recall of each retrieval is scored and the average across all queries is reported. The feature vectors representing the documents are defined using the entire corpus. 
 
 \subsection{Scientific Paper Retrieval}
 
@@ -501,7 +501,7 @@ documents. This experiment was meant to be a precursor to the work we will do th
 Words & tf-idf & 0.423913 &   0.71377  \\
 Words \& Dep. Pairs & tf-idf & 0.423913 & 0.71377 \\
 Words \& Pred. Arg. & tf-idf & 0.402173  & 0.65579 \\
-Words \& Pred. Arg.  & tf-idf &  {0.423913} & {0.713768} \\
+Words, Dep Pairs, \& Pred. Arg.  & tf-idf &  {0.423913} & {0.713768} \\
 Embeddings KD-Tree & - & 0.347826 & 0.565217 \\
 \hline
 \end{tabular}
@@ -519,7 +519,7 @@ We ran an additional retrieval experiment, in which we selected the first 15 sam
 \hline
 \headcol \color{white} Feature Type & \color{white} Value Type & \color{white} Avg. Precision  & \color{white} Avg. Recall \\
 \hline
-Words & Binary & 0.460952 &   0.460952  \\
+Words & tf-idf & 0.460952 &   0.460952  \\
 Words \& Dep. Pairs & tf-idf &  0.47047  & 0.47047\\
 Words \& Pred. Arg. & tf-idf & 0.463809  & 0.463809 \\
 Words, Dep. Pairs, \& Pred. Arg. & tf-idf & \textbf{0.47619} & \textbf{0.47619} \\
@@ -530,7 +530,7 @@ Embeddings KD-Tree & - & 0.45523 & 0.45523 \\
 
 \subsection{Analysis}
 
-It's not entirely clear why the additional features of dependency pairs and predicate argument structures do not provide  the same benefit in this retrieval experiment that they did in the other two experiments. It is possible that the experiment size is just too small for the results to be considered meaningful. With more data the feature space will expand and, consequently, spread the document's feature vectors farther apart in the space. An interesting follow up experiment would be similar to $K$-nearest neighbor classification, that is to take the training data from one of the data sets, use this data to define a feature, and extract features using this definition from the training documents. Then for evaluation, we query the data set on held out samples (e.g. the testing set of the data set). 
+It's not entirely clear why the additional features of dependency pairs and predicate argument structures do not provide  the same benefit in this retrieval experiment that they did in the other two experiments. It is possible that the experiment size is just too small for the results to be considered meaningful. With more data the feature space will expand and, consequently, spread the documents' feature vectors farther apart in the space. An interesting follow up experiment would be similar to $K$-nearest neighbor classification, that is to take the training data from one of the data sets, use this data to define a feature, and extract features using this definition from the training documents. Then for evaluation, we query the data set on held out samples (e.g. the testing set of the data set). 
 
 
 
