@@ -42,22 +42,21 @@
 
 There is no shortage of online databases of documents containing valuable information, but there is a need for more tools to organize this data to provide users a more accessible interface than a standard keyword search. Providing solutions to this problem of information overload has been the focus of years of research in information retrieval, natural language processing and machine learning in general. In particular, much work has been done on defining document similarity measures, which determine the relatedness of two documents based on their text content. Typical approaches to this problem are based in word usage statistics and are not able to capture the essence of a text, as the syntactic and semantic relationships of the words are disregarded. In this project, we will make use of dependency parsing and automatic semantic role labeling to extract syntactically and semantically related phrases from text. Using these phrases, we hope to create a more robust document representation and similarity measure than the traditional approaches. 
 
-We would like to apply our proposed document similarity measure to the problem of identifying relatedness between scientific research papers. The similarity of scientific research papers is a less studied problem than document similarity in general and a robust measure is in high demand \cite{Hurtado2013}. Such a measure would be useful in both research paper recommender systems and search engines. 
+We also apply our proposed document similarity measure to the problem of identifying relatedness between scientific research papers. The similarity of scientific research papers is a less studied problem than document similarity in general and a robust measure is in high demand \cite{Hurtado2013}. Such a measure would be useful in both research paper recommender systems and search engines. 
 
-The rest of this document is organized as follows: a review of related work done in this field and explanation of how our work differs from this previous research; our proposed approach to defining a document similarity measure; and an explanation of our proposed experiments.
+The rest of this document is organized as follows: a review of related work done in this field; a description of our document representations and proposed similarity measures; experiments and results; and a conclusion highlighting future work.
 
 \section{Related Work} \label{sec:RelatedWork}
 
 Document similarity is a much studied problem in the field of information retrieval with a wide range of applications, such as document classification and clustering, searching in large unorganized datasets, and recommendation systems. The problem of document similarity extends beyond the measurement of relatedness of \emph{unstructured} documents containing only text to \emph{structured} documents, which contain hyperlinks and other annotations \cite{Manning2008}. 
 
-The most common approach to unstructured text document similarity is a vector space, statistics based method known as the  \emph{bag-of-words} approach. The details of this approach are represented as a foundation for our model in Section \ref{sec:TraditionalApproaches}. Work in \cite{Huang2008} shows the effectiveness of this simple representation on a number of datasets in the problem of document clustering. Another common technique is the representation of documents with a \emph{language model}. First presented in \cite{Ponte1998}, language models make the assumption that the collection of individual terms in a document is a sample from a probability distribution. This approach is particularly useful in unsupervised document clustering.  Language models are often made more robust by adding additional information such as underlying topic labels obtained algorithms such as \emph{Latent Dirichlet Allocation} (LDA) or \emph{probabilistic latent semantic analysis}.  These models have been shown to be effective in document retrieval and categorization by \cite{Hofmann2000}. These approaches are also used in our approach and presented in more detail in Section \ref{sec:TraditionalApproaches}. 
+The most common approach to unstructured text document similarity is a vector space, statistics based method known as the  \emph{bag-of-words} approach. Work in \cite{Huang2008} shows the effectiveness of this simple representation on a number of datasets in the problem of document clustering. Another common technique is the representation of documents with a \emph{language model}. First presented in \cite{Ponte1998}, language models make the assumption that the collection of individual terms in a document is a sample from a probability distribution. This approach is particularly useful in unsupervised document clustering.  Language models are often made more robust by adding additional information such as underlying topic labels obtained algorithms such as \emph{Latent Dirichlet Allocation} (LDA) or \emph{probabilistic latent semantic analysis}.  These models have been shown to be effective in document retrieval and categorization by \cite{Hofmann2000}. 
 
 In these traditional approaches, the syntactic and semantic relationships of words and phrases in the text are ignored. The models are based on statistical information on the frequency of the occurrence of word sequences or $n$-grams. Often unigrams (i.e. $n=1$) are used and so the measure is the frequency of the occurrence of single words. Bigrams (two-word sequences) and trigrams (three-word sequences) are also commonly used. Intuitively, the substitution of \emph{n-grams} with syntactically related groups of words is a logically sound choice. Often, \emph{n-grams} are disparate sequences of terms, while syntactically related groups of words can provide a more robust feature that preserves the semantic meaning of phrases. Initial work was done on this in the late 1990s, such as \cite{Furnkranz1998}, \cite{Dumais1998}. The recent works of \cite{Nastase2007} and \cite{Koster2009}, show the method can have significant benefits over the traditional \emph{n-gram} approach. Nastase et al in \cite{Nastase2007} use syntactically related pairs of words obtained using a dependency parser as the base elements in a vector-based bag-of-words approach to perform the task of supervised text classification on the Reuters-21578 dataset. They also experiment with a combination of using the syntactically related pairs and unigrams both with and without syntactic labels. Koster et al in \cite{Koster2009} use a similar method of combining syntactically related triples obtained with a dependency parser with unigrams in a vector based model to perform the task of patent document classification.
 
 The most recent work related to document similarity of scientific papers can be found in \cite{Hurtado2011} and \cite{Hurtado2013}, it uses a unigram based language model to represent the documents. The model treats the text as \emph{semi-structured}, taking advantage of the additional features of the keywords of the paper, authors' names, and the name of the journal in which the paper appears.
 
-Our work separates itself from these previous studies in that we propose to use syntactically and semantically related sequences of words extracted from the text, using not only dependency parsing, but also automatic predicate argument structure detection, both in a language model and a vector based representation of documents. In creating a language model, we hope to provide a more robust representation of documents using LDA and other techniques. We will also apply the approach to unsupervised document clustering and pairwise document similarity for applications such as recommender systems. 
-
+Our work separates itself from these previous studies in that we propose to use syntactically and semantically related sequences of words extracted from the text, using not only dependency parsing, but also automatic predicate argument structure parsing. We also provide a more unified approach to the handling of dependency pairs than \cite{Nastase2007} and \cite{Koster2009}. Additionally, we apply the use of the dependency and predicate argument features to the problems of document clustering and retrieval. 
 
 \section{Document Representations}
 
@@ -68,29 +67,66 @@ In order to extract dependency pair and predicate argument structures from docum
 
 \subsection{Bag of ``Units'' Document Representation}
 
-In this work we extend the typical vector space model of a bag of words feature representation to include rich units than single words, namely dependency (head-modifier) pairs, and predicate argument structures. By \emph{units} or \emph{base units} we are referring to the terms whose presence/absence in a document determine the values of the feature vector of the document, its document representation. In this way, each unit corresponds to an entry in the feature vector of a document. The value of that vector can be binary, which means the values of the feature vector are 0 or 1 depending on whether or not a unit appears in the document. It can be tf-idf, in which the values of the feature vector are the term-frequency-inverse-document-frequency of a unit. In this project, we used the augmented tf-idf value presented HERE (CITE).
+In this work we extend the typical vector space model of a bag of words feature representation to include rich units than single words, namely dependency (head-modifier) pairs, and predicate argument structures. By \emph{units} or \emph{base units} we are referring to the terms whose presence/absence in a document determine the values of the feature vector of the document, its document representation. In this way, each unit corresponds to an entry in the feature vector of a document. The value of that vector can be binary, which means the values of the feature vector are 0 or 1 depending on whether or not a unit appears in the document. It  also can be tf-idf, in which the values of the feature vector are the term-frequency-inverse-document-frequency of a unit. In this project, we used the augmented tf-idf value presented \cite{Polettini2004}.
 
-\subsection{Word Representation}
+We experiment with three different units: words, dependency pairs, and predicate/arguments. In the following sections, we present the details of how these units are defined in our system.
 
-We define an object structure representing a single \emph{word} to have the attributes of the \emph{word form} that appears in the document, the \emph{lemmatized form} of the word, and the \emph{part of speech tag} of the word. 
+\subsection{Feature Settings}
+
+There are a few feature settings which apply to all three of the units. These feature settings determine the form of units that appear in the feature definition. 
+
+\begin{itemize}
+ \item \textbf{Lemmatization}: Determines if the lemmatized or un-lemmatized form of the word is used
+ \item \textbf{Case Sensitivity}: Determines if a case sensitive version of the word is used
+ \item \textbf{Part of Speech Tags}: Determines if part of speech tags are appended to words
+ \end{itemize}
+ 
+ 
+\subsection{Word Units}
+
+We define an object structure representing a single \emph{word} to have the attributes of the \emph{word form} that appears in the document, the \emph{lemmatized form} of the word, and the \emph{part of speech tag} of the word. Equivalence between words is defined through the feature settings. Equivalence is what determines how features are extracted from a document, e.g. suppose we had a feature definition with two words $\{a,b\}$ and are using a binary representation. When extracting a feature from a document, we check each word $w$ in the document, if $w$ is equivalent to $a$ or $b$, then we set the correspond bit in the feature vector to be true. 
+
+If lemmatization is used with part of speech tags, two words are considered equivalent if the character string of their lemmas are the same as well as their part of speech tags. If lemmatization is used without part of speech tags, equivalence is solely determined by the character strings of their lemmas.  If lemmatization is not used then equivalence between words is determined by the character strings of the form the words appear in in the document. This equivalence is also determined by part of speech tags if they are used. Additionally, the case sensitivity option determines if capitalization in the character strings of the word forms effects equivalence. 
+
+\subsubsection{Removing Stop Words}
+
+Rather than using a finite list of stop words, we removed stop words based on the part of speech tags of words. Any words with part of speech tags other than the following are removed:
+
+\begin{figure}[H]
+\begin{shaded} \tt
+\begin{verbatim}
+"JJ", "JJR", "JJS", "NN", "NNS", "NNP", "NNPS", "RR", "RBR", "RBS", "VB", "VBD", 
+"VBG", "VBN", "VBP", "VBZ"
+\end{verbatim}
+\end{shaded}
+\caption{Set of Part of Speech Tags of Words Used in the Feature Definition}
+\label{fig:KeeperPOS}
+\end{figure}
+
+In our future experiments we will experiment with using a finite list of stop words as opposed to this criteria.
 
 \subsection{Dependency Pair Representation}
 
-We define an object structure representing a head-modifier dependency pair to be an ordered tuple of \emph{words} with the structured defined above. The first word in the tuple is the $head$ of the dependency pair, and the second word in the tuple is the modifier of the dependency pair.  
+We define an object structure representing a head-modifier dependency pair to be an ordered tuple of \emph{words} with the structured defined above. The first word in the tuple is the $head$ of the dependency pair, and the second word in the tuple is the modifier of the dependency pair.  Equivalence between dependency pairs is important for the same reason equivalence is important in word units. A dependency pair $dp_1$ is said to be equivalent to another dependency pair $dp_2$ if an only if the word unit which is the head of $dp_1$ is equivalent to the word unit which is the head of $dp_2$ and the word unit which is the modifier of $dp_1$ is equivalent to the word unit which is the modifier of $dp_2$. The additional feature of \textbf{dependency labels} can be used in the representation of dependency pairs. If used, this adds an additional component to the definition of equivalence between dependency pairs, which is that the dependency labels in the pairs must also be the same.
 
-\subsubsection{Extracting Dependency Pairs from Parsed File}
+\subsubsection{Removing Stopwords}
 
-The preprocessed document files parsed by the \emph{ClearNLP} parser have the following format:
+The optimal approach to removing stop words from dependency pairs is not entirely clear. We chose the following approach, which we felt was the most logical. We are open to any and all suggestions in how to improve this approach or if other approaches should be taken. 
+
+A dependency pair is removed from the feature if \emph{either the head or modifier or both} have a part of speech tag that is not in the set of part speech tags shown Figure \ref{fig:KeeperPOS}.
+
+\subsubsection{Discovering Dependency Pairs from Parsed File} \label{sec:Discover}
+
 
 Given the input document:
 
 \begin{shaded} \tt
 \begin{verbatim}
-My sister thought John Updike's writing was offensive. I disagreed.
+My sister thought John Updike's writing was offensive. Mary disagreed.
 \end{verbatim}
 \end{shaded}
 
-The dependency pairs are discovered using the values in the 
+The parsed file is:
 
 \begin{shaded} \tt
 \footnotesize
@@ -106,7 +142,7 @@ The dependency pairs are discovered using the values in the
 9 &	offensive &	offensive &	JJ & \_	& 8 &	acomp &	8:A2=PRD \\
 10 & 	. & 	. &	. &	\_ &	3 &	punct &	\_ \\
 
-1 &	I &	I &	PRP	 & \_	 & 2	 & nsubj &	2:A0=PAG \\
+1 &	Mary &	Mary &	PRP	 & \_	 & 2	 & nsubj &	2:A0=PAG \\
 2 &	disagreed &	disagree &	VBD	 & pb=disagree.01 & 	0 & 	root	 & \_ \\
 3 &	. &	. &	. &	\_ &	2 &	punct &	\_ \\
 \end{tabular}
@@ -115,124 +151,24 @@ The dependency pairs are discovered using the values in the
 The dependency pairs are extracted making use of the intra-sentence word ID numbers (first column) and the corresponding dependency information (fifth column).
 
 
+\subsection{Predicate Argument Units}
 
+The predicate argument structures extracted from the documents using the semantic role labeler of the parser provide the addition of two units to the feature, predicate units and arguments units. Since we never include one without the other, we refer to them as a group in this report. An additional feature option comes with these units, which is argument labels. If argument labels are used the predicate unit is labeled as a \emph{predicate} and the argument units are labeled with their respective \emph{argument labels} (e.g. A0, AM-TMP etc). Two predicate units are said to be equivalent if the words of the predicate are equivalent and if the additional argument labels are used, if they both have the label \emph{predicate}. Argument units consist of an ordered (in the order they appear in the text) list of words. Two argument units are considered equivalent if  each word in their lists is equivalent and if 
+the additional argument labels are used, if they both have the same argument label. 
 
-\subsection{Feature Options Common to All Representations}
+\subsubsection{Removing Stop Words}
 
-Some feature options are common across both our baseline (bag of words) and proposed approaches. These options 
+As in the dependency pairs, there are multiple procedures for removing stop words in these units that could be used. The way we removed stop words was by removing any words from the list of words of an argument which do not have a part of speech tag that is in the set in Figure \ref{fig:KeeperPOS}. An argument is removed entirely if the removal of stop words resulted in it having an empty list of words. A relation is removed it the removal of stop words resulted in it having no arguments. 
 
-The first options define equivalence between words
+\subsubsection{Discovering Predicate Argument Structure From Parsed Files} 
 
-\begin{itemize}
- \item \textbf{Lemmatization}: 
- \item \textbf{Case Sensitivity}: Determines if capitalization effects the equality of words
- \item \textbf{Part of Speech Tags}: 
- 
- 
- \end{itemize}
+In the ClearNLP output file shown in Section \ref{sec:Discover}, we see that we can find the predicate argument structure of each sentence by using the values in the eighth column. The numbers correspond to the predicate associated with the word and the argument label for the argument is provided. Note how only the head word of each argument is labeled. We then follow the dependency paths to discover the entire argument. 
 
-\subsection{Bag of Words Representation}
+\section{Alternative Document Representations}
 
-As a baseline, we implemented a bag-of-words vector space model. In this model, we define a feature 
+\subsection{Embeddings KD Tree}
 
-\section{Proposed Approach}
-
-There are two components of a \bt{document similarity measure}: first, the definition of a \emph{document representation}, which specifies the data structure used to represent the document in a way which is meaningful to a machine; and second, a \emph{distance function}, which assigns to a given pair of documents a real number representing how different the two documents are. We propose several new document similarity measures which incorporate the output of linguistic tools such as dependency parsing and automatic semantic role labelers  in traditional statistics-based approaches. To determine the effectiveness a document similarity measure, the measure must be applied to an information retrieval task. We will evaluate our proposed similarity measures with the tasks of \bt{document clustering} and \bt{document classification}. 
-
-\subsection{Proposed Similarity Measures}
-
-\subsubsection{Traditional Approaches \& Baselines} \label{sec:TraditionalApproaches}
-
-The following  three methods are used as baselines in our experiments. We use a unigram, bigram and trigram version of each approach. These approaches are also used as the foundation for each of our proposed similarity measures presented in Sections \ref{sec:DependencyParsing}, \ref{sec:PredicateArgument}, and \ref{sec:Word2Vec}.
-
-\subsubsection*{Bag of Words}
-
-In a vector space $n$-gram bag of words approach, the \emph{document representation} is a feature vector of length $M$, where $M$ is the number of unique $n$-grams in the entire collection of documents. Each element of the feature corresponds to a word and value of the feature for each element is typically either binary or the term's tf-idf (term-frequence-inverse-document-frequency) value. Three \emph{distance functions} can be used, the cosine distance, Jaccard Coefficient, and Pearson Correlation Coefficient as presented in \cite{Huang2008}.  
-
-\subsubsection*{Language Model}
-
-Another canonical approach to document similarity is to use a $n$-gram language model.  The \emph{document representation} is the language model, which, for document $d_i$ is defined as:
-
-\begin{equation}
-\mathcal{D}_i(w) = \lambda P(w|d_i) + (1 - \lambda) P(w| C)
-\end{equation}
-
-where $w$ is an $n$-gram and C is the entire collection of documents. The \emph{distance function} is the Kullback-Leiber divergence: 
-\begin{equation}
-{\mathrm{KL}}(\mathcal{D}_i\|\mathcal{D}_j) = \sum_i \ln\left(\frac{\mathcal{D}_i(w)}{\mathcal{D}_j(w)}\right) \mathcal{D}_i(w)
-\end{equation}
-
-\subsubsection*{Language Model with LDA}
-
-In this approach, the $n$-gram language model is made more robust with the use of Latent Dirichlet Allocation (LDA) \cite{Blei2003}. Theoretically, LDA will allow us to discover latent topics in the documents, and further improve the language model of an article based on the revealed topical information.  The \emph{document representation} is now defined as: 
-
-\begin{equation}
-\mathcal{D}_i(w) = \lambda_1 P(w|d_i) + \lambda_2 P(w| C) + \lambda_3 P(w|T)
-\end{equation}
-
-where $T$ is the set of topics underlying document $d_i$ as defined by LDA. The \emph{distance function} is still the Kullback-Leiber divergence. 
-
-\subsubsection{Making use of Dependency Relations} \label{sec:DependencyParsing}
-
-A dependency parser such as the \emph{Stanford Parser} \cite{StanfordParser} can be used to extract the inter word dependencies in a sentence. For example, given the sentence:
-
-\begin{center}
-\it \tt  \emph{The quick brown fox jumped over the lazy dog}
-\end{center}
-
-The outputted dependencies are:
-
-\begin{center}
-\begin{tabular}{cc}
-\tt  det(fox-4, The-1) & \tt amod(fox-4, quick-2) \\
-\tt amod(fox-4, brown-3) & \tt nsubj(jumped-5, fox-4) \\
-\tt root(ROOT-0, jumped-5) & \tt det(dog-9, the-7) \\
-\tt amod(dog-9, lazy-8) & \tt prep\_over(jumped-5, dog-9) \\
-\end{tabular}
-\end{center}
-
-The word pairs of each dependency relation are used in place of $n$-grams in the \emph{document representations} of the three document similarity measures described in Section \ref{sec:TraditionalApproaches}. We will experiment with including the type of relationship along with the word pairs. Also, we will experiment with using the dependency pairs along with the unigrams in the three approaches. 
-
-
-\subsubsection{Making use of Predicate-Argument Structure} \label{sec:PredicateArgument}
-
-A automatic semantic role labeler such as the {\it Illinois Semantic Role Labeler (SRL)} \cite{Punyakanok2008} can be used to determine the predicate argument structure of English sentences. For example, given the sentence:  
-
-\begin{center}
-\tt \emph{After eating dinner, the quick brown fox saw the lazy dog, who was still sleeping.}
-\end{center}
-
-The following predicate argument relationships are given by the Illinois Semantic Role Labeler:
-
-\begin{center}
-\begin{tabular}{ccccccccc}
-Relation \#1: & eat.01 & meal [A1] & consumer/eater [A0]  \\
-& {\tt eating} & \tt dinner & {\tt the quick brown fox} \\
-Relation \#2:  & see.01 & viewer [A0] & thing viewed [A1] & temporal [AM-TMP] \\
-& {\tt saw} & {\tt the quick brown fox} & {\tt the lazy dog} & {\tt after eating dinner} \\
-Relation \#3: & sleep.01 & sleeper [A0] & sleeper [R-A0] & temporal [AM-TMP] \\
-& {\tt sleeping} & \tt the lady dog & \tt who & \tt still
-\end{tabular}
-\end{center}
-
-The groups of terms making up the relations and arguments are used in place of the $n$-grams in the \emph{document representations} of the three document similarity measures described in Section \ref{sec:TraditionalApproaches}. We will experiment with including the role labels along with each group of terms. Also, we will try using unigrams in addition to these groups of terms in the three approaches. 
-
-
-\subsubsection{Making use of Word2Vec} \label{sec:Word2Vec}
-
-Vector space word models are useful in determining the syntactic and semantic relatedness between words. In these models, each word in a corpus is assigned a position in a high-dimensional space $\mathbb{R}^N$ through a training process. The hope is that words that are related to one another are placed at a near by  in $\mathbb{R}^N$. The relatedness (or rather \emph{difference}) between two words is typically measured by the cosine distance between their two vectors. Word2Vec is a state of the art vector space word model and training process  \cite{Mikolov2013efficient}. We propose two modifications to the previously described models that make use of a vector space word model. 
-
-The first method is to perform clustering of the words and to use the centroid of each cluster in place of $n$-grams in the previously described approaches. Specifically, we let $\mathbf{W}$ be the set of words that appear in one or more of the collection of documents $d_1, d_2, \dots, d_n$ and we let $\mathbf{V}$ be the set of vectors corresponding to the entries in $\mathbf{W}$. We cluster $\mathbf{V}$ using an algorithm such as $k$-means or DBSCAN and so each entry in $\mathbf{V}$ is associated with a specific cluster. We then calculate the center point or centroid of that cluster. Then each word in the corpus is replaced with the centroid of its associated cluster and the three approaches described in Section \ref{sec:TraditionalApproaches} are used. 
-
-A second method, but related method, is a less strong form of clustering. Clustering is done in just two passes through the documents. For each word, we find the closest $k$ words in the vector space defined by Word2Vec. If the word is not already associated with a cluster and if any of these $k$ words appear in the collection of documents, a cluster is defined for the related words. If any of the $k$ words appear in other clusters, the clusters are merged together. We then calculate the center point or centroid of that cluster. Then each word in the corpus is replaced with the centroid of its associated cluster and the three approaches described in Section \ref{sec:TraditionalApproaches} are used. 
-
-According to \cite{Mikolov2013efficient}, we can define multiple word phrases in vector space as the sum of the vectors of the individual words. In so doing we can apply these two methods to the multi-word phrases extracted from the dependency parsing and semantic role labeling. 
-
-\subsubsection{Text Processing Tools}
-
-Many of the current papers convert words to their lemmatized form that is removing inflections so that each word is in its base form. This helps to reduce the feature space and make the feature vectors (or probability distributions) more descriptive. This process will take place after the dependency parsing and semantic role labeling. We can experiment with whether or not it will be used in the Word2Vec model. 
-
-
+We define an additional document representation which will be used in the retrieval experiment. In this model, a document is represented as the KD tree of the embeddings of all of the words that appear in the document. The distance between documents $D_1$ and $D_2$ with this representation is defined as 0.5 times the average distance of between each embedding in $D_1$  and the closest embedding $D_2$ plus 0.5 times the average distance of between each embedding in $D_2$  and the closest embedding $D_1$
 
 
 \section{Experiments}
@@ -243,9 +179,10 @@ Many of the current papers convert words to their lemmatized form that is removi
 \rowcolors{3}{tableShade}{white}  %% start alternating shades from 3rd row
 
 
+
 Due to limited computational resources and the immense size of the datasets we were not able to evaluate how our methods did compared to the state of the art. Instead, we ran a set of experiments comparing our methods to a baseline unigram bag of words approach. These experiments will provide insight into whether or not the additional features extracted using dependency pairs and predicate argument structures is beneficial to a document similarity measure. 
 
-In these experiments, we compared the performance of four of our feature representations. We performed the experiments on the feature definitions with each of the following combinations of units
+In these experiments, we compared the performance of four of our feature representations. We performed the experiments on the feature definitions with each of the following combinations of units:
 
 \begin{itemize}
 \item Words
@@ -257,9 +194,9 @@ In these experiments, we compared the performance of four of our feature represe
 We experimented with both a binary and a tf-idf valued feature vectors. Due to computational constraints, we used only the lemmatized version of words and did not use part of speech, dependency labels, nor argument labels. Features that appeared in only one document where removed from the feature definition.
 
 
-\subsection{Document Clustering} \label{sec:DocumentClusterting}
+\section{Document Clustering} \label{sec:DocumentClusterting}
 
-\subsubsection{General Setup}
+\subsection{General Setup}
 
 The problem of \bt{document clustering} is defined as the automatic organization of documents into logical groups based on latent features. For evaluation purposes, we use documents that are already divided into classes. We then use a clustering algorithm to see how well the clusters represent the true classes of the documents. 
 
@@ -270,7 +207,7 @@ In these, experiments we clustered the document features $X_1$, $X_2$, $\dots$ $
 
 \subsection{Evaluation Measures}
 
-Following the experiments in \cite{Huang2008} and \cite{Hofmann2000}, we evaluated the clustering of the documents with the measures of purity, normalized mutual information, and the adjusted Rand index. The definitions of these metrics are {\tt http://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-clustering-1.html}
+Following the experiments in \cite{Huang2008} and \cite{Hofmann2000}, we evaluated the clustering of the documents with the measures of purity, normalized mutual information, and the adjusted Rand index. The definitions of these metrics are from \cite{Manning2008}.
 
 \subsubsection{Purity}
 
@@ -307,24 +244,13 @@ and the probability distributions are their maximum likelihood estimates.
 
 \subsubsection{Adjusted Rand Index}
 
-The adjusted Rand index is a version of the Rand index that is adjusted for the chance grouping of elements. In general the Rand index evaluates the similarity between $C_{1:N}$ and $Y_{1:N}$. Letting $\mathcal{Y}$ be the set of unique class labels and $\mathcal{C}$ be the set of unique cluster labels, the adjusted Rand Index is calculated as:
-
-%TODO
-%\begin{equation}
-%\text{AdjustedRandIndex}(C_{1:N}, Y_{1:N}) = \dfrac{ \left ( \sum_{i=1}^N \sum_{j=1}^N \binom{n_{ij}}{2} \right ) - \frac{\left ( \sum_{i=1}^N \binom{a_{i}}{2} \right ) \left ( \sum_{i=1}^N \binom{a_{i}}{2} \right )}{\binom{N}{2}}}{ \frac{\left ( \sum_{i=1}^N \binom{a_{i}}{2} \right ) \left ( \sum_{i=1}^N \binom{a_{i}}{2} \right )}{{2}} - \frac{\left ( \sum_{i=1}^N \binom{a_{i}}{2} \right ) \left ( \sum_{i=1}^N \binom{a_{i}}{2} \right )}{\binom{N}{2}}}
-%\end{equation}
-%
-%where
-%
-%\begin{equation}
-%a_i = \sum 
+The adjusted Rand index is a version of the Rand index that is adjusted for the chance grouping of elements. In general the Rand index evaluates the similarity between $C_{1:N}$ and $Y_{1:N}$. For the sake of time, we will not present the full definition of the Adjusted Rand index here, but refer readers to \cite{Yeung2001} for its definition.
 
 \subsection{Reuters-21578}
 
-We selected a portion of the test cases of the Mod-Apte split of the Reuters-21578 to use in a clustering experiment. We selected those documents from the top 8 most frequently appearing classes and that only belonged to one class. This selection was inspired by the experiments in \ref{Natase2007} and \ref{Hoffman2000} The distribution of documents in the data set can be see in figure \ref{fig:ReutersClassDist}. The results for each of our feature vectors shown in Table \ref{tbl:ReutersClusteringResults}. 
+We selected a portion of the test cases of the Mod-Apte split of the Reuters-21578 to use in a clustering experiment. We selected those documents from the top 8 most frequently appearing classes and that only belonged to one class. This selection was inspired by the experiments in \cite{Nastase2007} and \cite{Hofmann2000}. The distribution of documents in the data set can be see in figure \ref{fig:ReutersClassDist}. The results for each of our feature vectors shown in Table \ref{tbl:ReutersClusteringResults}. 
 
 \begin{figure}[H]
-\label{fig:ReutersClassDist}
 \centering
 \begin{tikzpicture}
   \begin{axis}[
@@ -344,6 +270,9 @@ We selected a portion of the test cases of the Mod-Apte split of the Reuters-215
         (earn,1083) (interest,34) (money-fx,87) (ship, 130) (trade, 43) (wheat, 104)};
   \end{axis}
   \end{tikzpicture}
+  \caption{Class Distribution}
+  \label{fig:ReutersClassDist}
+
 \end{figure}
 
 \begin{table}[H]
@@ -417,7 +346,7 @@ Words, Dep. Pairs, \& Pred. Arg.& tf-idf & \textbf{0.414} & 0.34935 & 0.1424 \\
 
 \subsection{Scientific Paper Dataset} \label{sec:ScientificPaperClustering}
 
-We collected a small dataset of the abstracts, titles, and authors \footnote{There are no meta-data tags of in the documents, only text. This experimental setup was designed to partially mimic the experiments in \ref{Hurtado2013}} of the papers that we read in this courses. Each paper was given the class label of the unit it was a part of--unit being ``Tree Adjoining Grammar'' or ``Ontology and Taxonomy''. The name of each paper and the  class label assigned is shown in Table \ref{tbl:ScientificPaperClassListing}. While this is a relatively small dataset of just 22 documents, the domain was significantly different enough from the previous two datasets to be worthy of experimentation. The results are shown in Table \ref{tbl:ScientificPaperClusteringResults}
+We collected a small dataset of the abstracts, titles, and authors \footnote{There are no meta-data tags of in the documents, only text. This experimental setup was designed to partially mimic the experiments in \cite{Hurtado2013}} of the papers that we read in this courses. Each paper was given the class label of the unit it was a part of--unit being ``Tree Adjoining Grammar'' or ``Ontology and Taxonomy''. The name of each paper and the  class label assigned is shown in Table \ref{tbl:ScientificPaperClassListing}. While this is a relatively small dataset of just 22 documents, the domain was significantly different enough from the previous two datasets to be worthy of experimentation. The results are shown in Table \ref{tbl:ScientificPaperClusteringResults}
 
 Note that for a small number of these papers, there was no abstract. In these cases, if the introduction was brief, the introduction was used in lieu of the abstraction, otherwise the document was not a part of the dataset. Also note that the conversion from PDF to plain text was done manually.
 
@@ -480,10 +409,10 @@ Words, Dep. Pairs, \& Pred. Arg.& tf-idf & 0.69565 & 0.72555 & 0.44924 \\
 \end{tabular}
 \end{table}
 
-
-
-
 \subsection{Analysis}
+
+These experimental results showed that including richer features (dependency pairs and predicate argument structures) improves document clustering results. It is seen that the Reuters dataset is slightly easier to cluster than the Brown corpus, most likely because the classes are more distinct. We also see that in the Reuters and Brown experiments, the Words and Predicate Argument Structures feature did the best, while in the scientific paper experiment the words and dependency pairs feature performed the best. This is likely because the predicates in the scientific papers are less distinctive than in the other two works. 
+
 
 
 \section{Document Classification}
@@ -548,6 +477,10 @@ Words, Dep. Pairs, \& Pred. Arg.& tf-idf & 0.7705 & 0.77488 & 0.7705 \\
 \end{tabular}
 \end{table}
 
+\subsection{Analysis}
+
+In the first experiment, we were not able to out perform the unigram baseline approach. This is likely due to over-fitting during training. We used a far too over-fitting value of $C=1$ in our support vector machine. This mistake will be one of the first that we correct this summer. The second experiment was consistent with our hypothesis that in the presence of small amounts of data our document representation can provide great separation between the classes of documents. Interestingly, in this experiment, the increase in performance came with the addition of only dependency pairs rather than the predicate argument structures. The improvement over the baseline is only about 1.5 points. We will be investigating document classification further in our future work this summer. 
+
 
 \section{Document Retrieval}
 
@@ -599,39 +532,17 @@ Embeddings KD-Tree & - & 0.45523 & 0.45523 \\
 
 \subsection{Analysis}
 
+It's not entirely clear why the additional features of dependency pairs and predicate argument structures do not provide  the same benefit in this retrieval experiment that they did in the other two experiments. It is possible that the experiment size is just too small for the results to be considered meaningful. With more data the feature space will expand and in so doing spread the document's feature vectors farther apart in the space. An interesting follow up experiment would be similar to $K$-nearest neighbor classification, that is to take the training data from one of the data sets, use this data to define a feature, and extract features using this definition from the training documents. Then for evaluation, we query the data set on held out samples (e.g. the testing set of the data set). 
+
+
 
 \section{Conclusions and Future Work}
 
+Our experimental results revealed that vector space document similarity measures can be improved by including richer features such as dependency pairs and predicate argument structures. While these experiments were performed on smaller size datasets, they seem to support our hypothesis that these additional features can make vector space models for documents more distinguishable even when the amount of data of is limited. We will continue to work on this project in the summer. One of our first tasks will be to create an additional baseline of a bag of words model using bigrams and trigrams. Next, we will fine tune our code and run it on the full datasets on a machine that is more powerful than our laptops. We will also investigate tuning the hyper-parameters of the classifiers and clustering algorithms. 
 
+Once a more conclusive study of the performance of our system is complete. We will spend time trying to beat the state of the art. We will finish implementing the algorithm of the paper \cite{Nastase2007}, which also made use of dependency information. Additionally, we spend time setting up the experiment done in \cite{Hurtado2013}. This experiment uses scientific abstracts papers from the Web of Science as the data set. We hope to out perform the state of the art on this dataset. 
 
-
-
-
- 
-\clearpage
-
-For example, given a corpus of computational linguistics research papers, we might hope that a clustering of the papers would place all the work on grammars and language representations in one cluster, the work on semantics in another, the work in morphology in a third, etc. 
-
-We will reproduce the experiment in \cite{Hurtado2013},  which uses a corpus of 209 artificial intelligence research papers manually tagged by experts. For each paper, the 30 papers considered most similar using the bag-of-words approach \footnote{With tf-idf as the value of the vector for each unigram} with  the cosine distance function were labeled by an expert as similar or dissimilar. A document similarity measure is evaluated by selecting, for each paper, the 30 closest papers and measure the Mean Average Precision and Mean Reciprocal Rank. We will the results of our approach to that of the authors. 
-
-We will also evaluate our document similarity measures on the Reuters-21578 corpus. Each news article in the Reuters corpus is tagged with a class label. We will perform an experiment in which we cluster the articles in the corpus and measure how well each cluster encompasses a class of article and how well each class is represented by a cluster, both in terms of precision and recall. 
-
-Finally, if time allows, we will perform an additional experiment on the clustering of research papers, in which we collect a corpus and for each paper return the top $k$ most similar papers. The list of similar papers will then be evaluated by a human subject and the rate of dissimilar papers will be evaluated. 
-
-\subsubsection{Document Classification} \label{sec:DocumentClassification}
-
-The problem of \textbf{document classification} is formally defined just like the general problem of classification in machine learning: Given input pairs of documents and class labels, $(d_1, c_1), (d_2, c_2), \dots, (d_N, c_N)$, with $d_1, \dots d_n \in \mathcal{D}$ and $c_1, \dots, c_N \in \mathcal{C}$, where  $\mathcal{D}$ is the collection of training documents and $\mathcal{C}$ is the set of class labels, assume there is a function $f$ which maps any document $d$ the correct class label $c$. The goal of learning is to approximate the function $f$ with $\hat{f}$ a function created with the observed training data. 
-
-The authors of \cite{Nastase2007} present results from a document classification experiment on the Reuters-21578 dataset using a vector space model which makes use of dependency parsing. We will repeat their experiment to see how our model performs in comparison to theirs. The classification experiment is done using the 10 most frequent classes in the Reuters-21578 document collection with the ModApte split designating the specific documents for training and testing. The precision and recall scores are used to judge the performance of a document similarity measure. 
-
-\subsubsection{Clustering and Classification Methods}
-
-We will use a standard set of machine learning tools to implement the clustering and classification procedures. For clustering, we will perform experiments using \emph{k-means}, \emph{DBSCAN}, and the \emph{EM Algorithm}. For classification, we will perform experiments using \emph{Support Vector Machines}, \emph{Naive Bayes}, and \emph{k-Nearest Neighbor} approaches. We will be programming most of our project in {\tt Python} and will be using the machine learning tools available in {\tt NumPy} and {\tt SciPy}.
-
-\bigskip
-\bigskip
-
-\emph{Note the below references includes papers that we read, but did not cite in this document. Those papers are listed for our own reference}.
+Finally, we hope to implement portions of the project, which were stated in the proposal but we did not have time to implement. We hope to implement language model document representation that perhaps makes use of LDA. We also hope to further study the Embedding KD Tree document representation, to understand why it does not perform  as well as the vector space models.  
 
 
 \nocite{*}
