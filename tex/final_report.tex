@@ -26,10 +26,6 @@
 \usepackage{pgfplots}
 \definecolor{shadecolor}{rgb}{0.82,0.82,0.82}
 
-\definecolor{tableShade}{gray}{0.9}
-\colorlet{tableheadcolor}{black!90} % Table header colour = 25% gray
-\newcommand{\headcol}{\rowcolor{tableheadcolor}} %
-\rowcolors{3}{tableShade}{white}  %% start alternating shades from 3rd row
 
 
 
@@ -241,6 +237,12 @@ Many of the current papers convert words to their lemmatized form that is removi
 
 \section{Experiments}
 
+\definecolor{tableShade}{gray}{0.9}
+\colorlet{tableheadcolor}{black!90} % Table header colour = 25% gray
+\newcommand{\headcol}{\rowcolor{tableheadcolor}} %
+\rowcolors{3}{tableShade}{white}  %% start alternating shades from 3rd row
+
+
 Due to limited computational resources and the immense size of the datasets we were not able to evaluate how our methods did compared to the state of the art. Instead, we ran a set of experiments comparing our methods to a baseline unigram bag of words approach. These experiments will provide insight into whether or not the additional features extracted using dependency pairs and predicate argument structures is beneficial to a document similarity measure. 
 
 In these experiments, we compared the performance of four of our feature representations. We performed the experiments on the feature definitions with each of the following combinations of units
@@ -392,7 +394,6 @@ The next clustering experiment we ran was on the Brown Corpus. We ran the same d
   \end{tikzpicture}
 \end{figure}
 
-%TODO Insert the Correct values
 \begin{table}[H]
 \caption{Brown Corpus Clustering Results}
 \label{tbl:BrownClusteringResults}
@@ -401,14 +402,14 @@ The next clustering experiment we ran was on the Brown Corpus. We ran the same d
 \headcol \color{white} Feature Type & \color{white} Value Type & \color{white} Purity & \color{white} Normalized Mutual  & \color{white} Adjusted Rand  \\
  \headcol & & &  \color{white} Information & \color{white}  Index \\
 \hline
-Words & Binary & 0.72727 & 0.44211 &  0.20537  \\
-Words & tf-idf &  0.761149  & 0.50932 & 0.33894\\
-Words \& Dep. Pairs & Binary & 0.711835 & 0.42011 & 0.15659 \\
-Words \& Dep. Pairs & tf-idf & 0.699828 & 0.34044 & 0.05001 \\
-Words \& Pred. Arg. & Binary & 0.761149 & 0.490585 & 0.32799 \\
-Words \& Pred. Arg.  & tf-idf & \textbf{0.786878} & \textbf{0.5485359} & \textbf{0.37705} \\
-Words, Dep. Pairs, \& Pred. Arg. & Binary & 0.729845 & 0.442120 & 0.22446 \\
-Words, Dep. Pairs, \& Pred. Arg.& tf-idf & 0.75 & 0.491923 & 0.30966 \\
+Words & Binary & 0.384 & 0.35450 &  0.13015  \\
+Words & tf-idf &  0.39  & 0.32450 & 0.12138 \\
+Words \& Dep. Pairs & Binary & 0.388 & \textbf{0.3760} & 0.13765 \\
+Words \& Dep. Pairs & tf-idf & 0.388 & 0.32795 & 0.12595 \\
+Words \& Pred. Arg. & Binary & 0.406 & 0.37245 & \textbf{0.17063} \\
+Words \& Pred. Arg.  & tf-idf & 0.374 & 0.3249 & 0.12786\\
+Words, Dep. Pairs, \& Pred. Arg. & Binary & 0.368 & 0.32627 & 0.1205 \\
+Words, Dep. Pairs, \& Pred. Arg.& tf-idf & \textbf{0.414} & 0.34935 & 0.1424 \\
 \hline
 \end{tabular}
 \end{table}
@@ -421,7 +422,7 @@ We collected a small dataset of the abstracts, titles, and authors \footnote{The
 Note that for a small number of these papers, there was no abstract. In these cases, if the introduction was brief, the introduction was used in lieu of the abstraction, otherwise the document was not a part of the dataset. Also note that the conversion from PDF to plain text was done manually.
 
 
-\begin{table}
+\begin{table}[H]
 \centering
 \footnotesize
 \caption{Class Assignments in Scientific Paper Dataset}
@@ -467,14 +468,14 @@ Relation Extraction with Matrix Factorization and Universal Schema & Distributio
 \headcol \color{white} Feature Type & \color{white} Value Type & \color{white} Purity & \color{white} Normalized Mutual  & \color{white} Adjusted Rand  \\
  \headcol & & &  \color{white} Information & \color{white}  Index \\
 \hline
-Words & Binary & 0.72727 & 0.44211 &  0.20537  \\
-Words & tf-idf &  0.761149  & 0.50932 & 0.33894\\
-Words \& Dep. Pairs & Binary & 0.711835 & 0.42011 & 0.15659 \\
-Words \& Dep. Pairs & tf-idf & 0.699828 & 0.34044 & 0.05001 \\
-Words \& Pred. Arg. & Binary & 0.761149 & 0.490585 & 0.32799 \\
-Words \& Pred. Arg.  & tf-idf & \textbf{0.786878} & \textbf{0.5485359} & \textbf{0.37705} \\
-Words, Dep. Pairs, \& Pred. Arg. & Binary & 0.729845 & 0.442120 & 0.22446 \\
-Words, Dep. Pairs, \& Pred. Arg.& tf-idf & 0.75 & 0.491923 & 0.30966 \\
+Words & Binary & 0.69565 & 0.73913 &  0.40844 \\
+Words & tf-idf &  0.69565  & 0.74719 & 0.33894\\
+Words \& Dep. Pairs & Binary & \textbf{0.782608} & 0.79312 & 0.52854 \\
+Words \& Dep. Pairs & tf-idf & 0.69565 & 0.763719 & 0.515285 \\
+Words \& Pred. Arg. & Binary & 0.69565 & 0.760097 & 0.518171 \\
+Words \& Pred. Arg.  & tf-idf & {0.69565} & {0.73288} & {0.38731} \\
+Words, Dep. Pairs, \& Pred. Arg. & Binary & \textbf{0.782608} & \textbf{0.80828} & \textbf{0.53292} \\
+Words, Dep. Pairs, \& Pred. Arg.& tf-idf & 0.69565 & 0.72555 & 0.44924 \\
 \hline
 \end{tabular}
 \end{table}
@@ -509,14 +510,14 @@ The entire Twenty News Groups Corpus consists of about 18 thousand documents, ab
 \headcol \color{white} Feature Type & \color{white} Value Type & \color{white} Accuracy & \color{white} Avg. Precision  & \color{white} Avg. Recall \\
  \headcol & & &  \color{white} Per Class & \color{white}  Per Class \\
 \hline
-Words & Binary & 0.72727 & 0.44211 &  0.20537  \\
-Words & tf-idf &  0.761149  & 0.50932 & 0.33894\\
-Words \& Dep. Pairs & Binary & 0.711835 & 0.42011 & 0.15659 \\
-Words \& Dep. Pairs & tf-idf & 0.699828 & 0.34044 & 0.05001 \\
-Words \& Pred. Arg. & Binary & 0.761149 & 0.490585 & 0.32799 \\
-Words \& Pred. Arg.  & tf-idf & \textbf{0.786878} & \textbf{0.5485359} & \textbf{0.37705} \\
-Words, Dep. Pairs, \& Pred. Arg. & Binary & 0.729845 & 0.442120 & 0.22446 \\
-Words, Dep. Pairs, \& Pred. Arg.& tf-idf & 0.75 & 0.491923 & 0.30966 \\
+Words & Binary & 0.81033 & 0.809039 &  0.81033  \\
+Words & tf-idf &  \textbf{0.852}  & \textbf{0.85082} & \textbf{0.852} \\
+Words \& Dep. Pairs & Binary & 0.81266 & 0.811923 & 0.81266 \\
+Words \& Dep. Pairs & tf-idf & 0.849 & 0.84849 & 0.849 \\
+Words \& Pred. Arg. & Binary & 0.8143 & 0.81348 & 0.8143 \\
+Words \& Pred. Arg.  & tf-idf & {0.84933} & {0.84829} & {0.84933} \\
+Words, Dep. Pairs, \& Pred. Arg. & Binary & 0.81333 & 0.812843 & 0.81333 \\
+Words, Dep. Pairs, \& Pred. Arg.& tf-idf & 0.84766 & 0.847274 & 0.84766 \\
 \hline
 \end{tabular}
 \end{table}
@@ -535,14 +536,14 @@ As a second classification experiment, we selected the first 100 samples of all 
 \headcol \color{white} Feature Type & \color{white} Value Type & \color{white} Accuracy & \color{white} Avg. Precision  & \color{white} Avg. Recall \\
  \headcol & & &  \color{white} Per Class & \color{white}  Per Class \\
 \hline
-Words & Binary & 0.72727 & 0.44211 &  0.20537  \\
-Words & tf-idf &  0.761149  & 0.50932 & 0.33894\\
-Words \& Dep. Pairs & Binary & 0.711835 & 0.42011 & 0.15659 \\
-Words \& Dep. Pairs & tf-idf & 0.699828 & 0.34044 & 0.05001 \\
-Words \& Pred. Arg. & Binary & 0.761149 & 0.490585 & 0.32799 \\
-Words \& Pred. Arg.  & tf-idf & \textbf{0.786878} & \textbf{0.5485359} & \textbf{0.37705} \\
-Words, Dep. Pairs, \& Pred. Arg. & Binary & 0.729845 & 0.442120 & 0.22446 \\
-Words, Dep. Pairs, \& Pred. Arg.& tf-idf & 0.75 & 0.491923 & 0.30966 \\
+Words & Binary & 0.718 & 0.721072 &  0.718  \\
+Words & tf-idf &  0.768  & 0.773496 & 0.768\\
+Words \& Dep. Pairs & Binary & 0.719 & 0.72428 & 0.719 \\
+Words \& Dep. Pairs & tf-idf & \textbf{0.7705} & \textbf{0.77597} & \textbf{0.7705} \\
+Words \& Pred. Arg. & Binary & 0.7175 & 0.72105 & 0.7175 \\
+Words \& Pred. Arg.  & tf-idf & 0.7685 & 0.77455 & 0.7685\\
+Words, Dep. Pairs, \& Pred. Arg. & Binary &  0.717 & 0.721931 &  0.717 \\
+Words, Dep. Pairs, \& Pred. Arg.& tf-idf & 0.7705 & 0.77488 & 0.7705 \\
 \hline
 \end{tabular}
 \end{table}
@@ -566,14 +567,11 @@ documents. This experiment was meant to be a precursor to the work we will do th
 \hline
 \headcol \color{white} Feature Type & \color{white} Value Type & \color{white} Avg. Precision  & \color{white} Avg. Recall \\
 \hline
-Words & Binary & 0.72727 &   0.20537  \\
-Words & tf-idf &  0.761149  & 0.33894\\
-Words \& Dep. Pairs & Binary & 0.42011 & 0.15659 \\
-Words \& Dep. Pairs & tf-idf & 0.4044 & 0.05001 \\
-Words \& Pred. Arg. & Binary & 0.761149  & 0.32799 \\
-Words \& Pred. Arg.  & tf-idf &  \textbf{0.5485359} & \textbf{0.37705} \\
-Words, Dep. Pairs, \& Pred. Arg. & Binary & 0.442120 & 0.22446 \\
-Words, Dep. Pairs, \& Pred. Arg.& tf-idf & 0.491923 & 0.30966 \\
+Words & tf-idf & 0.423913 &   0.71377  \\
+Words \& Dep. Pairs & tf-idf & 0.423913 & 0.71377 \\
+Words \& Pred. Arg. & tf-idf & 0.402173  & 0.65579 \\
+Words \& Pred. Arg.  & tf-idf &  {0.423913} & {0.713768} \\
+Embeddings KD-Tree & - & 0.347826 & 0.565217 \\
 \hline
 \end{tabular}
 \end{table}
@@ -590,18 +588,16 @@ We ran an additional retrieval experiment, in which we selected the first 15 sam
 \hline
 \headcol \color{white} Feature Type & \color{white} Value Type & \color{white} Avg. Precision  & \color{white} Avg. Recall \\
 \hline
-Words & Binary & 0.72727 &   0.20537  \\
-Words & tf-idf &  0.761149  & 0.33894\\
-Words \& Dep. Pairs & Binary & 0.42011 & 0.15659 \\
-Words \& Dep. Pairs & tf-idf & 0.4044 & 0.05001 \\
-Words \& Pred. Arg. & Binary & 0.761149  & 0.32799 \\
-Words \& Pred. Arg.  & tf-idf &  \textbf{0.5485359} & \textbf{0.37705} \\
-Words, Dep. Pairs, \& Pred. Arg. & Binary & 0.442120 & 0.22446 \\
-Words, Dep. Pairs, \& Pred. Arg.& tf-idf & 0.491923 & 0.30966 \\
+Words & Binary & 0.460952 &   0.460952  \\
+Words \& Dep. Pairs & tf-idf &  0.47047  & 0.47047\\
+Words \& Pred. Arg. & tf-idf & 0.463809  & 0.463809 \\
+Words, Dep. Pairs, \& Pred. Arg. & tf-idf & \textbf{0.47619} & \textbf{0.47619} \\
+Embeddings KD-Tree & - & 0.45523 & 0.45523 \\
 \hline
 \end{tabular}
 \end{table}
 
+\subsection{Analysis}
 
 
 \section{Conclusions and Future Work}
