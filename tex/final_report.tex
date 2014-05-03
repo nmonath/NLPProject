@@ -2,9 +2,9 @@
 \usepackage{etex}
 \usepackage{amssymb}
 \usepackage[margin=.8in]{geometry}
+\usepackage[table]{xcolor}
 \usepackage{amsmath,graphicx}
 \usepackage{algorithm}
-\usepackage[usenames,dvipsnames]{color}
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
 \usepackage{alphalph}
@@ -25,6 +25,12 @@
 \usepackage{hyperref}
 \usepackage{pgfplots}
 \definecolor{shadecolor}{rgb}{0.82,0.82,0.82}
+
+\definecolor{tableShade}{gray}{0.9}
+\colorlet{tableheadcolor}{black!90} % Table header colour = 25% gray
+\newcommand{\headcol}{\rowcolor{tableheadcolor}} %
+\rowcolors{3}{tableShade}{white}  %% start alternating shades from 3rd row
+
 
 
 \newcommand{\bt}[1]{\textbf{#1}}    
@@ -111,6 +117,7 @@ The dependency pairs are discovered using the values in the
 \end{shaded}
 
 The dependency pairs are extracted making use of the intra-sentence word ID numbers (first column) and the corresponding dependency information (fifth column).
+
 
 
 
@@ -229,101 +236,383 @@ According to \cite{Mikolov2013efficient}, we can define multiple word phrases in
 
 Many of the current papers convert words to their lemmatized form that is removing inflections so that each word is in its base form. This helps to reduce the feature space and make the feature vectors (or probability distributions) more descriptive. This process will take place after the dependency parsing and semantic role labeling. We can experiment with whether or not it will be used in the Word2Vec model. 
 
-\subsection{Experiments}
+
+
+
+\section{Experiments}
 
 Due to limited computational resources and the immense size of the datasets we were not able to evaluate how our methods did compared to the state of the art. Instead, we ran a set of experiments comparing our methods to a baseline unigram bag of words approach. These experiments will provide insight into whether or not the additional features extracted using dependency pairs and predicate argument structures is beneficial to a document similarity measure. 
 
+In these experiments, we compared the performance of four of our feature representations. We performed the experiments on the feature definitions with each of the following combinations of units
 
-\subsubsection{Document Clustering} \label{sec:DocumentClusterting}
+\begin{itemize}
+\item Words
+\item Words and Dependency Pairs 
+\item Words and Predicate Argument Structures
+\item Words, Dependency Pairs, and Predicate Argument Structures
+\end{itemize}
 
-\paragraph{Problem Description and Evaluation Criteria}
+We experimented with both a binary and a tf-idf valued feature vectors. Due to computational constraints, we used only the lemmatized version of words and did not use part of speech, dependency labels, nor argument labels. Features that appeared in only one document where removed from the feature definition.
+
+
+\subsection{Document Clustering} \label{sec:DocumentClusterting}
+
+\subsubsection{General Setup}
 
 The problem of \bt{document clustering} is defined as the automatic organization of documents into logical groups based on latent features. For evaluation purposes, we use documents that are already divided into classes. We then use a clustering algorithm to see how well the clusters represent the true classes of the documents. 
 
-Formally, the experimental set up is as follows. Given a collection of documents $D_1$, $D_2$, $\dots$ $D_n$, we first define a feature vector to be used as the vector space model for the documents. This feature is defined as the union of the set of all units (words, dependency pairs, predicate/argument structures), which appear in at least one document in the collection. We then extract a feature vector from each of these documents to produce the set of features for the documents $X_1$, $X_2$, $\dots$ $X_n$. 
+Formally, the experimental set up is as follows. Given a collection of documents $D_1$, $D_2$, $\dots$ $D_N$,  which have been preprocessed in the method described above. The first step of the experiment is to define a feature for the documents, i.e. union of the set of all units (words, dependency pairs, predicate/argument structures), which appear in at least one document in the collection. We then extract a feature vector from each of these documents to produce the set of features for the documents $X_1$, $X_2$, $\dots$ $X_N$. Each document has an associated class label $y_1$, $y_2$, $\dots$, $y_N$, which will be used to in evaluating the performance of the clustering algorithm.
 
-The evaluation measures we use are purity, normalized mutual information and the adjusted rand index. 
-
-Similar experiments to these can be found in the literature in \cite{Huang2008} and \cite{Hofmann2000}. 
+In these, experiments we clustered the document features $X_1$, $X_2$, $\dots$ $X_N$ using the $k$-means clustering algorithm with $k$ being the number of unique class labels for the documents. For a distance function, we used the Cosine Similarity in that we normalized $X_1$, $X_2$, $\dots$ $X_N$  to unit length and used a Euclidean distance measure. The output of the clustering algorithm is a cluster id label for each of the $N$ documents, which we will refer to as $C_1$, $C_2$, $\dots$, $C_N$. 
 
 
-\paragraph{Reuters-21578}
+\subsection{Evaluation Measures}
 
-We selected a portion of the test cases of the Mod-Apte split of the Reuters-21578 to use in a clustering experiment. We selected those documents from the top 8 most frequently appearing classes and that only belonged to one class. The distribution of documents in the data set can be see as:
+Following the experiments in \cite{Huang2008} and \cite{Hofmann2000}, we evaluated the clustering of the documents with the measures of purity, normalized mutual information, and the adjusted Rand index. The definitions of these metrics are {\tt http://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-clustering-1.html}
+
+\subsubsection{Purity}
+
+Purity is a measure of cluster quality, that is how well the classes are defined into clusters. If we refer to $Y$ as the set of unique class labels in the data set, and refer to $W_i$ as the class labels of the documents in the $i^{th}$ cluster. The purity is defined as follows:
+
+\begin{equation}
+{\text{Purity}}(W_{1:K}, Y) = \frac{1}{N} \left ( \sum_{n=1}^N \max_{y \in Y} \left (\sum_{w \in W_n} [w = y] \right ) \right )
+\end{equation} 
+
+where $[w=y]$ is the indicator function--it evaluates to 1 if $w$ is equal to $y$ and evaluates to 0 otherwise. 
+
+\subsubsection{Normalized Mutual Information}
+
+The normalized mutual information between the cluster indexes $C_1$, $C_2$, $\dots$, $C_N$ and the class labels  $Y_1$, $Y_2$, $\dots$, $Y_N$ is measured. This is defined as:
+
+\begin{equation}
+\text{NormalizedMutualInformation}(C_{1:N}, Y_{1:N}) = \frac{I(C_{1:N}, Y_{1:N}) }{H(C_{1:N}) + H(Y_{1:N}) }
+\end{equation}
+
+Where $I$ is the mutual information:
+
+\begin{align}
+I(C_{1:N}, Y_{1:N}) &= \sum_i \sum_j {P(C_i, Y_j)} \frac{P(C_i, Y_j)}{P(C_i)P(Y_j)} \\
+\end{align}
+
+and the entropy $H$ is:
+
+\begin{align}
+H(C_{1:N}) = - \sum_i P(C_i) \log P(C_i) \\
+H(Y_{1:N}) = - \sum_i P(Y_i) \log P(Y_i) \\
+\end{align}
+
+and the probability distributions are their maximum likelihood estimates. 
+
+\subsubsection{Adjusted Rand Index}
+
+The adjusted Rand index is a version of the Rand index that is adjusted for the chance grouping of elements. In general the Rand index evaluates the similarity between $C_{1:N}$ and $Y_{1:N}$. Letting $\mathcal{Y}$ be the set of unique class labels and $\mathcal{C}$ be the set of unique cluster labels, the adjusted Rand Index is calculated as:
+
+%TODO
+%\begin{equation}
+%\text{AdjustedRandIndex}(C_{1:N}, Y_{1:N}) = \dfrac{ \left ( \sum_{i=1}^N \sum_{j=1}^N \binom{n_{ij}}{2} \right ) - \frac{\left ( \sum_{i=1}^N \binom{a_{i}}{2} \right ) \left ( \sum_{i=1}^N \binom{a_{i}}{2} \right )}{\binom{N}{2}}}{ \frac{\left ( \sum_{i=1}^N \binom{a_{i}}{2} \right ) \left ( \sum_{i=1}^N \binom{a_{i}}{2} \right )}{{2}} - \frac{\left ( \sum_{i=1}^N \binom{a_{i}}{2} \right ) \left ( \sum_{i=1}^N \binom{a_{i}}{2} \right )}{\binom{N}{2}}}
+%\end{equation}
+%
+%where
+%
+%\begin{equation}
+%a_i = \sum 
+
+\subsection{Reuters-21578}
+
+We selected a portion of the test cases of the Mod-Apte split of the Reuters-21578 to use in a clustering experiment. We selected those documents from the top 8 most frequently appearing classes and that only belonged to one class. This selection was inspired by the experiments in \ref{Natase2007} and \ref{Hoffman2000} The distribution of documents in the data set can be see in figure \ref{fig:ReutersClassDist}. The results for each of our feature vectors shown in Table \ref{tbl:ReutersClusteringResults}. 
 
 \begin{figure}[H]
+\label{fig:ReutersClassDist}
 \centering
 \begin{tikzpicture}
-  \begin{axis}[    ybar,    enlargelimits=0.15,    legend style={at={(0.5,-0.2)},      anchor=north,legend columns=-1},    ylabel={Number of Samples},    symbolic x coords={acq,corn,earn,interest,money-fx,ship,trade,wheat},    xtick=data,    nodes near coords,    nodes near coords align={vertical},    x tick label style={rotate=45,anchor=east},    ]    \addplot coordinates {(acq,709) (corn,142)        (earn,1083) (interest,34) (money-fx,87) (ship, 130) (trade, 43) (wheat, 104)};  \end{axis}
-  \end{tikzpicture}\end{figure}
+  \begin{axis}[
+    ybar,
+    enlargelimits=0.15,
+    legend style={at={(0.5,-0.2)},
+      anchor=north,legend columns=-1},
+    ylabel={Number of Samples},
+    symbolic x coords={acq,corn,earn,interest,money-fx,ship,trade,wheat},
+    xtick=data,
+    nodes near coords,
+    nodes near coords align={vertical},
+    x tick label style={rotate=45,anchor=east},
+    title=Distribution of Classes in Reuters Clustering Dataset
+    ]
+    \addplot coordinates {(acq,709) (corn,142)
+        (earn,1083) (interest,34) (money-fx,87) (ship, 130) (trade, 43) (wheat, 104)};
+  \end{axis}
+  \end{tikzpicture}
+\end{figure}
 
-The results for each of our feature vectors are: 
+\begin{table}[H]
+\caption{Reuters Clustering Results}
+\label{tbl:ReutersClusteringResults}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\headcol \color{white} Feature Type & \color{white} Value Type & \color{white} Purity & \color{white} Normalized Mutual  & \color{white} Adjusted Rand  \\
+ \headcol & & &  \color{white} Information & \color{white}  Index \\
+\hline
+Words & Binary & 0.72727 & 0.44211 &  0.20537  \\
+Words & tf-idf &  0.761149  & 0.50932 & 0.33894\\
+Words \& Dep. Pairs & Binary & 0.711835 & 0.42011 & 0.15659 \\
+Words \& Dep. Pairs & tf-idf & 0.699828 & 0.34044 & 0.05001 \\
+Words \& Pred. Arg. & Binary & 0.761149 & 0.490585 & 0.32799 \\
+Words \& Pred. Arg.  & tf-idf & \textbf{0.786878} & \textbf{0.5485359} & \textbf{0.37705} \\
+Words, Dep. Pairs, \& Pred. Arg. & Binary & 0.729845 & 0.442120 & 0.22446 \\
+Words, Dep. Pairs, \& Pred. Arg.& tf-idf & 0.75 & 0.491923 & 0.30966 \\
+\hline
+\end{tabular}
+\end{table}
 
-% REUTERS PLOTS
-% PURITY
-\pgfplotsset{width=10cm}
+
+\subsection{Brown Corpus}
+
+The next clustering experiment we ran was on the Brown Corpus. We ran the same document clustering experiment described earlier on the 500 document corpus. The Brown Corpus has a slightly more even class distribution than the Reuters Corpus:
+
+\pgfplotsset{width=12cm}
 \begin{figure}[H]
+\label{fig:BrownClassDist}
 \centering
 \begin{tikzpicture}
-\pgfkeys{
-    /pgf/number format/precision=5, 
-    /pgf/number format/fixed zerofill=true
-}
-  \begin{axis}[    ybar,    enlargelimits=0.15,    legend style={at={(0.5,-0.4)},      anchor=north,legend columns=-1},    ylabel={Number of Samples},    symbolic x coords={Words,Words and DP,Words and PA,Words and DP and PA},    xtick=data,    nodes near coords,    nodes near coords align={vertical},    x tick label style={rotate=45,anchor=east},
-  title=Purity,
-   y tick label style={/pgf/number format/.cd,
-        fixed,
-        fixed zerofill,
-        precision=2,
-        /tikz/.cd},    ]    \addplot coordinates {(Words, 0.72727) (Words and DP,0.711835) (Words and PA,0.761149) (Words and DP and PA,0.729845) };
-    \addplot coordinates {(Words, 0.761149) (Words and DP,0.699828) (Words and PA,0.786878) (Words and DP and PA,0.75) }; \legend{Binary, TF-IDF}
-     \end{axis}
-  \end{tikzpicture}\end{figure}
+  \begin{axis}[
+    ybar,
+    enlargelimits=0.15,
+    legend style={at={(0.5,-0.2)},
+      anchor=north,legend columns=-1},
+    ylabel={Number of Samples},
+    symbolic x coords={adventure,belles lettres,editorial,fiction,government,hobbies,humor,learned,lore,mystery,news,religion,reviews,romance,science fiction},
+    xtick=data,
+    nodes near coords,
+    nodes near coords align={vertical},
+    x tick label style={rotate=45,anchor=east},
+    title=Distribution of Classes in Brown Clustering Dataset
+    ]
+    \addplot coordinates {(adventure, 29) (belles lettres, 75) (editorial, 27) (fiction, 29) (government, 30) (hobbies, 36) (humor, 9) (learned, 80) (lore, 48) (mystery, 24) (news, 44) (religion, 17) (reviews, 17) (romance, 29) (science fiction, 6)};
+  \end{axis}
+  \end{tikzpicture}
+\end{figure}
 
- % NMI
-\pgfplotsset{width=10cm}
-\begin{figure}[H]
-\centering
-\begin{tikzpicture}
-\pgfkeys{
-    /pgf/number format/precision=5, 
-    /pgf/number format/fixed zerofill=true
-}
-  \begin{axis}[    ybar,    enlargelimits=0.15,    legend style={at={(0.5,-0.4)},      anchor=north,legend columns=-1},    ylabel={Number of Samples},    symbolic x coords={Words,Words and DP,Words and PA,Words and DP and PA},    xtick=data,    nodes near coords,    nodes near coords align={vertical},    x tick label style={rotate=45,anchor=east},
-  title=Normalized Mutual Information,
-   y tick label style={/pgf/number format/.cd,
-        fixed,
-        fixed zerofill,
-        precision=2,
-        /tikz/.cd},    ]    \addplot coordinates {(Words, 0.44211) (Words and DP,0.42011) (Words and PA,0.490585) (Words and DP and PA,0.442120) };
-    \addplot coordinates {(Words, 0.50932) (Words and DP,0.34044) (Words and PA,0.5485359) (Words and DP and PA,0.491923) }; \legend{Binary, TF-IDF}
-     \end{axis}
-  \end{tikzpicture}\end{figure}
+%TODO Insert the Correct values
+\begin{table}[H]
+\caption{Brown Corpus Clustering Results}
+\label{tbl:BrownClusteringResults}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\headcol \color{white} Feature Type & \color{white} Value Type & \color{white} Purity & \color{white} Normalized Mutual  & \color{white} Adjusted Rand  \\
+ \headcol & & &  \color{white} Information & \color{white}  Index \\
+\hline
+Words & Binary & 0.72727 & 0.44211 &  0.20537  \\
+Words & tf-idf &  0.761149  & 0.50932 & 0.33894\\
+Words \& Dep. Pairs & Binary & 0.711835 & 0.42011 & 0.15659 \\
+Words \& Dep. Pairs & tf-idf & 0.699828 & 0.34044 & 0.05001 \\
+Words \& Pred. Arg. & Binary & 0.761149 & 0.490585 & 0.32799 \\
+Words \& Pred. Arg.  & tf-idf & \textbf{0.786878} & \textbf{0.5485359} & \textbf{0.37705} \\
+Words, Dep. Pairs, \& Pred. Arg. & Binary & 0.729845 & 0.442120 & 0.22446 \\
+Words, Dep. Pairs, \& Pred. Arg.& tf-idf & 0.75 & 0.491923 & 0.30966 \\
+\hline
+\end{tabular}
+\end{table}
 
- % Adjusted Rand Index
-\pgfplotsset{width=10cm}
-\begin{figure}[H]
+
+\subsection{Scientific Paper Dataset} \label{sec:ScientificPaperClustering}
+
+We collected a small dataset of the abstracts, titles, and authors \footnote{There are no meta-data tags of in the documents, only text. This experimental setup was designed to partially mimic the experiments in \ref{Hurtado2013}} of the papers that we read in this courses. Each paper was given the class label of the unit it was a part of--unit being ``Tree Adjoining Grammar'' or ``Ontology and Taxonomy''. The name of each paper and the  class label assigned is shown in Table \ref{tbl:ScientificPaperClassListing}. While this is a relatively small dataset of just 22 documents, the domain was significantly different enough from the previous two datasets to be worthy of experimentation. The results are shown in Table \ref{tbl:ScientificPaperClusteringResults}
+
+Note that for a small number of these papers, there was no abstract. In these cases, if the introduction was brief, the introduction was used in lieu of the abstraction, otherwise the document was not a part of the dataset. Also note that the conversion from PDF to plain text was done manually.
+
+
+\begin{table}
 \centering
-\begin{tikzpicture}
-\pgfkeys{
-    /pgf/number format/precision=5, 
-    /pgf/number format/fixed zerofill=true
-}
-  \begin{axis}[    ybar,    enlargelimits=0.15,    legend style={at={(0.5,-0.4)},      anchor=north,legend columns=-1},    ylabel={Number of Samples},    symbolic x coords={Words,Words and DP,Words and PA,Words and DP and PA},    xtick=data,    nodes near coords,    nodes near coords align={vertical},    x tick label style={rotate=45,anchor=east},
-  title=Adjusted Rand Index,
-   y tick label style={/pgf/number format/.cd,
-        fixed,
-        fixed zerofill,
-        precision=2,
-        /tikz/.cd},    ]    \addplot coordinates {(Words, 0.20537) (Words and DP,0.15659) (Words and PA,0.32799) (Words and DP and PA,0.22446) };
-    \addplot coordinates {(Words, 0.33894) (Words and DP,0.05001) (Words and PA,0.37705) (Words and DP and PA,0.30966) }; \legend{Binary, TF-IDF}
-     \end{axis}
-  \end{tikzpicture}\end{figure}
+\footnotesize
+\caption{Class Assignments in Scientific Paper Dataset}
+\label{tbl:ScientificPaperClassListing}
+\begin{tabular}{|c|c|}
+\headcol \color{white} Paper Title & \color{white} Class Name \\
+\hline
+Penn Treebank Overview & Phrase Structure Grammar \\
+Government \& Binding Theory Introduction & Phrase Structure Grammar \\ 
+Introduction to Prop Bank & Predicate Argument Structure \\ 
+On the Semantic Content of the Notion of Thematic Role & Predicate Argument Structure \\
+Tree Adjoining Grammars & Tree Adjoining Grammars \\
+Domains of Locality & Tree Adjoining Grammars \\
+Synchronous Tree Adjoining Grammars & Tree Adjoining Grammars \\
+Supertagging: An Approach to Almost Parsing & Tree Adjoining Grammars \\
+Introduction to WordNet: An On-line Lexical Database & WordNet \\
+Nouns in WordNet: A Lexical Inheritance System & WordNet \\
+Adjectives in WordNet & WordNet \\
+English Verbs as a Semantic Net & WordNet \\
+Design and Implementation of WordNet Lexical Database and Searching Software & WordNet \\
+Never Ending Language Learner & Ontology and Taxonomy \\
+Which Noun Phrases Denote Which Concepts & Ontology and Taxonomy \\
+Combinatory Categorial Grammar by Steedman and Baldridge & Combinatory Categorial Grammar \\
+Equivalence of Four Extensions of Context Free Grammars & Combinatory Categorial Grammar \\
+Vector Space Semantic Parsing & Combinatory Categorial Grammar \\
+FrameNet II & Frame Semantics in FrameNet \\
+A Frames Approach to Semantic Analysis & Frame Semantics in FrameNet \\
+Learning to Map Sentence to Logical Form & Distributional Semantics \\
+Relation Extraction with Matrix Factorization and Universal Schema & Distributional Semantics \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+%TODO Insert the Correct values
+\begin{table}[H]
+\centering
+\caption{Scientific Paper Clustering Results}
+\label{tbl:ScientificPaperClusteringResults}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\headcol \color{white} Feature Type & \color{white} Value Type & \color{white} Purity & \color{white} Normalized Mutual  & \color{white} Adjusted Rand  \\
+ \headcol & & &  \color{white} Information & \color{white}  Index \\
+\hline
+Words & Binary & 0.72727 & 0.44211 &  0.20537  \\
+Words & tf-idf &  0.761149  & 0.50932 & 0.33894\\
+Words \& Dep. Pairs & Binary & 0.711835 & 0.42011 & 0.15659 \\
+Words \& Dep. Pairs & tf-idf & 0.699828 & 0.34044 & 0.05001 \\
+Words \& Pred. Arg. & Binary & 0.761149 & 0.490585 & 0.32799 \\
+Words \& Pred. Arg.  & tf-idf & \textbf{0.786878} & \textbf{0.5485359} & \textbf{0.37705} \\
+Words, Dep. Pairs, \& Pred. Arg. & Binary & 0.729845 & 0.442120 & 0.22446 \\
+Words, Dep. Pairs, \& Pred. Arg.& tf-idf & 0.75 & 0.491923 & 0.30966 \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+
+\subsection{Analysis}
+
+
+\section{Document Classification}
+
+\subsection{General Problem Description and Evaluation Criteria}
+
+In general the problem of document classification is defined as: given set of training samples, pairs of documents and associated class labels: $(D_1, Y_1)$, $(D_2, Y_2)$, \dots, $(D_N, Y_N)$, predict the class label for a document $D_{N+1}$ not a part of the training set. From the training documents we first define a feature vector in the same way described in clustering experiment. We then extract features from the training set to get the set of features for all the training documents: $X_1,\ X_2$, $\dots$, $X_N$. We use the same feature definition to extract features from the testing documents. 
+
+The classifier we used in this experiment was an SVM with a Linear Kernel. We used a value of $C=1$. In future experiments we will use a lower value of $C$. We again used Cosine similarity by normalizing the features and using the Euclidean distance.  
+
+The classification task was evaluated on the standard criteria of accuracy, and the average per-class precision and recall scores.
+
+\subsection{NewsGroups Classification Experiment \#1}
+
+The entire Twenty News Groups Corpus consists of about 18 thousand documents, about 11 thousand training and 7 thousand testing. The data set was too large to run our machines and so we selected a smaller portion of the data set to use in our experiments. From the original training and testing sets, we created new sets of the first 200 samples of the 15 most frequently occurring classes. The results from our experiment are shown in Table \ref{tbl:NewsGroupsClassification1}.
+
+%TODO Insert the Correct values
+\begin{table}[H]
+\centering
+\caption{NewsGroups Classification Experiment \#1 Results}
+\label{tbl:NewsGroupsClassification1}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\headcol \color{white} Feature Type & \color{white} Value Type & \color{white} Accuracy & \color{white} Avg. Precision  & \color{white} Avg. Recall \\
+ \headcol & & &  \color{white} Per Class & \color{white}  Per Class \\
+\hline
+Words & Binary & 0.72727 & 0.44211 &  0.20537  \\
+Words & tf-idf &  0.761149  & 0.50932 & 0.33894\\
+Words \& Dep. Pairs & Binary & 0.711835 & 0.42011 & 0.15659 \\
+Words \& Dep. Pairs & tf-idf & 0.699828 & 0.34044 & 0.05001 \\
+Words \& Pred. Arg. & Binary & 0.761149 & 0.490585 & 0.32799 \\
+Words \& Pred. Arg.  & tf-idf & \textbf{0.786878} & \textbf{0.5485359} & \textbf{0.37705} \\
+Words, Dep. Pairs, \& Pred. Arg. & Binary & 0.729845 & 0.442120 & 0.22446 \\
+Words, Dep. Pairs, \& Pred. Arg.& tf-idf & 0.75 & 0.491923 & 0.30966 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{NewsGroups Classification Experiment \#2}
+
+As a second classification experiment, we selected the first 100 samples of all of the twenty classes in both the training and testing sets.  The results for this experiment are shown in Table \ref{tbl:NewsGroupsClassification2}.
+
+%TODO Insert the Correct values
+\begin{table}[H]
+\centering
+\caption{NewsGroups Classification Experiment \#2 Results}
+\label{tbl:NewsGroupsClassification2}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\headcol \color{white} Feature Type & \color{white} Value Type & \color{white} Accuracy & \color{white} Avg. Precision  & \color{white} Avg. Recall \\
+ \headcol & & &  \color{white} Per Class & \color{white}  Per Class \\
+\hline
+Words & Binary & 0.72727 & 0.44211 &  0.20537  \\
+Words & tf-idf &  0.761149  & 0.50932 & 0.33894\\
+Words \& Dep. Pairs & Binary & 0.711835 & 0.42011 & 0.15659 \\
+Words \& Dep. Pairs & tf-idf & 0.699828 & 0.34044 & 0.05001 \\
+Words \& Pred. Arg. & Binary & 0.761149 & 0.490585 & 0.32799 \\
+Words \& Pred. Arg.  & tf-idf & \textbf{0.786878} & \textbf{0.5485359} & \textbf{0.37705} \\
+Words, Dep. Pairs, \& Pred. Arg. & Binary & 0.729845 & 0.442120 & 0.22446 \\
+Words, Dep. Pairs, \& Pred. Arg.& tf-idf & 0.75 & 0.491923 & 0.30966 \\
+\hline
+\end{tabular}
+\end{table}
+
+
+\section{Document Retrieval}
+
+As a final experiment, we ran a simplified version of a document retrieval system. The problem definition is as follows: Given a collection of documents $D_1$, $D_2$, $\dots$, $D_N$, each with a class label $Y_1$, $Y_2$, $\dots$, $Y_N$, query the collection on each document $D_i$ and retrieval the top $K$ documents with lowest Cosine distance. The precision/recall of each retrieval is scored and the average across all queries is reported. The feature vectors representing the documents are defined using the entire corpus. 
+
+\subsection{Scientific Paper Retrieval}
+
+We first ran the retrieval experiment on the Scientific Paper dataset described in Section \ref{sec:ScientificPaperClustering}. In this experiment we retrieved the top $K=5$ closest
+documents. This experiment was meant to be a precursor to the work we will do this summer replicating a similar experiment presented in \cite{Hurtado2013}. 
+
+%TODO Insert the Correct values
+\begin{table}[H]
+\centering
+\caption{Scientific Paper Retrieval Results}
+\label{tbl:ScientificPaperRetrievalResults}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\headcol \color{white} Feature Type & \color{white} Value Type & \color{white} Avg. Precision  & \color{white} Avg. Recall \\
+\hline
+Words & Binary & 0.72727 &   0.20537  \\
+Words & tf-idf &  0.761149  & 0.33894\\
+Words \& Dep. Pairs & Binary & 0.42011 & 0.15659 \\
+Words \& Dep. Pairs & tf-idf & 0.4044 & 0.05001 \\
+Words \& Pred. Arg. & Binary & 0.761149  & 0.32799 \\
+Words \& Pred. Arg.  & tf-idf &  \textbf{0.5485359} & \textbf{0.37705} \\
+Words, Dep. Pairs, \& Pred. Arg. & Binary & 0.442120 & 0.22446 \\
+Words, Dep. Pairs, \& Pred. Arg.& tf-idf & 0.491923 & 0.30966 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{Brown Corpus Retrieval}
+
+We ran an additional retrieval experiment, in which we selected the first 15 samples of the top 5 most frequently occurring classes in the Brown corpus. We then ran the retrieval experiment with $K=15$. Note that in this case the precision and recall is the same, it is just the percentage of the top 15 documents that were of the same class of the query document. 
+
+\begin{table}[H]
+\centering
+\caption{Brown Retrieval Results}
+\label{tbl:BrownRetrievalResults}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\headcol \color{white} Feature Type & \color{white} Value Type & \color{white} Avg. Precision  & \color{white} Avg. Recall \\
+\hline
+Words & Binary & 0.72727 &   0.20537  \\
+Words & tf-idf &  0.761149  & 0.33894\\
+Words \& Dep. Pairs & Binary & 0.42011 & 0.15659 \\
+Words \& Dep. Pairs & tf-idf & 0.4044 & 0.05001 \\
+Words \& Pred. Arg. & Binary & 0.761149  & 0.32799 \\
+Words \& Pred. Arg.  & tf-idf &  \textbf{0.5485359} & \textbf{0.37705} \\
+Words, Dep. Pairs, \& Pred. Arg. & Binary & 0.442120 & 0.22446 \\
+Words, Dep. Pairs, \& Pred. Arg.& tf-idf & 0.491923 & 0.30966 \\
+\hline
+\end{tabular}
+\end{table}
+
+
+
+\section{Conclusions and Future Work}
+
+
+
 
 
 
  
-
+\clearpage
 
 For example, given a corpus of computational linguistics research papers, we might hope that a clustering of the papers would place all the work on grammars and language representations in one cluster, the work on semantics in another, the work in morphology in a third, etc. 
 
