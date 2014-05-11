@@ -1,0 +1,42 @@
+ \documentclass[12pt]{article}
+\usepackage{amsmath,graphicx}
+\usepackage[left=0.5in, top=0.5in, bottom=0.5in, right=0.5in]{geometry}\usepackage{enumitem}
+\usepackage[export]{adjustbox}
+\usepackage{float}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{amssymb}
+\usepackage{framed}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage[bottom]{footmisc}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage{setspace}
+
+
+
+\begin{document}
+
+  \title{NLP Project \\ Related Papers Notes}
+\author{Klim Zaporojets}
+\date{\today}
+\maketitle
+
+\pagebreak
+
+\section{Comparing SVM and Naive Bayes Classifiers for Text Categorization with Wikitology as knowledge enrichment}
+The following are the main points of this papers: 
+\begin{enumerate}
+	\item Many researchers shown text enriching method facilitates text categorization by adding semantic background knowledge from knowledge bases like Word Net, Wikipedia, Open Project Directory (OPD) and Wikitology.
+	\item \textit{Wikitology} is a hybrid knowledge base of structured and unstructured information extracted from Wikipedia.
+	\item The \textit{Support Vector Machines} is a classifier that finds best hyper plane between two classes of data, by separating positive and negative examples through solid line in the middle called decision line.
+	\item The \textit{Support Vector Machines} is a classifier that finds best hyper plane between two classes of data, by separating positive and negative examples through solid line in the middle called decision line.
+	\item \textit{Naive Bayes classifier} is basically a probabilistic classifier based on hypothesis. On the basis of assumption and training document; Bayesian learning is to find most appropriate assumption based on prior hypothesis and initial knowledge. Main assumption is that terms in test document have no relation among them and probability is calculated that document belong to category C
+	\item To measure the performance, the authors use \textit{micro average} and \textit{macro average} F measure. More details can be found at http://rushdishams.blogspot.com/2011/08/micro-and-macro-average-of-precision.html. 
+	\item \textit{Baseline} for the experiment is setup by removing stop words, delimiters and stemmed the dataset by using Porter Stemmer. 
+	\item The authors extend their previous research in which they use Wikitology to cluster. They use the following document representation techniques: T1 - remove stop words, T2 - tag document as entity types (person, location, and organization), T3 – apply T1 and remove all other words except nouns and T4 – apply T3 and tag terms as entity types (person, location, and organization). 
+	\item The 5 enrichment techniques used by authors are: E1 – get top similar articles, add titles and categories, E2 – query Wikitology using Lucene, add titles, categories and linked concepts, E3 – apply E2 and query Freebase on entity types, E4 – Filter results returned by E1, E2 and E3 on defined criteria; and E5 – remove noise and delimiters from results returned by E1, E2, E3 and E4. 
+	
+\end{enumerate}
+\end{document}
