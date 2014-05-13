@@ -7,6 +7,7 @@ from Util import *
 import re
 from copy import copy
 import itertools
+import json
 
 
 def DataType(argin):
@@ -93,7 +94,41 @@ global FTYPE
 FTYPE = FeatureType.TFIDF
 
 
+def SetConfigurations(jsonfile):
+	configs = json.load(open(jsonfile))
+	for key in configs:
+		if 'lemma' in key.lower():
+			USE_LEMMA = (configs[key].lower() == 'true')
+		elif 'case' in key.lower():
+			CASE_SENSITIVE = (configs[key].lower() == 'true')
+		elif 'pos' in key.lower() and 'tag' in key.lower():
+			USE_POS_TAGS = (configs[key].lower() == 'true')
+		elif 'dep' in key.lower():
+			USE_DEP_TAGS = (configs[key].lower() == 'true')
+		elif 'arg' in key.lower():
+			USE_ARG_LABELS = (configs[key].lower() == 'true')
+		elif 'symbols' in key.lower():
+			SYMBOLS_TO_KEEP = configs[key].encode('ascii')
+		elif 'single' in key.lower():
+			REMOVE_SINGLE_CHARACTERS = (configs[key].lower() == 'true')
+		elif 'document' in key.lower():
+			REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT = (configs[key].lower() == 'true')
+		elif 'time' in key.lower():
+			REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = (configs[key].lower() == 'true')
+		elif 'memory' in key.lower():
+			USE_MEMORY_MAP = (configs[key].lower() == 'true')
+		elif 'keeper' in key.lower():
+			KEEPER_POS = [x.encode('ascii') for x in configs[key]]
+		elif 'unit' in key.lower():
+			FUNIT = configs[key].encode('ascii')
+		elif 'rep' in key.lower():
+			FREP = configs[key].encode('ascii')
+		elif 'type' in key.lower():
+			FTYPE = configs[key].encode('ascii')
 
+
+def DisplayConfigurations():
+	DisplayConfiguration()
 
 def DisplayConfiguration():
 	print("Feature Configuration Settings")
