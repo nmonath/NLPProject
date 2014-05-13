@@ -96,35 +96,84 @@ FTYPE = FeatureType.TFIDF
 
 def SetConfigurations(jsonfile):
 	configs = json.load(open(jsonfile))
+	print configs
 	for key in configs:
 		if 'lemma' in key.lower():
-			USE_LEMMA = (configs[key].lower() == 'true')
+			global USE_LEMMA
+			USE_LEMMA = (configs[key].encode('ascii').lower() == 'true')
 		elif 'case' in key.lower():
-			CASE_SENSITIVE = (configs[key].lower() == 'true')
+			global CASE_SENSITIVE
+			CASE_SENSITIVE = (configs[key].encode('ascii').lower() == 'true')
 		elif 'pos' in key.lower() and 'tag' in key.lower():
-			USE_POS_TAGS = (configs[key].lower() == 'true')
+			global USE_POS_TAGS
+			USE_POS_TAGS = (configs[key].encode('ascii').lower() == 'true')
 		elif 'dep' in key.lower():
-			USE_DEP_TAGS = (configs[key].lower() == 'true')
+			global USE_DEP_TAGS
+			USE_DEP_TAGS = (configs[key].encode('ascii').lower() == 'true')
 		elif 'arg' in key.lower():
-			USE_ARG_LABELS = (configs[key].lower() == 'true')
+			global USE_ARG_LABELS
+			USE_ARG_LABELS = (configs[key].encode('ascii').lower() == 'true')
 		elif 'symbols' in key.lower():
+			global SYMBOLS_TO_KEEP
 			SYMBOLS_TO_KEEP = configs[key].encode('ascii')
 		elif 'single' in key.lower():
-			REMOVE_SINGLE_CHARACTERS = (configs[key].lower() == 'true')
+			global REMOVE_SINGLE_CHARACTERS
+			REMOVE_SINGLE_CHARACTERS = (configs[key].encode('ascii').lower() == 'true')
 		elif 'document' in key.lower():
-			REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT = (configs[key].lower() == 'true')
+			global REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT
+			REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT = (configs[key].encode('ascii').lower() == 'true')
 		elif 'time' in key.lower():
-			REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = (configs[key].lower() == 'true')
+			global REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME
+			REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = (configs[key].encode('ascii').lower() == 'true')
 		elif 'memory' in key.lower():
-			USE_MEMORY_MAP = (configs[key].lower() == 'true')
+			global USE_MEMORY_MAP
+			USE_MEMORY_MAP = (configs[key].encode('ascii').lower() == 'true')
 		elif 'keeper' in key.lower():
+			global KEEPER_POS
 			KEEPER_POS = [x.encode('ascii') for x in configs[key]]
 		elif 'unit' in key.lower():
-			FUNIT = configs[key].encode('ascii')
+			global FUNIT
+			FUNIT = configs[key].encode('ascii').encode('ascii').lower()
+			if 'all' in FUNIT or ('pred' in FUNIT and 'word' in FUNIT and 'dep' in FUNIT):
+				global FUNIT
+				FUNIT = FeatureUnits.ALL
+			elif 'pred' in FUNIT and 'word' in FUNIT:
+				global FUNIT
+				FUNIT = FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT
+			elif 'dep' in FUNIT and 'word' in FUNIT:
+				global FUNIT
+				FUNIT = FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS
+			elif 'word' in FUNIT:
+				global FUNIT
+				FUNIT = FeatureUnits.WORD
+			elif 'dep' in FUNIT:
+				global FUNIT
+				FUNIT = FeatureUnits.DEPENDENCY_PAIR
+			elif 'pred' in FUNIT:
+				global FUNIT
+				FUNIT in FeatureUnits.PREDICATE_ARGUMENT
 		elif 'rep' in key.lower():
-			FREP = configs[key].encode('ascii')
+			global FREP
+			FREP = configs[key].encode('ascii').lower()
+			if 'hash' in FREP:
+				global FREP
+				FREP = FeatureRepresentation.HASH
+			elif 'str' in FREP:
+				global FREP
+				FREP = FeatureRepresentation.STRING
 		elif 'type' in key.lower():
-			FTYPE = configs[key].encode('ascii')
+			global FTYPE
+			FTYPE = configs[key].encode('ascii').lower()
+			if 'tf' in FTYPE and 'idf' in FTYPE:
+				global FTYPE
+				FTYPE = FeatureType.TFIDF
+			elif 'bin' in FTYPE:
+				global FTYPE
+				FTYPE = FeatureType.BINARY
+			elif 'count' in FTYPE:
+				global FTYPE
+				FTYPE = FeatureType.COUNT 
+
 
 
 def DisplayConfigurations():
