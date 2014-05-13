@@ -4,7 +4,6 @@ import tempfile
 import sys
 #from scipy.sparse import csr_matrix
 from Util import *
-from enum import Enum
 import re
 from copy import copy
 import itertools
@@ -28,7 +27,7 @@ def ConversionFunction(argin):
 		elif argin == FeatureRepresentation.STRING:
 			return str
 	
-class FeatureUnits(Enum):
+class FeatureUnits:
 	WORD = 'Words'
 	DEPENDENCY_PAIR = 'Dependency Pairs'
 	WORDS_AND_DEPENDENCY_PAIRS = 'Words and Dependency Pairs'
@@ -36,13 +35,15 @@ class FeatureUnits(Enum):
 	WORDS_AND_PREDICATE_ARGUMENT = "Words and Predicate Argument Components"
 	DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT = 'Dedependency Pairs and Predicate Argument Components'
 	ALL = 'Words, Dependency Pairs, and Predicate Argument Components'
+	BIGRAM = 'Bigram'
+	TRIGRAM = 'Trigram'
 
-class FeatureType(Enum):
+class FeatureType:
 	BINARY = 'BINARY'
 	TFIDF = 'TF-IDF'
 	COUNT = 'COUNT'
 
-class FeatureRepresentation(Enum):
+class FeatureRepresentation:
 	HASH = 'Hash'
 	STRING = 'String'
 
@@ -112,43 +113,6 @@ def DisplayConfiguration():
 	print("FREP: " + FREP)
 	print("FTYPE: " + FTYPE)
 
-'''
-def DataType(argin):
-		if argin == FeatureType.BINARY:
-			return np.bool
-		elif argin == FeatureType.TFIDF:
-			return np.float16
-		elif argin == FeatureType.COUNT:
-			return np.dtype(int)
-		elif argin == FeatureRepresentation.HASH:
-			return np.dtype(int)
-		elif argin == FeatureRepresentation.STRING:
-			return np.object
-
-def ConversionFunction(argin):
-		if argin == FeatureRepresentation.HASH:
-			return hash
-		elif argin == FeatureRepresentation.STRING:
-			return str
-	
-class FeatureUnits(Enum):
-	WORD = 'Words'
-	DEPENDENCY_PAIR = 'Dependency Pairs'
-	WORDS_AND_DEPENDENCY_PAIRS = 'Words and Dependency Pairs'
-	PREDICATE_ARGUMENT = "Predicate Argument Components"
-	WORDS_AND_PREDICATE_ARGUMENT = "Words and Predicate Argument Components"
-	DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT = 'Dedependency Pairs and Predicate Argument Components'
-	ALL = 'Words, Dependency Pairs, and Predicate Argument Components'
-
-class FeatureType(Enum):
-	BINARY = 'BINARY'
-	TFIDF = 'TF-IDF'
-	COUNT = 'COUNT'
-
-class FeatureRepresentation(Enum):
-	HASH = 'Hash'
-	STRING = 'String'
-'''
 class Word:
 	"""
 		A Word object consists of the following fields:
@@ -209,6 +173,50 @@ class Word:
 						return self.form 
 					else:
 						return self.form.lower()
+
+	def __hash__(self):
+		return hash(str(self))
+
+
+class Bigram:
+	"""
+
+	"""
+	def __init__(self, word_one, word_two, sentenceNo):
+		self.word_one = word_one
+		self.word_two = word_two
+		self.sentenceNo = sentenceNo
+
+	def __eq__(self, other):
+		return self.word_one == other.word_one and self.word_two == other.word_two
+
+	def __ne__(self, other):
+		return not self.eq(other)
+
+	def __str__(self):
+		return str(self.word_one) + " " + str(self.word_two)
+
+	def __hash__(self):
+		return hash(str(self))
+
+class Trigram:
+	"""
+
+	"""
+	def __init__(self, word_one, word_two, word_three, sentenceNo):
+		self.word_one = word_one
+		self.word_two = word_two
+		self.word_three = word_three
+		self.sentenceNo = sentenceNo
+
+	def __eq__(self, other):
+		return self.word_one == other.word_one and self.word_two == other.word_two and self.word_three == other.word_three
+
+	def __ne__(self, other):
+		return not self.eq(other)
+
+	def __str__(self):
+		return str(self.word_one) + " " + str(self.word_two) + str(self.word_three)
 
 	def __hash__(self):
 		return hash(str(self))
@@ -528,6 +536,15 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.WORD, remove=True):
 	PredArgs = list()
 
 	keepers = KeeperPOS()
+
+
+	# Bigram and trigram
+	
+
+
+
+
+
 
 	if funit  in [FeatureUnits.WORD, FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS, FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT, FeatureUnits.ALL]:
 		f = open(filename, 'r')
