@@ -48,40 +48,143 @@ def test001Word2VecHash():
 	assert (len(vec1ad)==len(vec1))
 
 def test002LookForDuplicateHash():
-	
+	'''Checks if there are collisions among hashes'''
+		
 	Features.USE_LEMMA = False
 	Features.CASE_SENSITIVE = True
-#	Features.REMOVE_FEATURES_APPEARING_IN_ONLY_ONE_DOCUMENT = False
-#	Features.REMOVE_FEATURES_ONLY_APPEARING_ONE_TIME = False
-#	Features.DisplayConfiguration()
 	
-	
-#	(fdef, X) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.WORD,frep=Features.FeatureRepresentation.STRING)
-#	(fdef2, X2) = Features.Features('../data_sets/unit_test2/train/', ftype=Features.FeatureType.COUNT,funit=Features.FeatureUnits.WORD,frep=Features.FeatureRepresentation.HASH)
-	
-	# Loads all the units from all the documents
-#	all_units = Features.LoadAllUnitsFromFiles('../data_sets/small/train/', funit=Features.FeatureUnits.WORD, keep_duplicates=False, remove_stop_words=False)
+	###########################################FOR WORDS########################################
 	all_units = Features.LoadAllUnitsFromFiles('../data_sets/reuters_21578/train copy/', funit=Features.FeatureUnits.WORD, keep_duplicates=False, remove_stop_words=False)
 
 	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.WORD) 
 	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.WORD) 
 
-	# Rearrange the feature_string so that it can be used for broadcasting
-	#feature_hash = feature_hash.reshape([feature_hash.shape[0], 1])	
-	#feature_string = feature_string.reshape([feature_string.shape[0], 1])	
-	print("\nFeature String Definition:")
-	print(feature_string)
-	print("\nFeature Hash Definition:")
-	print(feature_hash)
 
 	set_string = set(feature_string)
 	set_hash = set(feature_hash) 
 	
-	print("length of string set: " + str(len(set_string)))
-	print("length of hash set: " + str(len(set_hash)))
+	print("length of string set (words): " + str(len(set_string)))
+	print("length of hash set (words): " + str(len(set_hash)))
 	
 	assert(len(set_string)==len(set_hash))
 	
+	########################################FOR DEPENDENCY PAIRS########################################
+	all_units = Features.LoadAllUnitsFromFiles('../data_sets/reuters_21578/train copy/', funit=Features.FeatureUnits.DEPENDENCY_PAIR, keep_duplicates=False, remove_stop_words=False)
 	
+	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.DEPENDENCY_PAIR) 
+	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.DEPENDENCY_PAIR) 
+	
+	print("\nFeature String Definition:")
+	print(feature_string)
+	print("\nFeature Hash Definition:")
+	print(feature_hash)
+	
+	set_string = set(feature_string)
+	set_hash = set(feature_hash) 
+	
+	print("length of string set (dependency pairs): " + str(len(set_string)))
+	print("length of hash set (dependency pairs): " + str(len(set_hash)))
+	
+	assert(len(set_string)==len(set_hash))	
+	
+	########################################FOR WORDS AND DEPENDENCY PAIRS########################################
+	
+	all_units = Features.LoadAllUnitsFromFiles('../data_sets/reuters_21578/train copy/', funit=Features.FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS, keep_duplicates=False, remove_stop_words=False)
+	
+	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS) 
+	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS) 
+	
+	print("\nFeature String Definition:")
+	print(feature_string)
+	print("\nFeature Hash Definition:")
+	print(feature_hash)
+	
+	set_string = set(feature_string)
+	set_hash = set(feature_hash) 
+	
+	print("length of string set (words and dependency pairs): " + str(len(set_string)))
+	print("length of hash set (words and dependency pairs): " + str(len(set_hash)))
+	
+	assert(len(set_string)==len(set_hash))		
+	
+	
+	########################################FOR PREDICATE ARGUMENT########################################
+	
+	all_units = Features.LoadAllUnitsFromFiles('../data_sets/reuters_21578/train copy/', funit=Features.FeatureUnits.PREDICATE_ARGUMENT, keep_duplicates=False, remove_stop_words=False)
+	
+	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.PREDICATE_ARGUMENT) 
+	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.PREDICATE_ARGUMENT) 
+	
+	print("\nFeature String Definition:")
+	print(feature_string)
+	print("\nFeature Hash Definition:")
+	print(feature_hash)
+	
+	set_string = set(feature_string)
+	set_hash = set(feature_hash) 
+	
+	print("length of string set (predicate argument): " + str(len(set_string)))
+	print("length of hash set (predicate argument): " + str(len(set_hash)))
+	
+	assert(len(set_string)==len(set_hash))	
+
+	########################################FOR WORDS AND PREDICATE ARGUMENT########################################
+	
+	all_units = Features.LoadAllUnitsFromFiles('../data_sets/reuters_21578/train copy/', funit=Features.FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT, keep_duplicates=False, remove_stop_words=False)
+	
+	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT) 
+	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT) 
+	
+	print("\nFeature String Definition:")
+	print(feature_string)
+	print("\nFeature Hash Definition:")
+	print(feature_hash)
+	
+	set_string = set(feature_string)
+	set_hash = set(feature_hash)
+	
+	print("length of string set (words and predicate argument): " + str(len(set_string)))
+	print("length of hash set (words and predicate argument): " + str(len(set_hash)))
+	
+	assert(len(set_string)==len(set_hash))
+	
+	########################################FOR DEPENDENCY PAIRS AND PREDICATE ARGUMENT########################################
+	all_units = Features.LoadAllUnitsFromFiles('../data_sets/reuters_21578/train copy/', funit=Features.FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT, keep_duplicates=False, remove_stop_words=False)
+	
+	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT) 
+	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT) 
+	
+	print("\nFeature String Definition:")
+	print(feature_string)
+	print("\nFeature Hash Definition:")
+	print(feature_hash)
+	
+	set_string = set(feature_string)
+	set_hash = set(feature_hash)
+	
+	print("length of string set (dependency pairs and predicate argument): " + str(len(set_string)))
+	print("length of hash set (dependency pairs and predicate argument): " + str(len(set_hash)))
+	
+	assert(len(set_string)==len(set_hash))		
+	
+	########################################ALL########################################
+	all_units = Features.LoadAllUnitsFromFiles('../data_sets/reuters_21578/train copy/', funit=Features.FeatureUnits.ALL, keep_duplicates=False, remove_stop_words=False)
+	
+	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.ALL) 
+	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.ALL) 
+	
+	print("\nFeature String Definition:")
+	print(feature_string)
+	print("\nFeature Hash Definition:")
+	print(feature_hash)
+	
+	set_string = set(feature_string)
+	set_hash = set(feature_hash)
+	
+	print("length of string set (all): " + str(len(set_string)))
+	print("length of hash set (all): " + str(len(set_hash)))
+	
+	assert(len(set_string)==len(set_hash))				
+
 	
 runAllTests()
