@@ -4,7 +4,7 @@ import sys
 import random
 
 def runAllTests(): 
-#	test001Word2VecHash()
+	test001Word2VecHash()
 	test002LookForDuplicateHash()
 	sys.stdout.write("\nTESTS FINISHED SUCCESSFULLY!!!")
 
@@ -187,4 +187,4 @@ def test002LookForDuplicateHash():
 	assert(len(set_string)==len(set_hash))				
 
 	
-runAllTests()
+#runAllTests()
