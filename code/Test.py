@@ -52,9 +52,9 @@ def test002LookForDuplicateHash():
 		
 	Features.USE_LEMMA = False
 	Features.CASE_SENSITIVE = True
-	
+	parsedFilesDirectory = '../data_sets/reuters_21578/train copy/'
 	###########################################FOR WORDS########################################
-	all_units = Features.LoadAllUnitsFromFiles('../data_sets/reuters_21578/train copy/', funit=Features.FeatureUnits.WORD, keep_duplicates=False, remove_stop_words=False)
+	all_units = Features.LoadAllUnitsFromFiles(parsedFilesDirectory, funit=Features.FeatureUnits.WORD, keep_duplicates=False, remove_stop_words=False)
 
 	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.WORD) 
 	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.WORD) 
@@ -69,7 +69,7 @@ def test002LookForDuplicateHash():
 	assert(len(set_string)==len(set_hash))
 	
 	########################################FOR DEPENDENCY PAIRS########################################
-	all_units = Features.LoadAllUnitsFromFiles('../data_sets/reuters_21578/train copy/', funit=Features.FeatureUnits.DEPENDENCY_PAIR, keep_duplicates=False, remove_stop_words=False)
+	all_units = Features.LoadAllUnitsFromFiles(parsedFilesDirectory, funit=Features.FeatureUnits.DEPENDENCY_PAIR, keep_duplicates=False, remove_stop_words=False)
 	
 	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.DEPENDENCY_PAIR) 
 	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.DEPENDENCY_PAIR) 
@@ -89,7 +89,7 @@ def test002LookForDuplicateHash():
 	
 	########################################FOR WORDS AND DEPENDENCY PAIRS########################################
 	
-	all_units = Features.LoadAllUnitsFromFiles('../data_sets/reuters_21578/train copy/', funit=Features.FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS, keep_duplicates=False, remove_stop_words=False)
+	all_units = Features.LoadAllUnitsFromFiles(parsedFilesDirectory, funit=Features.FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS, keep_duplicates=False, remove_stop_words=False)
 	
 	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS) 
 	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS) 
@@ -110,7 +110,7 @@ def test002LookForDuplicateHash():
 	
 	########################################FOR PREDICATE ARGUMENT########################################
 	
-	all_units = Features.LoadAllUnitsFromFiles('../data_sets/reuters_21578/train copy/', funit=Features.FeatureUnits.PREDICATE_ARGUMENT, keep_duplicates=False, remove_stop_words=False)
+	all_units = Features.LoadAllUnitsFromFiles(parsedFilesDirectory, funit=Features.FeatureUnits.PREDICATE_ARGUMENT, keep_duplicates=False, remove_stop_words=False)
 	
 	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.PREDICATE_ARGUMENT) 
 	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.PREDICATE_ARGUMENT) 
@@ -130,7 +130,7 @@ def test002LookForDuplicateHash():
 
 	########################################FOR WORDS AND PREDICATE ARGUMENT########################################
 	
-	all_units = Features.LoadAllUnitsFromFiles('../data_sets/reuters_21578/train copy/', funit=Features.FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT, keep_duplicates=False, remove_stop_words=False)
+	all_units = Features.LoadAllUnitsFromFiles(parsedFilesDirectory, funit=Features.FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT, keep_duplicates=False, remove_stop_words=False)
 	
 	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT) 
 	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT) 
@@ -149,7 +149,7 @@ def test002LookForDuplicateHash():
 	assert(len(set_string)==len(set_hash))
 	
 	########################################FOR DEPENDENCY PAIRS AND PREDICATE ARGUMENT########################################
-	all_units = Features.LoadAllUnitsFromFiles('../data_sets/reuters_21578/train copy/', funit=Features.FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT, keep_duplicates=False, remove_stop_words=False)
+	all_units = Features.LoadAllUnitsFromFiles(parsedFilesDirectory, funit=Features.FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT, keep_duplicates=False, remove_stop_words=False)
 	
 	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT) 
 	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT) 
@@ -168,7 +168,7 @@ def test002LookForDuplicateHash():
 	assert(len(set_string)==len(set_hash))		
 	
 	########################################ALL########################################
-	all_units = Features.LoadAllUnitsFromFiles('../data_sets/reuters_21578/train copy/', funit=Features.FeatureUnits.ALL, keep_duplicates=False, remove_stop_words=False)
+	all_units = Features.LoadAllUnitsFromFiles(parsedFilesDirectory, funit=Features.FeatureUnits.ALL, keep_duplicates=False, remove_stop_words=False)
 	
 	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.ALL) 
 	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.ALL) 
@@ -187,4 +187,4 @@ def test002LookForDuplicateHash():
 	assert(len(set_string)==len(set_hash))				
 
 	
-#runAllTests()
+runAllTests()
