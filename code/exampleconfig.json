@@ -1,0 +1,14 @@
+{
+	"USE LEMMA": "True",
+	"CASE SENSITIVE": "False", 
+	"USE POS TAGS":  "False",
+	"USE DEP TAGS": "False",
+	"USE ARG LABELS": "False", 
+	"REMOVE SINGLE CHARACTERS": "True", 
+	"REMOVE FEATURES APPEARING IN ONLY ONE DOCUMENT": "True",
+	"REMOVE FEATURES ONLY APPEARING ONE TIME": "True",
+	"USE MEMORY MAP": "False", 
+	"FUNIT":  "Word",
+	"FREP":  "Hash",
+	"FTYPE": "Binary"
+}
