@@ -96,7 +96,6 @@ FTYPE = FeatureType.TFIDF
 
 def SetConfigurations(jsonfile):
 	configs = json.load(open(jsonfile))
-	print configs
 	for key in configs:
 		if 'lemma' in key.lower():
 			global USE_LEMMA
