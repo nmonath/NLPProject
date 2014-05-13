@@ -16,7 +16,7 @@ def DataType(argin):
 		elif argin == FeatureType.TFIDF:
 			return np.float16
 		elif argin == FeatureType.COUNT:
-			return np.dtype(int)
+			return np.dtype('uint32')
 		elif argin == FeatureRepresentation.HASH:
 			return np.dtype(int)
 		elif argin == FeatureRepresentation.STRING:
