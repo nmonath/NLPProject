@@ -36,6 +36,16 @@
   Feature  & Feature  & Lemmatized & Case  &  POS  &  Dependency  &  Argument  & Classifier & Classifier  & Accuracy & Micro F1 & Macro F1 \\
   Unit & Type & Sensitive & Tags &  Labels &  Labels & & Settings & & & &  \\
   \hline
+  Words & Binary & True & False & False & False & False & Linear SVM & C=0.1 & 0.976666666667 & 0.976666666667 & 0.9766983365 \\ 
+Words & Binary & True & False & False & False & False & Linear SVM & C=0.25 & 0.976666666667 & 0.976666666667 & 0.9766983365 \\ 
+Words & Binary & True & False & False & False & False & Linear SVM & C=0.5 & 0.98 & 0.98 & 0.980016333742 \\ 
+Words & Binary & True & False & False & False & False & Linear SVM & C=0.75 & 0.976666666667 & 0.976666666667 & 0.9766983365 \\ 
+Words & Binary & True & False & False & False & False & Linear SVM & C=1 & 0.976666666667 & 0.976666666667 & 0.9766983365 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=0.1 & 0.986666666667 & 0.986666666667 & 0.986649832912 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=0.25 & 0.986666666667 & 0.986666666667 & 0.986649832912 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=0.5 & 0.99 & 0.99 & 0.989983166246 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=0.75 & 0.99 & 0.99 & 0.989983166246 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=1 & 0.986666666667 & 0.986666666667 & 0.986666666667 \\ 
 Words & Count & True & False & False & False & False & Linear SVM & C=0.1 & 0.93 & 0.93 & 0.930283224401 \\ 
 Words & Count & True & False & False & False & False & Linear SVM & C=0.25 & 0.953333333333 & 0.953333333333 & 0.953443304162 \\ 
 Words & Count & True & False & False & False & False & Linear SVM & C=0.5 & 0.956666666667 & 0.956666666667 & 0.956788521087 \\ 
@@ -52,6 +62,36 @@ Words & Count & True & False & False & False & False & Linear SVM & C=1 & 0.9666
   Feature  & Feature  & Lemmatized & Case  &  POS  &  Dependency  &  Argument  & Classifier & Classifier  & Class & Num & Precision & Recall & F1 \\
   Unit & Type & Sensitive & Tags &  Labels &  Labels & & Settings & &  & Samples & & &  \\
   \hline
+  Words & Binary & True & False & False & False & False & Linear SVM & C=0.1 & rec.motorcycles & 100 & 0.989795918367 & 0.97 & 0.979797979798 \\ 
+Words & Binary & True & False & False & False & False & Linear SVM & C=0.1 & rec.sport.hockey & 100 & 0.960784313725 & 0.98 & 0.970297029703 \\ 
+Words & Binary & True & False & False & False & False & Linear SVM & C=0.1 & soc.religion.christian & 100 & 0.98 & 0.98 & 0.98 \\ 
+Words & Binary & True & False & False & False & False & Linear SVM & C=0.25 & rec.motorcycles & 100 & 0.989795918367 & 0.97 & 0.979797979798 \\ 
+Words & Binary & True & False & False & False & False & Linear SVM & C=0.25 & rec.sport.hockey & 100 & 0.960784313725 & 0.98 & 0.970297029703 \\ 
+Words & Binary & True & False & False & False & False & Linear SVM & C=0.25 & soc.religion.christian & 100 & 0.98 & 0.98 & 0.98 \\ 
+Words & Binary & True & False & False & False & False & Linear SVM & C=0.5 & rec.motorcycles & 100 & 0.989898989899 & 0.98 & 0.984924623116 \\ 
+Words & Binary & True & False & False & False & False & Linear SVM & C=0.5 & rec.sport.hockey & 100 & 0.970297029703 & 0.98 & 0.975124378109 \\ 
+Words & Binary & True & False & False & False & False & Linear SVM & C=0.5 & soc.religion.christian & 100 & 0.98 & 0.98 & 0.98 \\ 
+Words & Binary & True & False & False & False & False & Linear SVM & C=0.75 & rec.motorcycles & 100 & 0.989795918367 & 0.97 & 0.979797979798 \\ 
+Words & Binary & True & False & False & False & False & Linear SVM & C=0.75 & rec.sport.hockey & 100 & 0.960784313725 & 0.98 & 0.970297029703 \\ 
+Words & Binary & True & False & False & False & False & Linear SVM & C=0.75 & soc.religion.christian & 100 & 0.98 & 0.98 & 0.98 \\ 
+Words & Binary & True & False & False & False & False & Linear SVM & C=1 & rec.motorcycles & 100 & 0.989795918367 & 0.97 & 0.979797979798 \\ 
+Words & Binary & True & False & False & False & False & Linear SVM & C=1 & rec.sport.hockey & 100 & 0.960784313725 & 0.98 & 0.970297029703 \\ 
+Words & Binary & True & False & False & False & False & Linear SVM & C=1 & soc.religion.christian & 100 & 0.98 & 0.98 & 0.98 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=0.1 & rec.motorcycles & 100 & 0.989898989899 & 0.98 & 0.984924623116 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=0.1 & rec.sport.hockey & 100 & 0.990099009901 & 1.0 & 0.995024875622 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=0.1 & soc.religion.christian & 100 & 0.98 & 0.98 & 0.98 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=0.25 & rec.motorcycles & 100 & 0.989898989899 & 0.98 & 0.984924623116 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=0.25 & rec.sport.hockey & 100 & 0.990099009901 & 1.0 & 0.995024875622 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=0.25 & soc.religion.christian & 100 & 0.98 & 0.98 & 0.98 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=0.5 & rec.motorcycles & 100 & 0.99 & 0.99 & 0.99 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=0.5 & rec.sport.hockey & 100 & 0.990099009901 & 1.0 & 0.995024875622 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=0.5 & soc.religion.christian & 100 & 0.989898989899 & 0.98 & 0.984924623116 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=0.75 & rec.motorcycles & 100 & 0.99 & 0.99 & 0.99 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=0.75 & rec.sport.hockey & 100 & 0.990099009901 & 1.0 & 0.995024875622 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=0.75 & soc.religion.christian & 100 & 0.989898989899 & 0.98 & 0.984924623116 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=1 & rec.motorcycles & 100 & 0.99 & 0.99 & 0.99 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=1 & rec.sport.hockey & 100 & 0.99 & 0.99 & 0.99 \\ 
+Words & tf-idf & True & False & False & False & False & Linear SVM & C=1 & soc.religion.christian & 100 & 0.98 & 0.98 & 0.98 \\ 
 Words & Count & True & False & False & False & False & Linear SVM & C=0.1 & rec.motorcycles & 100 & 0.938775510204 & 0.92 & 0.929292929293 \\ 
 Words & Count & True & False & False & False & False & Linear SVM & C=0.1 & rec.sport.hockey & 100 & 0.969387755102 & 0.95 & 0.959595959596 \\ 
 Words & Count & True & False & False & False & False & Linear SVM & C=0.1 & soc.religion.christian & 100 & 0.884615384615 & 0.92 & 0.901960784314 \\ 
