@@ -1,40 +1,48 @@
- \documentclass{article}
+\documentclass[11pt]{article}
+\usepackage{etex}
 \usepackage{amssymb}
 \usepackage[paperwidth=20in, paperheight=40in]{geometry}
+\usepackage[table]{xcolor}
 \usepackage{amsmath,graphicx}
 \usepackage{algorithm}
-\usepackage[usenames,dvipsnames]{color}
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
 \usepackage{alphalph}
 \usepackage{listings}
 \usepackage{float}
 \usepackage{caption}
+\usepackage{amsmath}
 \usepackage{subcaption}
 \usepackage{tabularx}
 \usepackage{framed}
 \usepackage{tabu}
 \usepackage{booktabs}
-\usepackage{fancyheadings}
 \usepackage{tikz}
-\usepackage{lscape}
+\usepackage[stable]{footmisc}
+\usepackage{titlesec}
+\usepackage{setspace}
+ \usepackage{alltt} 
+\usepackage{hyperref}
+\usepackage{pgfplots}
+\definecolor{shadecolor}{rgb}{0.82,0.82,0.82}
 
-
-
-
-\pagestyle{fancy}
+\definecolor{tableShade}{gray}{0.9}
+\colorlet{tableheadcolor}{black!90} % Table header colour = 25% gray
+\newcommand{\headcol}{\rowcolor{tableheadcolor}} %
+\rowcolors{3}{tableShade}{white}  %% start alternating shades from 3rd row
 
   \begin{document}
   \title{NLP Project Results}
 
   \maketitle
-  
-\section{Overall Results}
+ 
+ \section{Classification}
+\subsection{Overall Results}
     
   \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
   \hline
-  Feature  & Feature  & Lemmatized & Case  &  POS  &  Dependency  &  Argument  & Classifier & Classifier  & Accuracy & Micro F1 & Macro F1 \\
-  Unit & Type & Sensitive & Tags &  Labels &  Labels & & Settings & & & &  \\
+  \headcol \color{white}  Feature  & \color{white}  Feature  &  \color{white}  Lemmatized & \color{white}  Case  & \color{white}   POS  & \color{white}   Dependency  &  \color{white}  Argument  &  \color{white}  Classifier &  \color{white}  Classifier  & \color{white}  Accuracy & \color{white}  Micro F1 & \color{white}  Macro F1 \\
+\headcol  \color{white}  Unit &  \color{white}  Type & \color{white}  Sensitive &  \color{white} Tags &  \color{white} Labels &  \color{white} Labels & & \color{white} Settings & & & &  \\
   \hline
   Words & Binary & True & False & False & False & False & Linear SVM & C=0.1 & 0.976666666667 & 0.976666666667 & 0.9766983365 \\ 
 Words & Binary & True & False & False & False & False & Linear SVM & C=0.25 & 0.976666666667 & 0.976666666667 & 0.9766983365 \\ 
@@ -55,12 +63,12 @@ Words & Count & True & False & False & False & False & Linear SVM & C=1 & 0.9666
   \end{tabular}
   
   \clearpage
-  \section{Per Class Results}
+  \subsection{Per Class Results}
     
   \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
   \hline
-  Feature  & Feature  & Lemmatized & Case  &  POS  &  Dependency  &  Argument  & Classifier & Classifier  & Class & Num & Precision & Recall & F1 \\
-  Unit & Type & Sensitive & Tags &  Labels &  Labels & & Settings & &  & Samples & & &  \\
+\headcol \color{white}   Feature  & \color{white}  Feature  &  \color{white} Lemmatized & \color{white} Case  & \color{white}   POS  & \color{white}   Dependency  &  \color{white}  Argument  & \color{white}  Classifier & \color{white}  Classifier  & \color{white}  Class & \color{white} Num &\color{white}  Precision & \color{white}  Recall & \color{white}  F1 \\
+ \headcol \color{white} Unit & \color{white} Type & \color{white} Sensitive & \color{white} Tags & \color{white}  Labels &  \color{white} Labels & &  \color{white} Settings & &  & \color{white} Samples & & &  \\
   \hline
   Words & Binary & True & False & False & False & False & Linear SVM & C=0.1 & rec.motorcycles & 100 & 0.989795918367 & 0.97 & 0.979797979798 \\ 
 Words & Binary & True & False & False & False & False & Linear SVM & C=0.1 & rec.sport.hockey & 100 & 0.960784313725 & 0.98 & 0.970297029703 \\ 
@@ -110,6 +118,20 @@ Words & Count & True & False & False & False & False & Linear SVM & C=1 & soc.re
 \hline
   \end{tabular}
   
+  \clearpage
+ \section{Clustering}
+ 
+ \subsection{Overall Results}
+ 
+   \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+  \hline
+  \headcol \color{white}  Feature  & \color{white}  Feature  & \color{white}  Lemmatized & \color{white}  Case  & \color{white}   POS  & \color{white}   Dependency  & \color{white}   Argument  & \color{white}  Clustering  & \color{white} Settings  & \color{white} Purity & \color{white} NMI &\color{white}  Adjusted \\
+\headcol  \color{white} Unit & \color{white}  Type & \color{white}  Sensitive & \color{white}  Tags & \color{white}   Labels &  \color{white}  Labels & \color{white}  Labels & \color{white}  Algorithm   & & & &  \color{white} Rand Index  \\
+  \hline
+  Words & Count & True & False & False & False & False & k-means & k=3 & 0.516666666667 & 0.142957602135 & 0.161597278217 \\ 
+
+  \hline
   
+  \end{tabular} 
   
   \end{document}
