@@ -1,7 +1,7 @@
 import numpy as np
 from scipy import stats
 
-def Purity(cluster_labels, true_labels, return_per_cluster=False):
+def Purity(true_labels, cluster_labels, return_per_cluster=False):
 	"""
 	purity = \frac{1}{NumDoc} \sum_k max_j |w_k \cap c_j| where w_k is the kth cluster and c_j is jth class label
 	Follows: http://nlp.stanford.edu/IR-book/html/htmledition/evaluation-of-clustering-1.html#fig:clustfg3

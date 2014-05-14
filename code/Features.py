@@ -94,6 +94,9 @@ global FTYPE
 FTYPE = FeatureType.TFIDF
 
 
+global PRINTING
+PRINTING = False
+
 def SetConfigurations(jsonfile):
 	configs = json.load(open(jsonfile))
 	for key in configs:
@@ -134,43 +137,32 @@ def SetConfigurations(jsonfile):
 			global FUNIT
 			FUNIT = configs[key].encode('ascii').encode('ascii').lower()
 			if 'all' in FUNIT or ('pred' in FUNIT and 'word' in FUNIT and 'dep' in FUNIT):
-				global FUNIT
 				FUNIT = FeatureUnits.ALL
 			elif 'pred' in FUNIT and 'word' in FUNIT:
-				global FUNIT
 				FUNIT = FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT
 			elif 'dep' in FUNIT and 'word' in FUNIT:
-				global FUNIT
 				FUNIT = FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS
 			elif 'word' in FUNIT:
-				global FUNIT
 				FUNIT = FeatureUnits.WORD
 			elif 'dep' in FUNIT:
-				global FUNIT
 				FUNIT = FeatureUnits.DEPENDENCY_PAIR
 			elif 'pred' in FUNIT:
-				global FUNIT
 				FUNIT in FeatureUnits.PREDICATE_ARGUMENT
 		elif 'rep' in key.lower():
 			global FREP
 			FREP = configs[key].encode('ascii').lower()
 			if 'hash' in FREP:
-				global FREP
 				FREP = FeatureRepresentation.HASH
 			elif 'str' in FREP:
-				global FREP
 				FREP = FeatureRepresentation.STRING
 		elif 'type' in key.lower():
 			global FTYPE
 			FTYPE = configs[key].encode('ascii').lower()
 			if 'tf' in FTYPE and 'idf' in FTYPE:
-				global FTYPE
 				FTYPE = FeatureType.TFIDF
 			elif 'bin' in FTYPE:
-				global FTYPE
 				FTYPE = FeatureType.BINARY
 			elif 'count' in FTYPE:
-				global FTYPE
 				FTYPE = FeatureType.COUNT 
 
 
@@ -426,14 +418,16 @@ def Features(dirname, funit=None, ftype=None, frep=None, feature=None, K=0.5):
 	all_units = 0;
 
 	# Just to keep track on what has been done
-	sys.stdout.write("\nExtracting Features, Documents Processed: 00000")
+	if PRINTING:
+		sys.stdout.write("\nExtracting Features, Documents Processed: 00000")
 
 	# iterate over all the files in the directory
 	for filename in os.listdir(dirname):
 		if '.srl' in filename:
 			features[count, :] = ExtractFeature(feature, Convert(ReadDependencyParseFile(os.path.join(dirname, filename), remove=True, funit=funit), frep=frep, funit=funit),ftype=ftype)
 			count = count + 1
-			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5)) # print just to see code is progressing
+			if PRINTING:
+				sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5)) # print just to see code is progressing
 
 	# Feature Reduction
 	if not is_testing:
@@ -585,11 +579,13 @@ def KeeperPOS():
 def LoadAllUnitsFromFiles(dirname, funit=FeatureUnits.WORD, keep_duplicates=False, remove_stop_words=True):
 	deps = []
 	count = 0
-	sys.stdout.write("\nDocuments Processed: 00000")
+	if PRINTING:
+		sys.stdout.write("\nDocuments Processed: 00000")
 	for filename in os.listdir(dirname):
 		if '.srl' in filename:
 			count = count + 1
-			sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5))
+			if PRINTING:
+				sys.stdout.write("\b\b\b\b\b" + str(count).zfill(5))
 			if keep_duplicates:
 				deps.extend((ReadDependencyParseFile(os.path.join(dirname, filename), remove=remove_stop_words, funit=funit)))
 			else:
