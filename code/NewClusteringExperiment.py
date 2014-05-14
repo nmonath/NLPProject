@@ -101,7 +101,7 @@ def ScoreClustering(FeatureType, XTrain, YTrain, YLabels, clusterers):
 
 
 	print(record_1)
-	print("\n" + '%' * 40 + "\n")
+	print("\n\n")
 
 
 RunClusteringExperiment(sys.argv[1], sys.argv[2])
