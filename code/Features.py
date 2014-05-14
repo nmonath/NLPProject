@@ -16,7 +16,7 @@ def DataType(argin):
 		elif argin == FeatureType.TFIDF:
 			return np.float16
 		elif argin == FeatureType.COUNT:
-			return np.dtype(int)
+			return np.dtype('uint32')
 		elif argin == FeatureRepresentation.HASH:
 			return np.dtype(int)
 		elif argin == FeatureRepresentation.STRING:
@@ -96,7 +96,6 @@ FTYPE = FeatureType.TFIDF
 
 def SetConfigurations(jsonfile):
 	configs = json.load(open(jsonfile))
-	print configs
 	for key in configs:
 		if 'lemma' in key.lower():
 			global USE_LEMMA
