@@ -49,10 +49,12 @@ def test001Word2VecHash():
 
 def test002LookForDuplicateHash():
 	'''Checks if there are collisions among hashes'''
-		
+	
 	Features.USE_LEMMA = False
 	Features.CASE_SENSITIVE = True
-	parsedFilesDirectory = '../data_sets/reuters_21578/train copy/'
+#	parsedFilesDirectory = '../data_sets/reuters_21578/train copy/'
+	parsedFilesDirectory = '../data_sets/20_news_groups/train/'
+	
 	###########################################FOR WORDS########################################
 	all_units = Features.LoadAllUnitsFromFiles(parsedFilesDirectory, funit=Features.FeatureUnits.WORD, keep_duplicates=False, remove_stop_words=False)
 
@@ -107,7 +109,6 @@ def test002LookForDuplicateHash():
 	
 	assert(len(set_string)==len(set_hash))		
 	
-	
 	########################################FOR PREDICATE ARGUMENT########################################
 	
 	all_units = Features.LoadAllUnitsFromFiles(parsedFilesDirectory, funit=Features.FeatureUnits.PREDICATE_ARGUMENT, keep_duplicates=False, remove_stop_words=False)
@@ -129,7 +130,6 @@ def test002LookForDuplicateHash():
 	assert(len(set_string)==len(set_hash))	
 
 	########################################FOR WORDS AND PREDICATE ARGUMENT########################################
-	
 	all_units = Features.LoadAllUnitsFromFiles(parsedFilesDirectory, funit=Features.FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT, keep_duplicates=False, remove_stop_words=False)
 	
 	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT) 
@@ -165,9 +165,9 @@ def test002LookForDuplicateHash():
 	print("length of string set (dependency pairs and predicate argument): " + str(len(set_string)))
 	print("length of hash set (dependency pairs and predicate argument): " + str(len(set_hash)))
 	
-	assert(len(set_string)==len(set_hash))		
-	
+	assert(len(set_string)==len(set_hash))	
 	########################################ALL########################################
+	
 	all_units = Features.LoadAllUnitsFromFiles(parsedFilesDirectory, funit=Features.FeatureUnits.ALL, keep_duplicates=False, remove_stop_words=False)
 	
 	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.ALL) 
@@ -185,6 +185,175 @@ def test002LookForDuplicateHash():
 	print("length of hash set (all): " + str(len(set_hash)))
 	
 	assert(len(set_string)==len(set_hash))				
-
 	
+
+	########################################ALL WITH DEP TAGS, POS TAGS AND ARG TAGS########################################
+
+	Features.USE_DEP_TAGS = True
+	Features.USE_POS_TAGS = True
+	Features.USE_ARG_LABELS = True	
+	
+	all_units = Features.LoadAllUnitsFromFiles(parsedFilesDirectory, funit=Features.FeatureUnits.ALL, keep_duplicates=False, remove_stop_words=False)
+	
+	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.ALL) 
+	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.ALL) 
+	
+	print("\nFeature String Definition:")
+	print(feature_string)
+	print("\nFeature Hash Definition:")
+	print(feature_hash)
+	
+	set_string = set(feature_string)
+	set_hash = set(feature_hash)
+	
+	print("length of string set (all): " + str(len(set_string)))
+	print("length of hash set (all): " + str(len(set_hash)))
+	
+	assert(len(set_string)==len(set_hash))		
+	
+	########################################ALL WITH NO DEP TAGS, POS TAGS AND ARG TAGS########################################
+	
+	Features.USE_DEP_TAGS = False
+	Features.USE_POS_TAGS = True
+	Features.USE_ARG_LABELS = True	
+	
+	all_units = Features.LoadAllUnitsFromFiles(parsedFilesDirectory, funit=Features.FeatureUnits.ALL, keep_duplicates=False, remove_stop_words=False)
+	
+	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.ALL) 
+	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.ALL) 
+	
+	print("\nFeature String Definition:")
+	print(feature_string)
+	print("\nFeature Hash Definition:")
+	print(feature_hash)
+	
+	set_string = set(feature_string)
+	set_hash = set(feature_hash)
+	
+	print("length of string set (all): " + str(len(set_string)))
+	print("length of hash set (all): " + str(len(set_hash)))
+	
+	assert(len(set_string)==len(set_hash))	
+	########################################ALL WITH DEP TAGS, NO POS TAGS AND ARG TAGS########################################
+	
+	Features.USE_DEP_TAGS = True
+	Features.USE_POS_TAGS = False
+	Features.USE_ARG_LABELS = True	
+	
+	all_units = Features.LoadAllUnitsFromFiles(parsedFilesDirectory, funit=Features.FeatureUnits.ALL, keep_duplicates=False, remove_stop_words=False)
+	
+	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.ALL) 
+	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.ALL) 
+	
+	print("\nFeature String Definition:")
+	print(feature_string)
+	print("\nFeature Hash Definition:")
+	print(feature_hash)
+	
+	set_string = set(feature_string)
+	set_hash = set(feature_hash)
+	
+	print("length of string set (all): " + str(len(set_string)))
+	print("length of hash set (all): " + str(len(set_hash)))
+	
+	assert(len(set_string)==len(set_hash))
+	
+	########################################ALL WITH DEP TAGS, POS TAGS AND NO ARG TAGS########################################
+	
+	Features.USE_DEP_TAGS = True
+	Features.USE_POS_TAGS = True
+	Features.USE_ARG_LABELS = False	
+	
+	all_units = Features.LoadAllUnitsFromFiles(parsedFilesDirectory, funit=Features.FeatureUnits.ALL, keep_duplicates=False, remove_stop_words=False)
+	
+	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.ALL) 
+	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.ALL) 
+	
+	print("\nFeature String Definition:")
+	print(feature_string)
+	print("\nFeature Hash Definition:")
+	print(feature_hash)
+	
+	set_string = set(feature_string)
+	set_hash = set(feature_hash)
+	
+	print("length of string set (all): " + str(len(set_string)))
+	print("length of hash set (all): " + str(len(set_hash)))
+	
+	assert(len(set_string)==len(set_hash))	
+	
+	########################################ALL WITH NO DEP TAGS, NO POS TAGS AND ARG TAGS########################################
+	
+	Features.USE_DEP_TAGS = False
+	Features.USE_POS_TAGS = False
+	Features.USE_ARG_LABELS = True	
+	
+	all_units = Features.LoadAllUnitsFromFiles(parsedFilesDirectory, funit=Features.FeatureUnits.ALL, keep_duplicates=False, remove_stop_words=False)
+	
+	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.ALL) 
+	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.ALL) 
+	
+	print("\nFeature String Definition:")
+	print(feature_string)
+	print("\nFeature Hash Definition:")
+	print(feature_hash)
+	
+	set_string = set(feature_string)
+	set_hash = set(feature_hash)
+	
+	print("length of string set (all): " + str(len(set_string)))
+	print("length of hash set (all): " + str(len(set_hash)))
+	
+	assert(len(set_string)==len(set_hash))
+
+	########################################ALL WITH NO DEP TAGS, POS TAGS AND NO ARG TAGS########################################
+	
+	Features.USE_DEP_TAGS = False
+	Features.USE_POS_TAGS = True
+	Features.USE_ARG_LABELS = False	
+	
+	all_units = Features.LoadAllUnitsFromFiles(parsedFilesDirectory, funit=Features.FeatureUnits.ALL, keep_duplicates=False, remove_stop_words=False)
+	
+	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.ALL) 
+	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.ALL) 
+	
+	print("\nFeature String Definition:")
+	print(feature_string)
+	print("\nFeature Hash Definition:")
+	print(feature_hash)
+	
+	set_string = set(feature_string)
+	set_hash = set(feature_hash)
+	
+	print("length of string set (all): " + str(len(set_string)))
+	print("length of hash set (all): " + str(len(set_hash)))
+	
+	assert(len(set_string)==len(set_hash))	
+
+	########################################ALL WITH DEP TAGS, NO POS TAGS AND NO ARG TAGS########################################
+	
+	Features.USE_DEP_TAGS = True
+	Features.USE_POS_TAGS = False
+	Features.USE_ARG_LABELS = False	
+	
+	all_units = Features.LoadAllUnitsFromFiles(parsedFilesDirectory, funit=Features.FeatureUnits.ALL, keep_duplicates=False, remove_stop_words=False)
+	
+	feature_hash = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.HASH, funit=Features.FeatureUnits.ALL) 
+	feature_string = Features.DefineFeature(all_units, frep=Features.FeatureRepresentation.STRING, funit=Features.FeatureUnits.ALL) 
+	
+	print("\nFeature String Definition:")
+	print(feature_string)
+	print("\nFeature Hash Definition:")
+	print(feature_hash)
+	
+	set_string = set(feature_string)
+	set_hash = set(feature_hash)
+	
+	print("length of string set (all): " + str(len(set_string)))
+	print("length of hash set (all): " + str(len(set_hash)))
+	
+	assert(len(set_string)==len(set_hash))	
+	
+
+				
 runAllTests()
