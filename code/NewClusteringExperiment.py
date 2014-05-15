@@ -1,4 +1,4 @@
-import json
+import simplejson as json
 from sklearn.svm import LinearSVC
 import Features
 import Util

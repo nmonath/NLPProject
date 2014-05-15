@@ -10,7 +10,8 @@ import os
 from sklearn.preprocessing import normalize
 import sklearn.metrics
 
-
+global PRINTING
+PRINTING = False
 
 
 def RunClassificationExperiment(FeaturesJSON, ClassifierJSON):
@@ -39,10 +40,35 @@ def RunClassificationExperiment(FeaturesJSON, ClassifierJSON):
 
 	# Extract the features from training documents
 	(feature_def, x_train_count) = Features.Features(os.path.join(classifier_settings['Dataset'], 'train'), ftype=Features.FeatureType.COUNT)
+	if PRINTING:
+		print("\n\n min: "  + str(x_train_count.min()) + " max: " + str(x_train_count.max()) + "\n")
+		print('%' * 40)
+		print('Feature Definition')
+		fdef = list()
+		for i in xrange(0, feature_def.shape[0]):
+			fdef.append(feature_def[i][0])
+		fdef.sort()
+		for i in fdef:
+			print(i)
+		print('%' * 40)
+		print(len(set(feature_def.flatten())))
+		# Binary Features
+		print(csr_matrix(x_train_count))
 
-	# Binary Features
 	x_train_binary = Features.ToBINARY(x_train_count)
 	x_train_binary_normalized = csr_matrix(normalize(np.float32(x_train_binary)))
+
+
+	if PRINTING:
+		ff= np.float32(x_train_binary)
+		ff2 = normalize(ff)
+		print("\n\n"  + str(np.count_nonzero(x_train_binary)) + "\n")
+		print("\n\n min: "  + str(np.mean(ff)) + " max: " + str(np.mean(ff)) + "\n")
+		print(csr_matrix(ff))
+		print("\n\n min 2: "  + str(np.mean(ff2)) + " max 2: " + str(np.mean(ff2)) + "\n")	
+		x_train_binary_normalized = csr_matrix(ff2)
+		#print("\n\n min 3: "  + str(np.mean(x_train_binary_normalized)) + " max 3: " + str(np.mean(x_train_binary_normalized)) + "\n")	
+	
 	del x_train_binary
 
 	# tf-idf Features
@@ -63,7 +89,12 @@ def RunClassificationExperiment(FeaturesJSON, ClassifierJSON):
 	x_test_binary = Features.ToBINARY(x_test_count)
 	x_test_binary_normalized = csr_matrix(normalize(np.float32(x_test_binary)))
 	del x_test_binary
-
+	if PRINTING:
+		print ("\n\n" + str(ff2.item(0,51)) + "\n")
+		print(x_train_binary_normalized)
+		print(y_train)
+		print(y_test)
+		print(y_labels)
 	ScoreClassifiers('Binary', x_train_binary_normalized, y_train, x_test_binary_normalized,  y_test, y_labels, copy.deepcopy(classifiers))
 	del x_test_binary_normalized
 	del x_train_binary_normalized

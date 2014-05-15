@@ -11,22 +11,22 @@ import json
 
 
 def DataType(argin):
-		if argin == FeatureType.BINARY:
-			return np.bool
-		elif argin == FeatureType.TFIDF:
-			return np.float16
-		elif argin == FeatureType.COUNT:
-			return np.dtype('uint32')
-		elif argin == FeatureRepresentation.HASH:
-			return np.dtype(int)
-		elif argin == FeatureRepresentation.STRING:
-			return np.object
+	if argin == FeatureType.BINARY:
+		return np.bool
+	elif argin == FeatureType.TFIDF:
+		return np.float16
+	elif argin == FeatureType.COUNT:
+		return np.dtype('uint32')
+	elif argin == FeatureRepresentation.HASH:
+		return np.dtype(int)
+	elif argin == FeatureRepresentation.STRING:
+		return np.object
 
 def ConversionFunction(argin):
-		if argin == FeatureRepresentation.HASH:
-			return hash
-		elif argin == FeatureRepresentation.STRING:
-			return str
+	if argin == FeatureRepresentation.HASH:
+		return hash
+	elif argin == FeatureRepresentation.STRING:
+		return str
 	
 class FeatureUnits:
 	WORD = 'Words'
@@ -422,7 +422,9 @@ def Features(dirname, funit=None, ftype=None, frep=None, feature=None, K=0.5):
 		sys.stdout.write("\nExtracting Features, Documents Processed: 00000")
 
 	# iterate over all the files in the directory
-	for filename in os.listdir(dirname):
+	filenames = (os.listdir(dirname))
+	filenames.sort()
+	for filename in filenames:
 		if '.srl' in filename:
 			features[count, :] = ExtractFeature(feature, Convert(ReadDependencyParseFile(os.path.join(dirname, filename), remove=True, funit=funit), frep=frep, funit=funit),ftype=ftype)
 			count = count + 1
@@ -445,8 +447,10 @@ def Features(dirname, funit=None, ftype=None, frep=None, feature=None, K=0.5):
 		# Augmented Term Frequency
 		# TF = K * binaryTF + (1-K) * count/(maxcount)
 		# IDF = log (NumDocuments / Number of Documents which the term appears in)
-		TF = (K * (features > 0)) + ((1-K) *  features) / (1 + DataType(FeatureType.TFIDF)(np.max(features, axis=1))).reshape([features.shape[0], 1])
-		IDF = np.log(num_samples / (1 + DataType(FeatureType.TFIDF)(np.sum(features > 0, axis = 0))))
+		features = features.astype(DataType(FeatureType.TFIDF))
+		num_samples = features.shape[0]
+		TF = (K * (features > 0)) + ((1-K) *  features) / (1 + (np.max(features, axis=1))).reshape([features.shape[0], 1])
+		IDF = np.log(num_samples / (1 + (np.sum(features > 0, axis = 0, dtype=DataType(FeatureType.TFIDF)))))
 		features = TF * IDF
 		TF = 0
 		IDF = 0
@@ -462,9 +466,10 @@ def Features(dirname, funit=None, ftype=None, frep=None, feature=None, K=0.5):
 
 
 def ToTFIDF(features, K=0.5):
+	features = features.astype(DataType(FeatureType.TFIDF))
 	num_samples = features.shape[0]
-	TF = (K * (features > 0)) + ((1-K) *  features) / (1 + DataType(FeatureType.TFIDF)(np.max(features, axis=1))).reshape([features.shape[0], 1])
-	IDF = np.log(num_samples / (1 + DataType(FeatureType.TFIDF)(np.sum(features > 0, axis = 0))))
+	TF = (K * (features > 0)) + ((1-K) *  features) / (1 + (np.max(features, axis=1))).reshape([features.shape[0], 1])
+	IDF = np.log(num_samples / (1 + (np.sum(features > 0, axis = 0, dtype=DataType(FeatureType.TFIDF)))))
 	return TF * IDF
 
 def ToBINARY(features):
@@ -472,7 +477,9 @@ def ToBINARY(features):
 
 def get_num_samples(dirname):
 	count = 0
-	for filename in os.listdir(dirname):
+	filenames = (os.listdir(dirname))
+	filenames.sort()
+	for filename in filenames:
 		if '.srl' in filename:
 			count = count + 1
 	return count
@@ -507,11 +514,15 @@ def RemoveItemsWithPOSExcept(words_or_deps, keepers=None):
 					result.append()
 	return result
 
-def Convert(units, frep=FREP, funit=FUNIT):
+def Convert(units, frep=None, funit=None):
 	"""
 		Convert a list of Dependency objects into an numpy array of strings
 
 	"""
+	if frep==None:
+		frep=FREP
+	if funit==None:
+		funit=FUNIT
 
 	# Optimize for speed when you can
 	if funit in [FeatureUnits.PREDICATE_ARGUMENT, FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT, FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT, FeatureUnits.ALL]:
@@ -535,10 +546,15 @@ def ConvertUnit(words_or_deps, frep=FeatureRepresentation.HASH):
 	f = ConversionFunction(frep)
 	return f(words_or_deps) 
 
-def DefineFeature(units, frep=FREP, funit=FUNIT):
+def DefineFeature(units, frep=None, funit=None):
 	"""
 		Convert a list of Dependency objects into an numpy array of strings
 	"""
+
+	if frep==None:
+		frep=FREP
+	if funit==None:
+		funit=FUNIT
 
 	# Optimize for speed when you can
 	if funit in [FeatureUnits.PREDICATE_ARGUMENT, FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT, FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT, FeatureUnits.ALL]:
@@ -581,7 +597,9 @@ def LoadAllUnitsFromFiles(dirname, funit=FeatureUnits.WORD, keep_duplicates=Fals
 	count = 0
 	if PRINTING:
 		sys.stdout.write("\nDocuments Processed: 00000")
-	for filename in os.listdir(dirname):
+	filenames = (os.listdir(dirname))
+	filenames.sort()
+	for filename in filenames:
 		if '.srl' in filename:
 			count = count + 1
 			if PRINTING:
