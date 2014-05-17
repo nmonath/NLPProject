@@ -401,7 +401,7 @@ def Features(dirname, funit=None, ftype=None, frep=None, feature=None, K=0.5):
 		# Rearrange the feature so that it can be used for broadcasting
 		feature = feature.reshape([feature.shape[0], 1])
 		
-		print feature
+	#	print feature
 	# Init the features matrix, uint16 to save space.
 	if USE_MEMORY_MAP:
 		if is_testing:
