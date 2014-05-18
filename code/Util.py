@@ -115,7 +115,7 @@ def preprocessFiles(dirname):
 							filesModified+=1
 						cntTimesBigWord+=1
 						prevSusp = 1
-					elif((len(word)>15 and len(patMin.findall(word))==0 and len(pat.findall(word))/len(word)<0.7) or 
+					elif((len(word)>10 and len(patMin.findall(word))==0 and len(pat.findall(word))/len(word)<0.7) or 
 						#(prevSusp==1 and len(patMin.findall(word))==0 and len(pat.findall(word))!=0 and len(pat.findall(word))<len(word))):
 						(prevSusp==1 and len(patMin.findall(word))==0 and len(pat.findall(word))<len(word))):
 						if(cntTimesBigWord==0):
