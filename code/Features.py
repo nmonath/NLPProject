@@ -5,7 +5,7 @@ import sys
 #from scipy.sparse import csr_matrix
 from Util import *
 import re
-from copy import copy
+from copy import copy, deepcopy
 import itertools
 import json
 
@@ -257,10 +257,9 @@ class Bigram:
 	"""
 
 	"""
-	def __init__(self, word_one, word_two, sentenceNo):
+	def __init__(self, word_one, word_two):
 		self.word_one = word_one
 		self.word_two = word_two
-		self.sentenceNo = sentenceNo
 
 	def __eq__(self, other):
 		return self.word_one == other.word_one and self.word_two == other.word_two
@@ -278,11 +277,10 @@ class Trigram:
 	"""
 
 	"""
-	def __init__(self, word_one, word_two, word_three, sentenceNo):
+	def __init__(self, word_one, word_two, word_three):
 		self.word_one = word_one
 		self.word_two = word_two
 		self.word_three = word_three
-		self.sentenceNo = sentenceNo
 
 	def __eq__(self, other):
 		return self.word_one == other.word_one and self.word_two == other.word_two and self.word_three == other.word_three
@@ -291,7 +289,7 @@ class Trigram:
 		return not self.eq(other)
 
 	def __str__(self):
-		return str(self.word_one) + " " + str(self.word_two) + str(self.word_three)
+		return str(self.word_one) + " " + str(self.word_two) + " " + str(self.word_three)
 
 	def __hash__(self):
 		return hash(str(self))
@@ -464,7 +462,6 @@ def Features(dirname, funit=None, ftype=None, frep=None, feature=None, K=0.5):
 	else:
 		return (feature, features) 
 
-
 def ToTFIDF(features, K=0.5):
 	features = features.astype(DataType(FeatureType.TFIDF))
 	num_samples = features.shape[0]
@@ -511,7 +508,7 @@ def RemoveItemsWithPOSExcept(words_or_deps, keepers=None):
 		elif w_or_d.__class__ == PredicateArgument:
 			if w_or_d.predicate.posTag in keepers:
 				if np.all(np.array([ (w.posTag in keepers) for w in w_or_d.args.values()])):
-					result.append()
+					result.append(w_or_d)
 	return result
 
 def Convert(units, frep=None, funit=None):
@@ -571,7 +568,6 @@ def DefineFeature(units, frep=None, funit=None):
 		fdef = [conv(u) for u in units]
 		return np.array(list(set(fdef)), dtype=DataType(frep))
 
-
 def NumberOfHashCollisions(words_or_deps):
 	return len([hash(w_or_d) for w_or_d in set(words_or_deps)]) - len(set([hash(w_or_d) for w_or_d in set(words_or_deps)])) 
 
@@ -623,7 +619,6 @@ def Display(dep):
 		elif d.__class__ == PredicateArgument:
 			print(str(d))
 
-
 def ReadDependencyParseFile(filename, funit=FeatureUnits.WORD, remove=True):
 	""" 
 		This function reads a dep format file into a (python) list of Word and or Dependency objects.
@@ -631,18 +626,65 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.WORD, remove=True):
 	Words = list()
 	Dependencies = list()
 	PredArgs = list()
+	Bigrams = list()
+	Trigrams = list()
 
 	keepers = KeeperPOS()
+
+	if funit in [FeatureUnits.BIGRAM]:
+		f = open(filename, 'r')
+		previous_word = None
+		for line in f:
+			spl = line.split()
+			if len(spl) == 7 or len(spl) == 8:
+				wordno = int(spl[0])-1
+				wordform = spl[1]
+				lemma = spl[2]
+				posTag = spl[3]
+				feat = spl[4]
+				head = int(spl[5])-1
+				depRel = spl[6]
+				if (not remove) or (not IsStopWord(Word(wordform, lemma, posTag, feat, depRel))): 
+					if previous_word is None:
+						previous_word = Word(wordform, lemma, posTag, feat, depRel)
+					else:
+						Bigrams.append(Bigram(deepcopy(previous_word), Word(wordform, lemma, posTag, feat, depRel)))
+						previous_word = Word(wordform, lemma, posTag, feat, depRel)
+		return Bigrams
+
+
+	if funit in [FeatureUnits.TRIGRAM]:
+		f = open(filename, 'r')
+		previous_word_one = None
+		previous_word_two = None
+
+		for line in f:
+			spl = line.split()
+			if len(spl) == 7 or len(spl) == 8:
+				wordno = int(spl[0])-1
+				wordform = spl[1]
+				lemma = spl[2]
+				posTag = spl[3]
+				feat = spl[4]
+				head = int(spl[5])-1
+				depRel = spl[6]
+				if (not remove) or (not IsStopWord(Word(wordform, lemma, posTag, feat, depRel))): 
+					if previous_word_one is None:
+						previous_word_one = Word(wordform, lemma, posTag, feat, depRel)
+					elif previous_word_two is None:
+						previous_word_two = Word(wordform, lemma, posTag, feat, depRel)
+					else:
+						Trigrams.append(Trigram(deepcopy(previous_word_one), deepcopy(previous_word_two), Word(wordform, lemma, posTag, feat, depRel)))
+						previous_word_one = deepcopy(previous_word_two)
+						previous_word_two = Word(wordform, lemma, posTag, feat, depRel)
+		return Trigrams
+
+
+
 
 
 	# Bigram and trigram
 	
-
-
-
-
-
-
 	if funit  in [FeatureUnits.WORD, FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS, FeatureUnits.WORDS_AND_PREDICATE_ARGUMENT, FeatureUnits.ALL]:
 		f = open(filename, 'r')
 		# Mapping from (sentence number, head id number) to a list of the complements of the head id number
@@ -657,10 +699,8 @@ def ReadDependencyParseFile(filename, funit=FeatureUnits.WORD, remove=True):
 				feat = spl[4]
 				head = int(spl[5])-1
 				depRel = spl[6]
-				if (not remove) or (posTag in keepers and ((USE_LEMMA and not_single_character(lemma)) or ((not USE_LEMMA) and not_single_character(wordform)))  and ((USE_LEMMA and not_contains_symbols(lemma)) or ((not USE_LEMMA) and not_contains_symbols(wordform)))):
+				if (not remove) or (not IsStopWord(Word(wordform, lemma, posTag, feat, depRel))):
 					Words.append(Word(wordform, lemma, posTag, feat, depRel))
-				# else:
-				# 	print([wordno, wordform, lemma, posTag, feat, head, depRel])
 		if funit == FeatureUnits.WORD: 
 			return Words
 	if funit in [FeatureUnits.DEPENDENCY_PAIR, FeatureUnits.WORDS_AND_DEPENDENCY_PAIRS, FeatureUnits.DEPENDENCY_PAIRS_AND_PREDICATE_ARGUMENT, FeatureUnits.ALL]:
@@ -779,9 +819,9 @@ def not_single_character(s):
 
 
 
-
-
-
-
-
+def IsStopWord(unit):
+	res = True
+	if unit.__class__ == Word:
+		res = res and unit.posTag in KEEPER_POS and not_single_character(str(unit)) and not_contains_symbols(str(unit))
+	return False
 
