@@ -2,6 +2,8 @@ import os
 import numpy as np
 import shutil
 from sklearn import preprocessing
+import glob
+import re 
 
 def tic():
     #Homemade version of matlab tic and toc functions
@@ -66,6 +68,94 @@ def SVMLightWrite(targets, features, filename):
 				fid.write(' ' + str(d+1) + ':' + str(features[n,d])) 
 	fid.write('\n');
 	fid.close()
+
+
+def preprocessFiles(dirname):
+	"""
+	This function pre-processes files with the following rules: 
+        1- If the file has chains of words larger than 50 characters, it is shown in the screen to see what to do. 
+        2- If the file has character \n> or \n>>, the > and >> are deleted. 
+	"""
+	files = glob.glob(dirname + "/*")
+	filesModified = 0
+	for file in files:
+		cntTimesBigWord = 0
+		printed = 0 
+		fName = file.split("/")
+
+#		print ("opening: " + dirname + "/modified_" + fName[len(fName)-1])
+
+		pat = re.compile(r'[ABCDEFGHIJKLMNOPQRSTUVWXYZ]')
+		patMin = re.compile(r'[abcdefghijklmnopqrstuvwxyz]')
+		if(file[len(file)-3:len(file)]!='srl' and os.path.isfile(file)):
+#			print file
+			writeFile = open(dirname + "/" + fName[len(fName)-1] + "_modified",'w')
+			f = open(file)
+			prevSusp = 0
+			for line in iter(f):
+#				charChange=0
+#				onlySpaces=1
+#				prevI = ""
+#				for i in range(0, len(line)):
+#					if(prevI != "" and line[i]!= prevI and line[i]!="\n"):
+#						charChange=1
+#					if(line[i]!=' ' and line[i]!='\n' and ord(line[i])!='\t'):
+#						onlySpaces=0
+#					if(line[i]!=' '):
+#						prevI = line[i]
+#				if(charChange==0 and len(line)>5 and onlySpaces==0):
+#					print ("\nsame char line: " + line)
+                
+				splitted = line.split(' ')
+				for word in splitted:
+					if(len(word)>50):
+						#don't write anything to writeFile
+						if(cntTimesBigWord==0):
+							print ("file modified: " + file)
+							filesModified+=1
+						cntTimesBigWord+=1
+						prevSusp = 1
+					elif((len(word)>10 and len(patMin.findall(word))==0 and len(pat.findall(word))/len(word)<0.7) or 
+						#(prevSusp==1 and len(patMin.findall(word))==0 and len(pat.findall(word))!=0 and len(pat.findall(word))<len(word))):
+						(prevSusp==1 and len(patMin.findall(word))==0 and len(pat.findall(word))<len(word))):
+						if(cntTimesBigWord==0):
+							print ("file modified: " + file)
+							filesModified+=1
+						cntTimesBigWord+=1
+						prevSusp=1
+					else:
+						if(word=='\n' or word.find('\n')!=-1):
+							writeFile.write(word)
+						else:
+							writeFile.write(word + " ")
+						if(len(word.strip())>0):
+							prevSusp=0
+#					if(len(word)>50 and cntTimesBigWord>10 and printed == 0):
+#						print word
+#						print file
+#						printed =1
+                    
+			f.close()
+	print("files modified: " + str(filesModified))
+
+
+def showFilesContent(dirname):
+	"""
+	This function just displays the files' content inside the directory
+	"""
+	files = glob.glob(dirname + "/*")
+	for file in files:
+		cntTimesBigWord = 0
+		printed = 0 
+		if(file[len(file)-3:len(file)]!='srl'):
+			print file
+			f = open(file)
+			for line in iter(f):
+#				line = "------------"
+#                if(len(line)>0):
+				print line
+			f.close()
+
 
 def SRL(dirname):
 	"""
@@ -194,3 +284,7 @@ def get_num_samples(dirname):
 		if '.srl' in filename:
 			count = count + 1
 	return count
+
+
+#showFilesContent("/Users/klimzaporojets/klim/umass/691CL/NLPProject/data_sets/20_news_groups_classification/train/")
+preprocessFiles("/Users/klimzaporojets/klim/umass/691CL/NLPProject/data_sets/20_news_groups_classification/train/")

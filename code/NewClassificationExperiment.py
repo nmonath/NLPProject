@@ -69,6 +69,7 @@ def RunClassificationExperiment(FeaturesJSON, ClassifierJSON):
 		x_train_binary_normalized = csr_matrix(ff2)
 		#print("\n\n min 3: "  + str(np.mean(x_train_binary_normalized)) + " max 3: " + str(np.mean(x_train_binary_normalized)) + "\n")	
 	
+	
 	del x_train_binary
 
 	# tf-idf Features
